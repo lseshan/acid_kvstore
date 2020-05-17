@@ -26,7 +26,7 @@ import (
 func main() {
 	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
 	id := flag.Int("id", 1, "node ID")
-	//kvport := flag.Int("port", 9121, "key-value server port")
+	kvport := flag.Int("port", 9121, "key-value server port")
 	join := flag.Bool("join", false, "join an existing cluster")
 	flag.Parse()
 
@@ -41,9 +41,10 @@ func main() {
 	commitC, errorC, snapshotterReady := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
 
 	kvs = kvstore.NewKVStore(<-snapshotterReady, proposeC, commitC, errorC)
+	kvs.ServeHttpKVApi(*kvport, errorC)
 
 	// the key-value http handler will propose updates to raft
-	//httpapi.ServeHttpKVAPI(kvs, *kvport, confChangeC, errorC)
+	//httpapi.ServeHttpKVAPI(*kvport, confChangeC, errorC)
 	// start a rpc handler
 	//rpc
 }
