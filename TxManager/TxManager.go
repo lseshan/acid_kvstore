@@ -189,4 +189,4 @@ func (tr *TxRecord) CommitComplete(index int) {
 
 // goRPC:HTTP:$PORT each leader 
 //Leader / Service Discon
-How to find TxManager Leader and KV-store Leader ?
+//How to find TxManager Leader and KV-store Leader ?
