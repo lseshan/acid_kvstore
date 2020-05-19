@@ -1,3 +1,3 @@
 #!/bin/sh
-
-./Tx
+go build 
+if [[ $?  -eq 0 ]] ; then ./Tx ; fi
