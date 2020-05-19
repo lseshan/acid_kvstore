@@ -16,11 +16,19 @@ package main
 
 import (
 	"flag"
+	"log"
+	"net"
 	"strings"
 
+	pb "github.com/acid_kvstore/proto/package/kvstorepb"
 	"github.com/acid_kvstore/raft"
 	"github.com/acid_kvstore/store/kvstore"
 	"go.etcd.io/etcd/raft/raftpb"
+	"google.golang.org/grpc"
+)
+
+const (
+	gRPCport = ":50051"
 )
 
 func main() {
@@ -41,10 +49,26 @@ func main() {
 	commitC, errorC, snapshotterReady := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
 
 	kvs = kvstore.NewKVStore(<-snapshotterReady, proposeC, commitC, errorC)
+
+	/* RPC handling */
+	go func() {
+		lis, err := net.Listen("tcp", gRPCport)
+		if err != nil {
+			log.Fatalf("failed to listen: %v", err)
+		}
+		s := grpc.NewServer()
+		ks := kvstore.NewKvServer()
+		pb.RegisterKvstoreServer(s, ks)
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+
 	kvs.ServeHttpKVApi(*kvport, errorC)
 
 	// the key-value http handler will propose updates to raft
 	//httpapi.ServeHttpKVAPI(*kvport, confChangeC, errorC)
 	// start a rpc handler
 	//rpc
+
 }
