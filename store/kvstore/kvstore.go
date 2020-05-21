@@ -38,6 +38,7 @@ Commit(key string) {
   //Write to disk (v)
   print(v.val) ===> 20
 }*/
+var txnMap map[uint64]Txn
 
 type value struct {
 	mu  sync.RWMutex
@@ -76,9 +77,10 @@ type operation struct {
 //   call(OP)
 // TM =====>   KVSTORE
 type Txn struct {
-	Cmd  string // Prep, Lock, Commit, Abort
-	TxId int
-	Oper []operation //
+	Cmd    string // Prep, Lock, Commit, Abort
+	TxId   uint64
+	Oper   []operation //
+	RespCh chan<- int
 }
 
 type raftMsg struct {
@@ -109,6 +111,7 @@ func (s *kvstore) Lock(txn Txn) {
 }
 
 func (s *kvstore) Prep(txn Txn) {
+	log.Printf("Got Prep")
 
 	//Check for locks
 	s.txnPhase = "Prep"
@@ -117,8 +120,13 @@ func (s *kvstore) Prep(txn Txn) {
 		//Should we take lock
 		key := s.KvStore[oper.Key]
 		key.writeIntent = oper.Val
+		s.KvStore[oper.Key] = key
 	}
-
+	log.Printf("Sending commit response")
+	if stxn, found := txnMap[txn.TxId]; found {
+		stxn.RespCh <- 1
+	}
+	delete(txnMap, txn.TxId)
 }
 
 func (s *kvstore) Commit(txn Txn) {
@@ -128,8 +136,16 @@ func (s *kvstore) Commit(txn Txn) {
 		value := s.KvStore[oper.Key]
 		value.val = value.writeIntent
 		value.writeIntent = ""
+		s.KvStore[oper.Key] = value
 	}
+	oper := txn.Oper[0]
+	log.Printf("key : %v val : %v", oper.Key, s.KvStore[oper.Key].val)
 	s.writeIntent = []operation{}
+	log.Printf("Sending response")
+	if stxn, found := txnMap[txn.TxId]; found {
+		stxn.RespCh <- 1
+	}
+	delete(txnMap, txn.TxId)
 	//Snapshot
 }
 
@@ -160,8 +176,13 @@ func (s *kvstore) ProposeKV(k string, v string) {
 
 func (s *kvstore) ProposeTxn(txn Txn) {
 	var buf bytes.Buffer
+	txnMap[txn.TxId] = txn
 	if err := gob.NewEncoder(&buf).Encode(raftMsg{MsgType: "txn", Rawkv: operation{}, Txn: txn}); err != nil {
 		log.Fatal(err)
+	}
+	log.Printf("propose txn")
+	if txn.RespCh != nil {
+		log.Printf("RespC is not  nil %v", txn.RespCh)
 	}
 	s.proposeC <- buf.String()
 }
@@ -173,7 +194,7 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) KV {
 		log.Printf("Got get")
 		kv.Key = key
 		kv.Val = s.KvStore[key].val
-		log.Printf("%s", s.KvStore[key])
+		log.Printf("%v", s.KvStore[key])
 	case "PUT":
 		fallthrough
 	case "POST":
@@ -205,13 +226,14 @@ func (s *kvstore) readCommits(commitC <-chan *string, errorC <-chan error) {
 
 		var msg raftMsg
 		dec := gob.NewDecoder(bytes.NewBufferString(*data))
-		log.Printf("%s", dec)
+		log.Printf("%v", dec)
 		if err := dec.Decode(&msg); err != nil {
 			log.Fatalf("kvstore: could not decode message (%v)", err)
 		}
 		s.mu.Lock()
 		switch msg.MsgType {
 		case "txn":
+			log.Printf("Got txn from raft")
 			switch msg.Txn.Cmd {
 			case "Lock":
 				s.Lock(msg.Txn)
@@ -254,3 +276,6 @@ func (s *kvstore) recoverFromSnapshot(snapshot []byte) error {
 	s.kvStore = store
 	return nil
 }*/
+func init() {
+	txnMap = make(map[uint64]Txn)
+}
