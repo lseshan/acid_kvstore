@@ -114,7 +114,7 @@ func NewTxRecord(ctx context.Context, Cli pb.KvstoreClient) *TxRecord {
 		TxPhase:     "PENDING",
 		KvClient:    k,
 		Wg:          sync.WaitGroup{},
-		CommandList: make([]*pb.Command, 2),
+		CommandList: make([]*pb.Command, 0),
 	}
 
 	tr.KvClient.ctx = ctx

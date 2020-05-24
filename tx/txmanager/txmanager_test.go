@@ -14,14 +14,17 @@ import (
 
 func TestTxAddCommand(t *testing.T) {
 
-	rs := tr.TxAddCommand("Hey", "WhoisThis", "PUT")
+	rs := tr.TxAddCommand("TOMI", "WhoisThis", "PUT")
 	log.Printf("result of TxAdd:%t", rs)
 
-	rs = tr.TxAddCommand("Hello", "This is Me", "PUT")
+	rs = tr.TxAddCommand("MarloI", "This is Me", "PUT")
 	log.Printf("result of TxAdd:%t", rs)
 }
 
 func TestTxSendBatchRequest(t *testing.T) {
+	for _, cm := range tr.CommandList {
+		log.Printf("Op:%s", cm.Op)
+	}
 	rs := tr.TxSendBatchRequest()
 	log.Printf("result of TxAdd:%t", rs)
 

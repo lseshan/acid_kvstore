@@ -110,7 +110,7 @@ service kvstore {
     rpc KvTxRead (KvTxReadReq) returns (KvTxReadReply);
     rpc KvRawRead (KvRawReq) returns (KvRawReply);
     rpc KvRawWrite (KvRawReq) returns (KvRawReply);
-    rpc KvRawDelete (KvTxReq) returns (KvTxReply);
+    rpc KvRawDelete (KvRawReq) returns (KvRawReply);
     //XXX:rpc KvGetLeader (TxLeader) returns (KvLeader);
     //XXX:rpc KvGetRaftGroupDetails (TxLeader) returns (stream KvNode);
     //XXX:rpc GetAll (stream Request) returnss (Response);    
