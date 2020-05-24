@@ -12,49 +12,58 @@ message TxContext {
     uint64 txId = 1;
 }
 
+
 message KvTxReadReq {
-    TxContext txContext =1;
-    Command   command = 2;
+    TxContext TxContext =1;
+    Command  Command = 2;
 }
 
 message KvTxReadReply {
-    TxContext txContext = 1;
-    Command   command = 2;
-    Status status = 3;
+    TxContext TxContext = 1;
+    Command Command = 2;
+    Status Status = 3;
+}
+
+message KvTxReq {
+    TxContext TxContext = 1;
+    repeated Command CommandList = 2;
+}
+
+message KvTxReply {
+    TxContext TxContext = 1;
+    repeated Command CommandList = 2;
+    Status Status = 3;
 }
 
 message Command {
-    uint64 idx = 1;
-    string op = 2;
-    uint64 key = 3;
-    uint64 Val = 4; 
+    uint64 Idx = 1;
+    string Op = 2;
+    string Key = 3;
+    string Val = 4; 
+   // string Stage = 5;
 }
 
-message KvTxWriteReq {
-    TxContext txContext = 1;
-    Command   command = 2;
-}
 
-message KvTxWriteReply {
-    TxContext txContext = 1;
-    Command   command = 2;
-    Status status = 3;
+/* message KvTxWriteReply {
+    TxContext TxContext = 1;
+    Command   Command = 2;
+    Status Status = 3;
 }
-
+*/
 enum Status {
     Success = 0;
     Failure = 1;
  }
 
-message KvReadReq {
+message KvRawReq {
     uint64 id =1;
     uint64 key =2;    
 }
 
-message KvReadReply {
+message KvRawReply {
     uint64 id = 1;
-    uint64 key =2;
-    uint64 val =3;
+    string key =2;
+    string val =3;
     Status status = 4;    
 }
 
@@ -66,8 +75,8 @@ message KvWriteReq {
 
 message KvWriteReply {
     uint64 id = 1;
-    uint64 key =2;
-    uint64 val =3;
+    string key =2;
+    string val =3;
     Status status = 4;    
 }
 
@@ -88,14 +97,20 @@ message TxLeader {
 }
 
 */
+message KvTxStatusReply {
+    Status status = 1;
+}
+
+
 service kvstore {
 
-    rpc KvTxPrepare (KvTxWriteReq) returns (KvTxWriteReply);
-    rpc KvTxCommit (KvTxWriteReq) returns (KvTxWriteReply);
+    rpc KvTxPrepare (KvTxReq) returns (KvTxReply);
+    rpc KvTxCommit (KvTxReq) returns (KvTxReply);
+    rpc KvTxRollback (KvTxReq) returns (KvTxReply);
     rpc KvTxRead (KvTxReadReq) returns (KvTxReadReply);
-    rpc KvRawRead (KvReadReq) returns (KvReadReply);
-    rpc KvRawWrite (KvWriteReq) returns (KvWriteReply);
-    rpc KvRawDelete (KvTxWriteReq) returns (KvTxWriteReply);
+    rpc KvRawRead (KvRawReq) returns (KvRawReply);
+    rpc KvRawWrite (KvRawReq) returns (KvRawReply);
+    rpc KvRawDelete (KvTxReq) returns (KvTxReply);
     //XXX:rpc KvGetLeader (TxLeader) returns (KvLeader);
     //XXX:rpc KvGetRaftGroupDetails (TxLeader) returns (stream KvNode);
     //XXX:rpc GetAll (stream Request) returnss (Response);    
