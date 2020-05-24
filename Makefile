@@ -15,10 +15,11 @@ PACKAGE_LIST        := go list ./...| grep -vE "cmd"
 PACKAGES            := $$($(PACKAGE_LIST))
 
 CUR_DIR := $(shell pwd)
-export PATH := $(CURDIR)/bin/:$(PATH)
+export PATH := $(CUR_DIR)/bin/:$(PATH)
+
+.PHONY: clean proto
 
 proto:
-	mkdir -p $(CURDIR)/bin
 	(cd proto && ./generate_go.sh)
 	GO111MODULE=on go build ./proto/pkg/...
 
