@@ -1,12 +1,17 @@
 package txmanager
 
 import (
+	"bytes"
 	"context"
+	"encoding/gob"
+	"encoding/json"
 	"log"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
+	"go.etcd.io/etcd/etcdserver/api/snap"
 )
 
 // I am the raft leader
@@ -52,12 +57,16 @@ After the transaction is committed, all written intents are upgraded in parallel
 	Dispatch writeIntent on prOpose channel
 
 */
-type TxStore struct {
+
+/*
+type TxRecordStore struct {
 	TxRecord *TxRecord
 	TxPhase  string // COMMMITED/ABORTED/PENDING //seems to be redundant can even have switch - actually not, TX record represent whole Tx
 }
+*/
 
-var TxRecordStore = make(map[uint64]TxStore)
+//type TxRecordStore map([uint64]TxStore)
+//var TxRecordStore = make(map[uint64]TxStore)
 
 /*
 func newTxStore() map[uint64]TxStore {
@@ -66,24 +75,39 @@ func newTxStore() map[uint64]TxStore {
 }
 */
 
+var txStore *TxStore
+
+type TxStore struct {
+	TxRecordStore map[uint64]*TxRecord
+	KvClient      *KvClient
+
+	//sddhards
+	proposeC    chan<- string // channel for proposing updates
+	snapshotter *snap.Snapshotter
+	txnMap      map[uint64]Txn
+	mu          sync.RWMutex
+}
+
+type Txn struct {
+	TxRecord *TxRecord
+	RespCh   chan<- int
+}
+
+type raftMsg struct {
+	Tx     Txn
+	OpType string // Status : New, UpdateCommands, UpdateStatus
+}
+
 const (
-	getUUID = iota
-	pi      = 3.14
+	getUUID = iota + 100
 )
 
-type Command struct {
-	//UUID int
-	Idx   uint64
-	Key   string
-	Val   string
-	Op    string
-	Stage string //prepare, prepareDone, Commit, commitDone
-}
-
+//XXX: We can maintain map of this if we are doing shards??
 type KvClient struct {
-	ctx context.Context
 	Cli pb.KvstoreClient
 }
+
+var kvStorecli *KvClient
 
 //TxManagerStore[UUID] = { TR, writeIntent }
 type TxRecord struct {
@@ -96,38 +120,126 @@ type TxRecord struct {
 	CommandList []*pb.Command
 	// Logging the tx, if its crashed ?
 	//	txStore	map[int]TxStore
-	KvClient     *KvClient
-	TotalCount   uint64
-	PrepareCount uint64
-	CommitCount  uint64
-	Wg           sync.WaitGroup
+	//KvClient     *KvClient
+	totalCount   uint64
+	prepareCount uint64
+	commitCount  uint64
+	//	Wg           sync.WaitGroup
 	/*
 		"The record is co-located (i.e. on the same nodes in the distributed system) with the Key in the transaction record."
 	*/
 
 }
 
-func NewTxRecord(ctx context.Context, Cli pb.KvstoreClient) *TxRecord {
-	k := new(KvClient)
+func NewTxStore(cl *KvClient, snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error) *TxStore {
+	m := make(map[uint64]*TxRecord)
+	n := make(map[uint64]Txn)
+	ts := &TxStore{
+		TxRecordStore: m,
+		KvClient:      cl,
+		proposeC:      proposeC,
+		snapshotter:   snapshotter,
+		txnMap:        n,
+	}
+	// replay log into key-value map
+	ts.readCommits(commitC, errorC)
+	// read commits from raft into kvStore map until error
+	go ts.readCommits(commitC, errorC)
+	txStore = ts
+	return ts
+}
+
+func (ts *TxStore) GetSnapshot() ([]byte, error) {
+	ts.mu.RLock()
+	defer ts.mu.RUnlock()
+	return json.Marshal(ts.TxRecordStore)
+}
+
+func (ts *TxStore) ProposeTxRecord(tx Txn, op string) {
+	var buf bytes.Buffer
+	if err := gob.NewEncoder(&buf).Encode(raftMsg{Tx: tx, OpType: op}); err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("propose txn")
+
+	if tx.RespCh != nil {
+		log.Printf("RespC is not  nil %v", tx.RespCh)
+	}
+	ts.proposeC <- buf.String()
+}
+
+func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
+
+	log.Printf("I am in Read Commit")
+	for data := range commitC {
+		if data == nil {
+			// done replaying log; new data incoming
+			// OR signaled to load snapshot
+			snapshot, err := ts.snapshotter.Load()
+			if err == snap.ErrNoSnapshot {
+				return
+			}
+			if err != nil {
+				log.Panic(err)
+			}
+			log.Printf("loading snapshot at term %d and index %d", snapshot.Metadata.Term, snapshot.Metadata.Index)
+			/*if err := s.recoverFromSnapshot(snapshot.Data); err != nil {
+				log.Panic(err)
+			}*/
+			continue
+		}
+
+		var msg raftMsg
+		dec := gob.NewDecoder(bytes.NewBufferString(*data))
+		log.Printf("gob result: %v", dec)
+		if err := dec.Decode(&msg); err != nil {
+			log.Fatalf("Tx: could not decode message (%v)", err)
+		}
+		log.Printf("Update Tx entry: %v", msg.OpType)
+		//XXX: Not sure  we need this
+		//	ts.mu.Lock()
+		//	defer ts.mu.Unlock()
+		tx := msg.Tx
+		tr := tx.TxRecord
+
+		// XXX: add failure checks and log message
+		switch msg.OpType {
+		case "New":
+			// XXX: This would be redundant for leader , find a way to no-op for leader
+			ts.TxRecordStore[tr.UUID] = tr
+
+		//	log.Printf("Created new Tx entry %+v", tr)
+		//Update the state of TR
+		case "COMMITED":
+			fallthrough
+		case "ABORT":
+			if r, ok := ts.TxRecordStore[tr.UUID]; ok == false {
+				//XXX: go to update the error channel
+				log.Fatalf("Error finding the record store")
+				r.TxPhase = "ABORT"
+			} else {
+				r.TxPhase = msg.OpType
+			}
+			log.Printf("Update Tx entry: %v", msg.OpType)
+		}
+		if ltxn, ok := ts.txnMap[tr.UUID]; ok {
+			ltxn.RespCh <- 1
+		}
+		delete(ts.txnMap, tr.UUID)
+		log.Printf("Confirmation should have got")
+	}
+}
+
+func NewTxRecord(cli *KvClient) *TxRecord {
 	tr := &TxRecord{
-		UUID:        getUUID,
-		TxPhase:     "PENDING",
-		KvClient:    k,
-		Wg:          sync.WaitGroup{},
+		UUID:    getUUID,
+		TxPhase: "PENDING",
+		//KvClient: cli,
+		//	Wg:          sync.WaitGroup{},
 		CommandList: make([]*pb.Command, 0),
 	}
-
-	tr.KvClient.ctx = ctx
-	tr.KvClient.Cli = Cli
-
-	ts := TxStore{
-		TxRecord: tr,
-		TxPhase:  "PENDING",
-	}
-	TxRecordStore[tr.UUID] = ts
-	//	tr.txStore = TxRecordStore;
+	kvStorecli = cli
 	return tr
-	//check for previous store
 
 }
 
@@ -143,7 +255,7 @@ func (tr *TxRecord) TxAddCommand(Key, Val, Op string) bool {
 	}
 
 	rq := &pb.Command{
-		Idx: tr.TotalCount,
+		Idx: tr.totalCount,
 		Key: Key,
 		Val: Val,
 		Op:  Op,
@@ -151,10 +263,27 @@ func (tr *TxRecord) TxAddCommand(Key, Val, Op string) bool {
 	}
 
 	//We dont need this atomic since SendRequest is serial
-	atomic.AddUint64(&tr.TotalCount, 1)
+	atomic.AddUint64(&tr.totalCount, 1)
 
 	tr.CommandList = append(tr.CommandList, rq)
 	return true
+}
+
+func (tr *TxRecord) TxUpdateTxRecord(s string) int {
+
+	var tx Txn
+
+	respCh := make(chan int)
+	defer close(respCh)
+
+	tx.RespCh = respCh
+	tx.TxRecord = tr
+	txStore.txnMap[tr.UUID] = tx
+	txStore.ProposeTxRecord(tx, s)
+	log.Printf("Done propose of TR, status:%s", s)
+	val := <-respCh
+	log.Printf("Val %v", val)
+	return val
 }
 
 func (tr *TxRecord) TxSendBatchRequest() bool {
@@ -168,30 +297,39 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	   	//	tr.mu.RUnLock()
 	*/
 
-	ts := TxRecordStore[tr.UUID]
 	rq := newSendPacket(tr)
 
 	if tr.TxPrepare(rq) == false {
 		//dbg failure of the writeIntent
 		//invoke the rollback
-		ts.TxPhase = "ABORT"
-		tr.TxPhase = "ABORT"
+		if ok := tr.TxRollaback(rq); ok == true {
+			log.Printf("Rollback failed: %v", ok)
+		}
+		res := tr.TxUpdateTxRecord("ABORT")
+		log.Printf("Update record: %d", res)
+		//tr.TxPhase = "ABORT"
 		return false
 	}
 
 	if tr.TxCommit(rq) == false {
 		//retry the operation
 		// gross error
-		ts.TxPhase = "ABORT"
-		tr.TxPhase = "ABORT"
+		//	tr.TxPhase = "ABORT"
+		if ok := tr.TxRollaback(rq); ok == true {
+			log.Printf("Rollback failed: %v", ok)
+		}
+
+		res := tr.TxUpdateTxRecord("ABORT")
+		log.Printf("Update record: %d", res)
 		return false
 
 	}
 
 	log.Printf(" We are good")
 
-	ts.TxPhase = "COMMITED"
-	tr.TxPhase = "COMMITED"
+	res := tr.TxUpdateTxRecord("COMMITED")
+	log.Printf("Update record: %d", res)
+	//tr.TxPhase = "COMMITED"
 	return true
 }
 
@@ -213,7 +351,10 @@ func newSendPacket(tr *TxRecord) *pb.KvTxReq {
 func (tr *TxRecord) TxPrepare(rq *pb.KvTxReq) bool {
 	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
 	//c , err := getClient()
-	rp, err := tr.KvClient.Cli.KvTxPrepare(tr.KvClient.ctx, rq)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+	rp, err := kvStorecli.Cli.KvTxPrepare(ctx, rq)
 	//XXX: analyze the error later
 	if err != nil {
 		log.Fatalf("TxPrepare: %v", err)
@@ -229,7 +370,10 @@ func (tr *TxRecord) TxPrepare(rq *pb.KvTxReq) bool {
 func (tr *TxRecord) TxCommit(rq *pb.KvTxReq) bool {
 	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
 	//c , err := getClient()
-	rp, err := tr.KvClient.Cli.KvTxCommit(tr.KvClient.ctx, rq)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	rp, err := kvStorecli.Cli.KvTxCommit(ctx, rq)
 	if err != nil {
 		log.Fatalf("TxCommit: %v", err)
 	}
@@ -246,9 +390,15 @@ func (tr *TxRecord) TxCommit(rq *pb.KvTxReq) bool {
 //Rollback sync: batch the request
 func (tr *TxRecord) TxRollaback(rq *pb.KvTxReq) bool {
 	//canceliing the request
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
 	// do a batch processing
-	rp, _ := tr.KvClient.Cli.KvTxRollback(tr.KvClient.ctx, rq)
+	rp, err := kvStorecli.Cli.KvTxRollback(ctx, rq)
 	//XXX: analyze the error later
+	if err != nil {
+		log.Fatalf("TxRollback: %v", err)
+	}
+
 	if rp.Status == 0 {
 		log.Printf("Rollback succeeded")
 		return true

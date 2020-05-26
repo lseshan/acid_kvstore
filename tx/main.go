@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"time"
 
@@ -15,6 +16,12 @@ const (
 )
 
 func main() {
+	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
+	id := flag.Int("id", 1, "node ID")
+	kvport := flag.Int("port", 9121, "key-value server port")
+	join := flag.Bool("join", false, "join an existing cluster")
+	flag.Parse()
+
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -31,14 +38,8 @@ func main() {
 	*/
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	cm := new(pb.Command)
-	cm.Key = 100
-	in := new(pb.KvTxReadReq)
-	in.Command = cm
 
-	r, err := c.KvTxRead(ctx, in)
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %d, %d", r.Command.Key, r.Command.Val)
+	ts := NewTxStore(ctx, c, snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error)
+
+	ts.ServeHttpTxApi(*kvport, errorC)
 }
