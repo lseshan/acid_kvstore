@@ -15,10 +15,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"net"
 	"strings"
+	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
 	"github.com/acid_kvstore/raft"
@@ -31,11 +33,28 @@ const (
 	gRPCport = ":50051"
 )
 
+func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
+	log.Printf("check Leaderstarted")
+	for {
+		select {
+		case <-time.After(500 * time.Millisecond):
+			if kvs.Node.IsLeader() {
+				log.Printf("Is leader")
+			} else {
+				log.Printf("Is not Leader")
+			}
+		case <-ctx.Done():
+			log.Printf("Done with CheckLeader")
+		}
+	}
+}
+
 func main() {
 	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
 	id := flag.Int("id", 1, "node ID")
 	kvport := flag.Int("port", 9121, "key-value server port")
 	join := flag.Bool("join", false, "join an existing cluster")
+	grpcport := flag.String("grpcport", ":9122", "grpc server port")
 	flag.Parse()
 
 	proposeC := make(chan string)
@@ -46,13 +65,18 @@ func main() {
 	// raft provides a commit stream for the proposals from the http api
 	var kvs *kvstore.Kvstore
 	getSnapshot := func() ([]byte, error) { return kvs.GetSnapshot() }
-	commitC, errorC, snapshotterReady := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
+	commitC, errorC, snapshotterReady, rc := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
 
-	kvs = kvstore.NewKVStore(<-snapshotterReady, proposeC, commitC, errorC)
+	kvs = kvstore.NewKVStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+
+	go checkLeader(ctx, kvs)
 
 	/* RPC handling */
 	go func() {
-		lis, err := net.Listen("tcp", gRPCport)
+		lis, err := net.Listen("tcp", *grpcport)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
@@ -64,6 +88,7 @@ func main() {
 	}()
 
 	kvs.ServeHttpKVApi(*kvport, errorC)
+	cancel()
 
 	// the key-value http handler will propose updates to raft
 	//httpapi.ServeHttpKVAPI(*kvport, confChangeC, errorC)

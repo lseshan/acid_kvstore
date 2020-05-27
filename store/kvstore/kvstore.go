@@ -21,6 +21,7 @@ import (
 	"log"
 	"sync"
 
+	"github.com/acid_kvstore/raft"
 	"go.etcd.io/etcd/etcdserver/api/snap"
 )
 
@@ -61,6 +62,7 @@ type kvstore struct {
 	txnPhase    string      // "Locked"/ "Prepared" / "Committed" / "Abort"
 	writeIntent []operation // Write intent for the entire store/ shard
 	txnId       int
+	Node        *raft.RaftNode
 }
 
 type KV struct {
@@ -89,8 +91,8 @@ type raftMsg struct {
 	Txn     Txn
 }
 
-func NewKVStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error) *kvstore {
-	s := &kvstore{proposeC: proposeC, KvStore: make(map[string]value), snapshotter: snapshotter}
+func NewKVStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, rc *raft.RaftNode) *kvstore {
+	s := &kvstore{proposeC: proposeC, KvStore: make(map[string]value), snapshotter: snapshotter, Node: rc}
 	// replay log into key-value map
 	s.readCommits(commitC, errorC)
 	// read commits from raft into kvStore map until error
