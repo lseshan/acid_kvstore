@@ -20,6 +20,6 @@ export PATH := $(CUR_DIR)/bin/:$(PATH)
 .PHONY: clean proto
 
 proto:
-	(cd proto && ./generate_go.sh)
-	GO111MODULE=on go build ./proto/pkg/...
+	(proto/generate_go.sh)
+	GO111MODULE=on go build ./proto/package/...
 
