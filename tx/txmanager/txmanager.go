@@ -11,6 +11,7 @@ import (
 	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
+	"github.com/acid_kvstore/raft"
 	"go.etcd.io/etcd/etcdserver/api/snap"
 )
 
@@ -80,6 +81,7 @@ var txStore *TxStore
 type TxStore struct {
 	TxRecordStore map[uint64]*TxRecord
 	KvClient      *KvClient
+	RaftNode      *raft.RaftNode
 
 	//sddhards
 	proposeC    chan<- string // channel for proposing updates
@@ -131,7 +133,7 @@ type TxRecord struct {
 
 }
 
-func NewTxStore(cl *KvClient, snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error) *TxStore {
+func NewTxStore(cl *KvClient, snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
 	m := make(map[uint64]*TxRecord)
 	n := make(map[uint64]Txn)
 	ts := &TxStore{
@@ -140,6 +142,7 @@ func NewTxStore(cl *KvClient, snapshotter *snap.Snapshotter, proposeC chan<- str
 		proposeC:      proposeC,
 		snapshotter:   snapshotter,
 		txnMap:        n,
+		RaftNode:      r,
 	}
 	// replay log into key-value map
 	ts.readCommits(commitC, errorC)

@@ -107,10 +107,10 @@ func TestMain(m *testing.M) {
 
 	var ts *txmanager.TxStore
 	getSnapshot := func() ([]byte, error) { return ts.GetSnapshot() }
-	commitC, errorC, snapshotterReady := raft.NewRaftNode(id, strings.Split(cluster, ","), join, getSnapshot, proposeC, confChangeC)
+	commitC, errorC, snapshotterReady, raft := raft.NewRaftNode(id, strings.Split(cluster, ","), join, getSnapshot, proposeC, confChangeC)
 	cli := &txmanager.KvClient{c}
 	//	tr = txmanager.NewTxRecord(cli)
-	ts = txmanager.NewTxStore(cli, <-snapshotterReady, proposeC, commitC, errorC)
+	ts = txmanager.NewTxStore(cli, <-snapshotterReady, proposeC, commitC, errorC, raft)
 	go ts.ServeHttpTxApi(kvport, errorC)
 	time.Sleep(2 * time.Second)
 	os.Exit(m.Run())
