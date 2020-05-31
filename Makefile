@@ -17,9 +17,20 @@ PACKAGES            := $$($(PACKAGE_LIST))
 CUR_DIR := $(shell pwd)
 export PATH := $(CUR_DIR)/bin/:$(PATH)
 
-.PHONY: clean proto
-
 proto:
 	(proto/generate_go.sh)
 	GO111MODULE=on go build ./proto/package/...
 
+clean:
+	rm -rf bin/*
+
+proto:
+	(cd proto && ./generate_go.sh)
+	GO111MODULE=on go build ./proto/pkg/...
+
+store:
+	echo $(GO_BUILD)
+	$(GO_BUILD) -o bin/kvstore store/main.go
+
+tx:
+	$(GO_BUILD) -o bin/tx tx/main.go
