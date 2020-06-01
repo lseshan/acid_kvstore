@@ -9,9 +9,9 @@ option go_package = "package/kvstorepb";
 //RawWrite
 //RawDelete
 message TxContext {
-    uint64 txId = 1;
+    uint64 TxId = 1;
+    uint64 ShardId = 2;
 }
-
 
 message KvTxReadReq {
     TxContext TxContext =1;
@@ -43,20 +43,51 @@ message Command {
    // string Stage = 5;
 }
 
+message KvRawReq {
+    uint64 id =1;
+    uint64 key =2;    
+}
+
+message KvRawReply {
+    uint64 id = 1;
+    string key =2;
+    string val =3;
+    Status status = 4;    
+}
+
+message KvWriteReq {
+    uint64 id = 1; 
+    uint64 key = 2;
+    uint64 val = 3;    
+}
+
+message KvWriteReply {
+    uint64 id = 1;
+    string key =2;
+    string val =3;
+    Status status = 4;    
+}
+
 //Replica config === Region in tinyKV
 // One Replica - one Shard
-/*message KeyRange {
+message KeyRange {
     uint64 StartKey = 1;
     uint64 EndKey = 2;
 }
+
 message ReplicaConfig {
-    repeated uint64   ShardId = 1;
-    repeated string   Peers = 2;
+    string TxLeader = 1;
+    string ReplLeader = 2;
+}
+
+message ShardConfig {
+    repeated string   Peers = 1;
+    string            TxLeader = 2; 
     repeated KeyRange Key = 3; 
 }
 message ReplicaJoinReq {
-    uint64        ReplicaGid = 1;
-    ReplicaConfig Config = 2;
+    uint64        ShardId = 1;
+    ShardConfig   Config = 2;
 }
 
 message ReplicaJoinReply {
@@ -68,7 +99,22 @@ message ReplicaLeaveReq {
 }
 message ReplicaLeaveReply {
     Status Status = 1;
-}*/
+}
+
+message ReplicaConfigReq {
+    ReplicaConfig config = 1;
+}
+message ReplicaConfigResp {
+    Status Status = 1;
+}
+
+message ShardConfigReq {
+    ShardConfig Config = 1;
+}
+
+message ShardConfigResp {
+    Status Status = 1;
+}
 
 //Shard 
 /*message ShardAddReq {
@@ -97,53 +143,24 @@ enum Status {
     Failure = 1;
  }
 
-message KvRawReq {
-    uint64 id =1;
-    uint64 key =2;    
-}
-
-message KvRawReply {
-    uint64 id = 1;
-    string key =2;
-    string val =3;
-    Status status = 4;    
-}
-
-message KvWriteReq {
-    uint64 id = 1; 
-    uint64 key = 2;
-    uint64 val = 3;    
-}
-
-message KvWriteReply {
-    uint64 id = 1;
-    string key =2;
-    string val =3;
-    Status status = 4;    
-}
-
-/* message KvStoreLeader {
+message KvStoreLeader {
     string kvStoreLeader = 1;
     Status status = 2;
 }
 
-message TxLeader {
-    string txLeader = 1;
-
-}
-
- message KvNode {
+message KvNode {
     string KvNode = 1;
     uint64 KvNodeId = 2;
     uint64 KvLeader  = 3;
 }
 
-*/
 message KvTxStatusReply {
     Status status = 1;
 }
 
-
+message ReplicaStatus {
+    repeated KvStoreLeader KvStoreInfo = 1;
+}
 service kvstore {
 
     rpc KvTxPrepare (KvTxReq) returns (KvTxReply);
@@ -153,9 +170,10 @@ service kvstore {
     rpc KvRawRead (KvRawReq) returns (KvRawReply);
     rpc KvRawWrite (KvRawReq) returns (KvRawReply);
     rpc KvRawDelete (KvRawReq) returns (KvRawReply);
-    //rpc KvReplicaJoin (ReplicaJoinReq) returns (ReplicaJoinReply);  ---> StartKVstore + raft.
-    //rpc KvReplicaLeave (ReplicaLeaveReq) returns (ReplicaLeaveReply);
-    //rpc KvReplicaUpdateConfig(0)
+    rpc KvReplicaJoin (ReplicaJoinReq) returns (ReplicaJoinReply);
+    rpc KvReplicaLeave (ReplicaLeaveReq) returns (ReplicaLeaveReply);
+    rpc KvReplicaUpdateConfig(ReplicaConfigReq) returns (ReplicaConfigResp);
+    rpc KvShardUpdateConfig(ShardConfigReq) returns (ShardConfigResp);
     //rpc KvAddShard(ShardAddReq) returns (ShardAddReq);
     //rpc KvAddShard(ShardDelReq) returns (ShardDelReq)
     //rpc KvShardMove(ShardMoveReq) returns (ShardMoveReply);

@@ -127,3 +127,55 @@ func (kv *Kvstore) KvRawWrite(_ context.Context, in *pb.KvRawReq) (*pb.KvRawRepl
 func (kv *Kvstore) KvRawDelete(_ context.Context, in *pb.KvRawReq) (*pb.KvRawReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method KvRawDelete not implemented")
 }
+
+//Replica
+
+func (repl *Replica) KvTxPrepare(ctx context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
+	shardId := in.GetTxContext().GetShardId()
+	if kv, ok := repl.Stores[shardId]; ok {
+		return kv.KvTxPrepare(ctx, in)
+	}
+	return &pb.KvTxReply{Status: pb.Status_Failure}, nil
+}
+func (repl *Replica) KvReplicaJoin(_ context.Context, req *pb.ReplicaJoinReq) (*pb.ReplicaJoinReply, error) {
+	repl.NewKVStoreWrapper(req.GetShardId(), 1, req.GetConfig().GetPeers(), true)
+	return &pb.ReplicaJoinReply{Status: pb.Status_Success}, nil
+}
+func (repl *Replica) KvReplicaLeave(_ context.Context, req *pb.ReplicaLeaveReq) (*pb.ReplicaLeaveReply, error) {
+	return &pb.ReplicaLeaveReply{Status: pb.Status_Success}, nil
+}
+func (repl *Replica) KvTxCommit(ctx context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
+	shardId := in.GetTxContext().GetShardId()
+	if kv, ok := repl.Stores[shardId]; ok {
+		return kv.KvTxCommit(ctx, in)
+	}
+	return &pb.KvTxReply{Status: pb.Status_Failure}, nil
+}
+
+func (repl *Replica) KvTxRead(_ context.Context, in *pb.KvTxReadReq) (*pb.KvTxReadReply, error) {
+
+	return nil, status.Errorf(codes.Unimplemented, "method KvTxRead not implemented")
+}
+func (repl *Replica) KvTxRollback(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method KvTxRollback not implemented")
+}
+func (repl *Replica) KvRawRead(_ context.Context, in *pb.KvRawReq) (*pb.KvRawReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method KvRawRead not implemented")
+}
+func (repl *Replica) KvRawWrite(_ context.Context, in *pb.KvRawReq) (*pb.KvRawReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method KvRawWrite not implemented")
+}
+func (repl *Replica) KvRawDelete(_ context.Context, in *pb.KvRawReq) (*pb.KvRawReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method KvRawDelete not implemented")
+}
+
+func (repl *Replica) KvReplicaUpdateConfig(_ context.Context, in *pb.ReplicaConfigReq) (*pb.ReplicaConfigResp, error) {
+	repl.Config = in.GetConfig()
+	repl.StartReplMgrGrpcClient()
+	//ToDo:Start Grpc client to ReplicManager
+	return &pb.ReplicaConfigResp{Status: pb.Status_Success}, nil
+}
+
+func (repl *Replica) KvShardUpdateConfig(_ context.Context, in *pb.ShardConfigReq) (*pb.ShardConfigResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method KvShardUpdateConfig not implemented")
+}

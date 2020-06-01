@@ -21,8 +21,12 @@ import (
 	"log"
 	"sync"
 
+	pb "github.com/acid_kvstore/proto/package/kvstorepb"
+	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	"github.com/acid_kvstore/raft"
 	"go.etcd.io/etcd/etcdserver/api/snap"
+	"go.etcd.io/etcd/raft/raftpb"
+	"google.golang.org/grpc"
 )
 
 // Key exists
@@ -40,6 +44,13 @@ Commit(key string) {
   print(v.val) ===> 20
 }*/
 var txnMap map[uint64]Txn
+
+type Replica struct {
+	Stores     map[uint64]*kvstore //map of kvstores keys by region id/shard id
+	Config     *pb.ReplicaConfig
+	Conn       grpc.ClientConnInterface
+	Replclient replpb.ReplicamgrClient
+}
 
 type value struct {
 	mu  sync.RWMutex
@@ -89,6 +100,29 @@ type raftMsg struct {
 	MsgType string
 	Rawkv   operation
 	Txn     Txn
+}
+
+func (repl *Replica) StartReplMgrGrpcClient() {
+	conn, _ := grpc.Dial(repl.Config.ReplLeader, grpc.WithInsecure(), grpc.WithBlock())
+	client := replpb.NewReplicamgrClient(conn)
+	repl.Replclient = client
+	repl.Conn = conn
+}
+
+func (repl *Replica) NewKVStoreWrapper(gid uint64, id int, cluster []string, join bool) {
+
+	proposeC := make(chan string)
+	//defer close(proposeC)
+	confC := make(chan raftpb.ConfChange)
+	var confChangeC <-chan raftpb.ConfChange
+	confChangeC = confC
+	var kvs *kvstore
+	getSnapshot := func() ([]byte, error) { return kvs.GetSnapshot() }
+
+	commitC, errorC, snapshotterReady, rc := raft.NewRaftNode(id, cluster, join, getSnapshot, proposeC, confChangeC)
+
+	kvs = NewKVStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
+	repl.Stores[gid] = kvs
 }
 
 func NewKVStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, rc *raft.RaftNode) *kvstore {

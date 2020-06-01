@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package replicamgrpb;
+
+option go_package = "package/replicamgrpb";
+
+message Shard {
+    uint64 ShardId = 1;
+    bool   IsLeader = 2;
+    string LeaderKey = 3;
+}
+message Replica {
+    string ReplicaName = 1;
+    map<uint64, Shard> ShardMap = 2;
+}
+
+message ReplicaUpdateReq {
+    Replica ReplicaInfo = 1;
+}
+
+service replicamgr {
+    rpc ReplicaHeartbeat(ReplicaUpdateReq) returns (google.protobuf.Empty);
+}

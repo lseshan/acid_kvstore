@@ -19,13 +19,10 @@ import (
 	"flag"
 	"log"
 	"net"
-	"strings"
 	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
-	"github.com/acid_kvstore/raft"
 	"github.com/acid_kvstore/store/kvstore"
-	"go.etcd.io/etcd/raft/raftpb"
 	"google.golang.org/grpc"
 )
 
@@ -50,29 +47,17 @@ func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
 }
 
 func main() {
-	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
-	id := flag.Int("id", 1, "node ID")
-	kvport := flag.Int("port", 9121, "key-value server port")
-	join := flag.Bool("join", false, "join an existing cluster")
+	httport := flag.Int("httpport", 1024, "http server port")
 	grpcport := flag.String("grpcport", ":9122", "grpc server port")
 	flag.Parse()
-
-	proposeC := make(chan string)
-	defer close(proposeC)
-	confChangeC := make(chan raftpb.ConfChange)
-	defer close(confChangeC)
-
-	// raft provides a commit stream for the proposals from the http api
-	var kvs *kvstore.Kvstore
-	getSnapshot := func() ([]byte, error) { return kvs.GetSnapshot() }
-	commitC, errorC, snapshotterReady, rc := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
-
-	kvs = kvstore.NewKVStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
-
 	ctx := context.Background()
+
 	ctx, cancel := context.WithCancel(ctx)
 
-	go checkLeader(ctx, kvs)
+	var replica kvstore.Replica
+	replica.Stores = make(map[uint64]*kvstore.Kvstore)
+
+	go replica.UpdateLeader(ctx)
 
 	/* RPC handling */
 	go func() {
@@ -81,13 +66,13 @@ func main() {
 			log.Fatalf("failed to listen: %v", err)
 		}
 		s := grpc.NewServer()
-		pb.RegisterKvstoreServer(s, kvs)
+		pb.RegisterKvstoreServer(s, &replica)
 		if err := s.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)
 		}
 	}()
 
-	kvs.ServeHttpKVApi(*kvport, errorC)
+	replica.ServeHttpReplicaApi(*httport)
 	cancel()
 
 	// the key-value http handler will propose updates to raft
