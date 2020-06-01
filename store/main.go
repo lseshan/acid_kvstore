@@ -19,15 +19,12 @@ import (
 	"flag"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
 	"github.com/acid_kvstore/store/kvstore"
 	"google.golang.org/grpc"
-)
-
-const (
-	gRPCport = ":50051"
 )
 
 func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
@@ -47,6 +44,7 @@ func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
 }
 
 func main() {
+	txcluster := flag.String("txcluster", "http://127.0.0.1:9021", "comma separated TxManager cluster peers")
 	httport := flag.Int("httpport", 1024, "http server port")
 	grpcport := flag.String("grpcport", ":9122", "grpc server port")
 	flag.Parse()
@@ -56,11 +54,13 @@ func main() {
 
 	var replica kvstore.Replica
 	replica.Stores = make(map[uint64]*kvstore.Kvstore)
+	replica.ReplicaName = "127.0.0.1" + *grpcport
 
 	go replica.UpdateLeader(ctx)
 
 	/* RPC handling */
 	go func() {
+		log.Printf("grpx port %s", *grpcport)
 		lis, err := net.Listen("tcp", *grpcport)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
@@ -72,6 +72,9 @@ func main() {
 		}
 	}()
 
+	go kvstore.NewKvTxManager(strings.Split(*txcluster, ","))
+
+	//kvs.ServeHttpKVApi(*kvport, errorC)
 	replica.ServeHttpReplicaApi(*httport)
 	cancel()
 

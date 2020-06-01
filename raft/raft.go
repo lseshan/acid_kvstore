@@ -46,11 +46,11 @@ type RaftNode struct {
 	errorC      chan<- error             // errors from raft session
 	statusC     chan<- string            // raft status channel
 
-	id          int      // client ID for raft session
-	peers       []string // raft peer URLs
-	join        bool     // node is joining an existing cluster
-	waldir      string   // path to WAL directory
-	snapdir     string   // path to snapshot directory
+	id          int        // client ID for raft session
+	peers       []PeerInfo // raft peer URLs
+	join        bool       // node is joining an existing cluster
+	waldir      string     // path to WAL directory
+	snapdir     string     // path to snapshot directory
 	getSnapshot func() ([]byte, error)
 	lastIndex   uint64 // index of log at start
 
@@ -66,21 +66,27 @@ type RaftNode struct {
 	snapshotter      *snap.Snapshotter
 	snapshotterReady chan *snap.Snapshotter // signals when snapshotter is ready
 
-	snapCount uint64
-	transport *rafthttp.Transport
-	stopc     chan struct{} // signals proposal channel closed
-	httpstopc chan struct{} // signals http server to shutdown
-	httpdonec chan struct{} // signals http server shutdown complete
+	snapCount    uint64
+	transport    *rafthttp.Transport
+	stopc        chan struct{} // signals proposal channel closed
+	httpstopc    chan struct{} // signals http server to shutdown
+	httpdonec    chan struct{} // signals http server shutdown complete
+	transporturl string
 }
 
 var defaultSnapshotCount uint64 = 10000
+
+type PeerInfo struct {
+	Peer string
+	Id   int
+}
 
 // newRaftNode initiates a raft instance and returns a committed log entry
 // channel and error channel. Proposals for log updates are sent over the
 // provided the proposal channel. All log entries are replayed over the
 // commit channel, followed by a nil message (to indicate the channel is
 // current), then new log entries. To shutdown, close proposeC and read errorC.
-func NewRaftNode(id int, peers []string, join bool, getSnapshot func() ([]byte, error), proposeC <-chan string,
+func NewRaftNode(id int, peers []PeerInfo, join bool, getSnapshot func() ([]byte, error), proposeC <-chan string,
 	confChangeC <-chan raftpb.ConfChange) (<-chan *string, <-chan error, <-chan *snap.Snapshotter, *RaftNode) {
 
 	commitC := make(chan *string)
@@ -104,6 +110,11 @@ func NewRaftNode(id int, peers []string, join bool, getSnapshot func() ([]byte, 
 
 		snapshotterReady: make(chan *snap.Snapshotter, 1),
 		// rest of structure populated after WAL replay
+	}
+	for _, peerinfo := range peers {
+		if peerinfo.Id == id {
+			rc.transporturl = peerinfo.Peer
+		}
 	}
 	go rc.startRaft()
 	return commitC, errorC, rc.snapshotterReady, rc
@@ -272,8 +283,8 @@ func (rc *RaftNode) startRaft() {
 	rc.wal = rc.replayWAL()
 
 	rpeers := make([]raft.Peer, len(rc.peers))
-	for i := range rpeers {
-		rpeers[i] = raft.Peer{ID: uint64(i + 1)}
+	for i, peerinfo := range rc.peers {
+		rpeers[i] = raft.Peer{ID: uint64(peerinfo.Id)}
 	}
 	c := &raft.Config{
 		ID:                        uint64(rc.id),
@@ -288,11 +299,11 @@ func (rc *RaftNode) startRaft() {
 	if oldwal {
 		rc.Node = raft.RestartNode(c)
 	} else {
-		startPeers := rpeers
+		startpeers := rpeers
 		if rc.join {
-			startPeers = nil
+			startpeers = nil
 		}
-		rc.Node = raft.StartNode(c, startPeers)
+		rc.Node = raft.StartNode(c, startpeers)
 	}
 
 	rc.transport = &rafthttp.Transport{
@@ -306,9 +317,9 @@ func (rc *RaftNode) startRaft() {
 	}
 
 	rc.transport.Start()
-	for i := range rc.peers {
-		if i+1 != rc.id {
-			rc.transport.AddPeer(types.ID(i+1), []string{rc.peers[i]})
+	for _, peerinfo := range rc.peers {
+		if peerinfo.Id != rc.id {
+			rc.transport.AddPeer(types.ID(peerinfo.Id), []string{peerinfo.Peer})
 		}
 	}
 
@@ -457,10 +468,12 @@ func (rc *RaftNode) serveChannels() {
 }
 
 func (rc *RaftNode) serveRaft() {
-	url, err := url.Parse(rc.peers[rc.id-1])
+	url, err := url.Parse(rc.transporturl)
 	if err != nil {
 		log.Fatalf("raftexample: Failed parsing URL (%v)", err)
 	}
+
+	log.Printf("url.Host %v", url.Host)
 
 	ln, err := httpapi.NewStoppableListener(url.Host, rc.httpstopc)
 	if err != nil {

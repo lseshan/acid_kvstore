@@ -16,6 +16,7 @@ package httpapi
 
 import (
 	"errors"
+	"log"
 	"net"
 	"time"
 )
@@ -33,6 +34,7 @@ func NewStoppableListener(addr string, stopc <-chan struct{}) (*stoppableListene
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Created a new listener")
 	return &stoppableListener{ln.(*net.TCPListener), stopc}, nil
 }
 

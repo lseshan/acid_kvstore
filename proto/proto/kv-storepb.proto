@@ -78,15 +78,16 @@ message KeyRange {
 message ReplicaConfig {
     string TxLeader = 1;
     string ReplLeader = 2;
+    uint32 ReplicaId = 3;
 }
 
 message ShardConfig {
     repeated string   Peers = 1;
     string            TxLeader = 2; 
-    repeated KeyRange Key = 3; 
+    KeyRange Key = 3; 
 }
 message ReplicaJoinReq {
-    uint64        ShardId = 1;
+    int32         ShardId = 1;
     ShardConfig   Config = 2;
 }
 
