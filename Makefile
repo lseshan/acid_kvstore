@@ -23,3 +23,8 @@ proto:
 	(proto/generate_go.sh)
 	GO111MODULE=on go build ./proto/package/...
 
+tx:
+	$(GO_BUILD) -o tx/tx tx/main.go
+
+store:
+	$(GO_BUILD) -o store/store store/main.go

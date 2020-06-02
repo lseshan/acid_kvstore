@@ -1,0 +1,50 @@
+@startuml rj
+actor client 
+collections TM
+collections kvsha1
+collections kvsha2
+collections kvsha3
+scale 3
+'TM is TM Leader'
+TM -> TM : Recovery: RAFT, pending status to Abort
+TM -> TM : Recovery: Send Abort for pended Tx
+TM -> TM : Recovery: RAFT, remove from pended,\n update to ABORT
+
+client -> TM : Begin 
+client -> TM : TxId, PUT "Key" "Val"
+client -> TM : TxId, PUT "Key" "Val"
+client -> TM : PUT "Key" "Val"
+client -> TM : Commit
+
+TM -->TM : RAFT, create Record
+TM -->TM : RAFT, TxRecord PENDING
+TM -->TM : RAFT, Add TxID to Pending list 
+'TM -->kvsha1 : RAFT, TxRecord PENDING 
+'TM -->kvsha3 : RAFT, TxRecord PENDING
+
+TM --> kvsha1 : Batched request(Prepare)
+TM --> kvsha3 : Batched request(Prepare)
+
+kvsha1 --> TM : Batched request(PrepareDone/FAIL)
+kvsha3 --> TM : Batched request(PrepareDone/FAIL)
+
+TM -->TM : RAFT, state change Commit/Abort
+TM -->TM : RAFT, remove from the Pending list
+'TM -->kvsha1 : RAFRT state change Commit/Abort
+'TM --> kvsha3 : RAFT state change commit/Abort
+
+
+TM --> kvsha1 : Batched request(Commit)
+TM --> kvsha3 : Batched request(Commit)
+
+TM -->TM : RAFT,MARK as end??
+'TM -->kvsha1 : CAN delete the TR
+'TM --> kvsha3 : CAN delete the TR
+
+kvsha1 --> TM : Batched request(CommitDone)
+kvsha3 --> TM : Batched request(CommitDone)
+
+TM -> client : Tx Success
+@enduml
+
+T2-> Lok ActivityBackgroundColor

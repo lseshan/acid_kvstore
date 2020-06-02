@@ -37,6 +37,11 @@ const (
 	FAILURE = false
 )
 
+const (
+	SUCCESS = true
+	FAILURE = false
+)
+
 // Key exists
 /*Key 'A': { val : 10
 	       writeIntent: 20
