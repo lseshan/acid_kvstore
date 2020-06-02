@@ -22,16 +22,25 @@ type PostReq struct {
 
 func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 
+	// XXX: find a way to get the leader
+	/*	if ts.RaftNode.IsLeader() {
+			log.Printf("Sorry, I am not a leader")
+			log.Fatalf("Leader is: XXX")
+			return
+		}
+	*/
 	//Creates the Tr with Begin Tx and sends it part of the cookie ?
-	tr := NewTxRecord(ts.KvClient)
-	ts.TxRecordStore[tr.UUID] = tr
+	tr := NewTxRecord()
+	//ts.TxRecordStore[tr.TxId] = tr
+	// XXX: ? no need to update with raft as if we fail here dont bother
+	ts.TxPending[tr.TxId] = tr
 	var res TxJson
-	res.TxId = strconv.FormatUint(tr.UUID, 10)
+	res.TxId = strconv.FormatUint(tr.TxId, 10)
 	json.NewEncoder(w).Encode(res)
 
 	//	ts.ProposeTxRecord(*tr)
 
-	log.Printf("Begin: Tx is %d", tr.UUID)
+	log.Printf("Begin: Tx is %d", tr.TxId)
 
 }
 
@@ -45,14 +54,13 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("TxId:%d ", txid)
-	tr, ok := ts.TxRecordStore[txid]
+	tr, ok := ts.TxPending[txid]
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 		return
 	}
-
-	ret := tr.TxUpdateTxRecord("New")
-	log.Printf("Update Record res:  %v", ret)
+	ret := tr.TxUpdateTxPending("ADD")
+	log.Printf("TxHttp: Update Record res:  %v", ret)
 
 	res := tr.TxSendBatchRequest()
 
@@ -80,7 +88,7 @@ func (ts *TxStore) handleTxGet(w http.ResponseWriter, r *http.Request) {
 
 	key := vars["key"]
 	tr.TxAddCommand(key, "None", "GET")
-	json.NewEncoder(w).Encode(tr.UUID)
+	json.NewEncoder(w).Encode(tr.TxId)
 
 	log.Printf("Tx GET is %v", key)
 }
@@ -125,7 +133,7 @@ func (ts *TxStore) handleTxDelete(w http.ResponseWriter, r *http.Request) {
 
 func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	var tx PostReq
-	log.Printf("I am here")
+	log.Printf("Handle TxCommand")
 	body, _ := ioutil.ReadAll(r.Body)
 
 	log.Printf("%s", body)
@@ -142,8 +150,8 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	key := m["key"][0]
 	val := m["val"][0]
 	op := m["op"][0]
-	log.Printf("TxId: %d, key: %s, key: %s, op:%s", txid, key, val, op)
-	tr, ok := ts.TxRecordStore[txid]
+	log.Printf("http: TxId: %d, key: %s, key: %s, op:%s", txid, key, val, op)
+	tr, ok := ts.TxPending[txid]
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", tx.txid)
 	}

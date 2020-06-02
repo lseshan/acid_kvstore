@@ -16,13 +16,21 @@ package kvstore
 
 import (
 	"bytes"
+	"context"
 	"encoding/gob"
 	"encoding/json"
 	"log"
 	"sync"
+	"time"
 
+	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
 	"github.com/acid_kvstore/raft"
 	"go.etcd.io/etcd/etcdserver/api/snap"
+)
+
+const (
+	SUCCESS = true
+	FAILURE = false
 )
 
 // Key exists
@@ -47,7 +55,7 @@ type value struct {
 	//txnPhase     string
 	//val_shdw     string //Empty
 	writeIntent string //Write intent per key
-	txnId       int
+	txnId       uint64
 }
 
 //Kvstore exported for use by other packages
@@ -112,21 +120,62 @@ func (s *kvstore) Lock(txn Txn) {
 
 }
 
+func (s *kvstore) KvResolveTx(v *value) string {
+	cli := TxManager.KvTxGetClient()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	txc := &pbt.TxContext{TxId: v.txnId}
+	res, err := cli.TxGetRecordState(ctx, &pbt.TxReq{TxContext: txc})
+	if err != nil {
+		log.Fatalf("TxPrepare: %v", err)
+	}
+
+	v.mu.Lock()
+	defer v.mu.Unlock()
+
+	switch res.Stage {
+	case "PENDING":
+		return "ABORT"
+	case "ABORT":
+		v.writeIntent = ""
+		v.txnId = 0
+	case "COMMIT":
+		v.val = v.writeIntent
+		v.writeIntent = ""
+		v.txnId = 0
+	}
+	return "STAGE"
+}
+
 func (s *kvstore) Prep(txn Txn) {
 	log.Printf("Got Prep")
 
+	var res int
+	res = 1
 	//Check for locks
 	s.txnPhase = "Prep"
 	s.writeIntent = txn.Oper
+
 	for _, oper := range txn.Oper {
 		//Should we take lock
-		key := s.KvStore[oper.Key]
-		key.writeIntent = oper.Val
-		s.KvStore[oper.Key] = key
+		v := s.KvStore[oper.Key]
+		ok := "STAGE"
+		if len(v.writeIntent) > 0 {
+			ok = s.KvResolveTx(&v)
+		}
+		if ok == "ABORT" {
+			res = 0
+			break
+		}
+		res = 1
+		v.writeIntent = oper.Val
+		s.KvStore[oper.Key] = v
 	}
+
 	log.Printf("Sending commit response")
 	if stxn, found := txnMap[txn.TxId]; found {
-		stxn.RespCh <- 1
+		stxn.RespCh <- res
 	}
 	delete(txnMap, txn.TxId)
 }
@@ -232,7 +281,7 @@ func (s *kvstore) readCommits(commitC <-chan *string, errorC <-chan error) {
 		if err := dec.Decode(&msg); err != nil {
 			log.Fatalf("kvstore: could not decode message (%v)", err)
 		}
-		s.mu.Lock()
+		//	s.mu.Lock()
 		switch msg.MsgType {
 		case "txn":
 			log.Printf("Got txn from raft")
@@ -254,7 +303,7 @@ func (s *kvstore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				s.Put(msg.Rawkv)
 			}
 		}
-		s.mu.Unlock()
+		//	s.mu.Unlock()
 	}
 	if err, ok := <-errorC; ok {
 		log.Fatal(err)

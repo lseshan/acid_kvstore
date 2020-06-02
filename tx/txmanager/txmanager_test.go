@@ -7,16 +7,9 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
-	"strings"
 	"testing"
-	"time"
 
-	pb "github.com/acid_kvstore/proto/package/kvstorepb"
-	"github.com/acid_kvstore/raft"
 	"github.com/acid_kvstore/tx/txmanager"
-	"go.etcd.io/etcd/raft/raftpb"
-	"google.golang.org/grpc"
 )
 
 /*
@@ -43,7 +36,7 @@ func TestTxSendBatchRequest(t *testing.T) {
 
 func TestHttpRequest(t *testing.T) {
 
-	ul := "http://127.0.0.1:50055/api/tx/"
+	ul := "http://127.0.0.1:23480/api/tx/"
 	resp, err := http.Get(ul)
 	if err != nil {
 		log.Fatalf("Error Occurred")
@@ -83,6 +76,7 @@ const (
 	defaultName = "world"
 )
 
+/*
 func TestMain(m *testing.M) {
 	// call flag parser if needed
 	kvport := 50055
@@ -108,11 +102,16 @@ func TestMain(m *testing.M) {
 	var ts *txmanager.TxStore
 	getSnapshot := func() ([]byte, error) { return ts.GetSnapshot() }
 	commitC, errorC, snapshotterReady, raft := raft.NewRaftNode(id, strings.Split(cluster, ","), join, getSnapshot, proposeC, confChangeC)
-	cli := &txmanager.KvClient{c}
+	compl := make(chan int)
+	go txmanager.NewTxKvManager(strings.Split(*kvport, ","), compl)
+	log.Printf("Waiting to get kvport client")
+	<-compl
+
 	//	tr = txmanager.NewTxRecord(cli)
-	ts = txmanager.NewTxStore(cli, <-snapshotterReady, proposeC, commitC, errorC, raft)
+	ts = txmanager.NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, raft)
 	go ts.ServeHttpTxApi(kvport, errorC)
 	time.Sleep(2 * time.Second)
 	os.Exit(m.Run())
 
 }
+*/

@@ -61,6 +61,7 @@ func (kv *Kvstore) KvTxPrepare(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply
 	val := <-respCh
 	log.Printf("Val %v", val)
 	resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList()}
+	// XXX: val is 1 translated to sucess, might need to switch for uniformity
 	if val == 1 {
 		resp.Status = pb.Status_Success
 	} else {
@@ -110,14 +111,50 @@ func (kv *Kvstore) KvTxCommit(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply,
 	return &resp, nil
 }
 
+func (kv *Kvstore) KvTxRollback(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
+	var txn Txn
+	log.Printf("KvTxRollback")
+	txn.TxId = in.GetTxContext().GetTxId()
+	txn.Cmd = "Abort"
+	cl := in.GetCommandList()
+	var oper operation
+	for _, cm := range cl {
+		oper.Optype = cm.Op
+		oper.Key = cm.Key
+		oper.Val = cm.Val
+		txn.Oper = append(txn.Oper, oper)
+		log.Printf("Operation: %+v", oper)
+	}
+
+	/* var oper operation
+	oper.Optype = in.GetCommand().GetOp()
+	oper.Key = strconv.FormatUint(in.GetCommand().GetKey(), 10)
+	oper.Val = strconv.FormatUint(in.GetCommand().GetVal(), 10)
+	txn.Oper = append(txn.Oper, oper)
+	*/
+	respCh := make(chan int)
+	defer close(respCh)
+	txn.RespCh = respCh
+	kv.ProposeTxn(txn)
+	log.Printf("Done Abort txn")
+	val := <-respCh
+	log.Printf("Val %v", val)
+	resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList()}
+	if val == 1 {
+		resp.Status = pb.Status_Success
+	} else {
+		resp.Status = pb.Status_Failure
+	}
+	log.Printf("Done success")
+
+	return &resp, nil
+}
+
 func (kv *Kvstore) KvTxRead(_ context.Context, in *pb.KvTxReadReq) (*pb.KvTxReadReply, error) {
 
 	return nil, status.Errorf(codes.Unimplemented, "method KvTxRead not implemented")
 }
 
-func (kv *Kvstore) KvTxRollback(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method KvTxRollback not implemented")
-}
 func (kv *Kvstore) KvRawRead(_ context.Context, in *pb.KvRawReq) (*pb.KvRawReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method KvRawRead not implemented")
 }

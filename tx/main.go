@@ -4,42 +4,63 @@ import (
 	"context"
 	"flag"
 	"log"
-	"time"
+	"net"
+	"strings"
 
-	pb "github.com/acid_kvstore/proto/package/kvstorepb"
+	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
+	"github.com/acid_kvstore/raft"
+	"github.com/acid_kvstore/tx/txmanager"
+	"go.etcd.io/etcd/raft/raftpb"
 	"google.golang.org/grpc"
 )
 
-const (
-	address     = "localhost:50051"
-	defaultName = "world"
-)
-
 func main() {
+
 	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
 	id := flag.Int("id", 1, "node ID")
-	kvport := flag.Int("port", 9121, "key-value server port")
+	cliport := flag.Int("cliport", 9121, "key-value server port")
 	join := flag.Bool("join", false, "join an existing cluster")
+	kvcluster := flag.String("kvcluster", "http://127.0.0.1:9021", "comma separated KvServer cluster peers")
+	grpcport := flag.String("grpcport", ":9122", "grpc server port")
 	flag.Parse()
 
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewKvstoreClient(conn)
+	proposeC := make(chan string)
+	defer close(proposeC)
+	confChangeC := make(chan raftpb.ConfChange)
+	defer close(confChangeC)
 
-	// Contact the server and print out its response.
-	/* name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
-	*/
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
+	//start the raft service
+	var ts *txmanager.TxStore
+	getSnapshot := func() ([]byte, error) { return ts.GetSnapshot() }
+	//	tr = txmanager.NewTxRecord(cli)
+	commitC, errorC, snapshotterReady, raft := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
+	ts = txmanager.NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, raft)
 
-	ts := NewTxStore(ctx, c, snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error)
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
 
-	ts.ServeHttpTxApi(*kvport, errorC)
+	// XXX: TxManager Server
+	go func() {
+		lis, err := net.Listen("tcp", *grpcport)
+		if err != nil {
+			log.Fatalf("failed to listen: %v", err)
+		}
+		s := grpc.NewServer()
+		pbt.RegisterTxmanagerServer(s, ts)
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+	log.Printf("Starting setting up KvCLient")
+	compl := make(chan int)
+	go txmanager.NewTxKvManager(strings.Split(*kvcluster, ","), compl)
+	log.Printf("Waiting to get kvport client")
+	<-compl
+	//XXX: Server HTTP api
+	ts.ServeHttpTxApi(*cliport, errorC)
+	//	go checkLeader(ctx, kvs)
+
+	/* start the grpc server */
+
+	cancel()
 }

@@ -1,0 +1,5 @@
+# Use goreman to run `go get github.com/mattn/goreman`
+raft1:./store --id 1 --cluster http://127.0.0.1:13479,http://127.0.0.1:14479,http://127.0.0.1:15479  --txcluster http://127.0.0.1:20051,http://127.0.0.1:20052,http://127.0.0.1:20053 --port 13480 --grpcport :50051
+raft2:./store --id 2 --cluster http://127.0.0.1:13479,http://127.0.0.1:14479,http://127.0.0.1:15479  --txcluster http://127.0.0.1:20051,http://127.0.0.1:20052,http://127.0.0.1:20053 --port 14480 --grpcport :50052
+raft3:./store --id 3 --cluster http://127.0.0.1:13479,http://127.0.0.1:14479,http://127.0.0.1:15479  --txcluster http://127.0.0.1:20051,http://127.0.0.1:20052,http://127.0.0.1:20053 --port 15480 --grpcport :50053
+

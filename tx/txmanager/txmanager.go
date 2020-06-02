@@ -10,7 +10,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	pb "github.com/acid_kvstore/proto/package/kvstorepb"
+	pbk "github.com/acid_kvstore/proto/package/kvstorepb"
 	"github.com/acid_kvstore/raft"
 	"go.etcd.io/etcd/etcdserver/api/snap"
 )
@@ -27,20 +27,20 @@ import (
 */
 
 /*
-Transactions are executed in two phases:
+TransActions are executed in two phases:
 https://github.com/cockroachdb/cockroach/blob/master/docs/design.md
-Start the transaction by selecting a range which is likely to be heavily involved in the transaction and writing a new transaction record to a reserved area of that range with state "PENDING". In parallel write an "intent" Value for each datum being written as part of the transaction. These are normal MVCC Values,
-with the addition of a special flag (i.e. “intent”) indicating that the Value may be committed after the transaction itself commits. In addition,
-the transaction id (unique and chosen at txn start time by Client) is stored with intent Values.
-The txn id is used to refer to the transaction record when there are conflicts and to make tie-breaking decisions on ordering between identical timestamps.
+Start the transAction by selecting a range which is likely to be heavily involved in the transAction and writing a new transAction record to a reserved area of that range with state "PENDING". In parallel write an "intent" Value for each datum being written as part of the transAction. These are normal MVCC Values,
+with the addition of a special flag (i.e. “intent”) indicating that the Value may be committed after the transAction itself commits. In addition,
+the transAction id (unique and chosen at txn start time by Client) is stored with intent Values.
+The txn id is used to refer to the transAction record when there are conflicts and to make tie-breaking decisions on ordering between identical timestamps.
 Each node returns the timestamp used for the write (which is the original candidate timestamp in the absence of read/write conflicts);
 the Client selects the maximum from amongst all write timestamps as the final commit timestamp.
 
-Commit the transaction by updating its transaction record. The Value of the commit entry contains the candidate timestamp (increased as necessary to accommodate any latest read timestamps). Note that the transaction is considered fully committed at this point and control may be returned to the Client.
+Commit the transAction by updating its transAction record. The Value of the commit entry contains the candidate timestamp (increased as necessary to accommodate any latest read timestamps). Note that the transAction is considered fully committed at this point and control may be returned to the Client.
 
-In the case of an SI transaction, a commit timestamp which was increased to accommodate concurrent readers is perfectly acceptable and the commit may continue. For SSI transactions, however, a gap between candidate and commit timestamps necessitates transaction restart (note: restart is different than abort--see below).
+In the case of an SI transAction, a commit timestamp which was increased to accommodate concurrent readers is perfectly acceptable and the commit may continue. For SSI transActions, however, a gap between candidate and commit timestamps necessitates transAction restart (note: restart is different than abort--see below).
 
-After the transaction is committed, all written intents are upgraded in parallel by removing the “intent” flag. The transaction is considered fully committed before this step and does not wait for it to return control to the transac
+After the transAction is committed, all written intents are upgraded in parallel by removing the “intent” flag. The transAction is considered fully committed before this step and does not wait for it to return control to the transac
 
 */
 
@@ -53,7 +53,7 @@ After the transaction is committed, all written intents are upgraded in parallel
 
 /* implement TxRecord Operations */
 /*
-	Generate UUID
+	Generate TxId
 	Create WriteIntent
 	Dispatch writeIntent on prOpose channel
 
@@ -78,15 +78,16 @@ func newTxStore() map[uint64]TxStore {
 
 var txStore *TxStore
 
+//XXX: After implement TxPending, mantain only state of Commited/Abort in the list
 type TxStore struct {
 	TxRecordStore map[uint64]*TxRecord
-	KvClient      *KvClient
 	RaftNode      *raft.RaftNode
-
+	TxPending     map[uint64]*TxRecord
 	//sddhards
 	proposeC    chan<- string // channel for proposing updates
 	snapshotter *snap.Snapshotter
 	txnMap      map[uint64]Txn
+	lastTxnId   uint64
 	mu          sync.RWMutex
 }
 
@@ -95,31 +96,29 @@ type Txn struct {
 	RespCh   chan<- int
 }
 
+type raftType struct {
+	RecordType string
+	Action     string // : New, UpdateCommands, UpdateStatui
+}
+
 type raftMsg struct {
 	Tx     Txn
-	OpType string // Status : New, UpdateCommands, UpdateStatus
+	OpType raftType
 }
 
 const (
-	getUUID = iota + 100
+	getTxId = iota + 100
 )
 
-//XXX: We can maintain map of this if we are doing shards??
-type KvClient struct {
-	Cli pb.KvstoreClient
-}
-
-var kvStorecli *KvClient
-
-//TxManagerStore[UUID] = { TR, writeIntent }
+//TxManagerStore[TxId] = { TR, writeIntent }
 type TxRecord struct {
 	mu sync.RWMutex // get the lock variable
 	//prOposeC    chan<- string // channel for prOposing writeIntent
-	UUID    uint64
+	TxId    uint64
 	TxPhase string // PENDING, ABORTED, COMMITED, if PENDING, ABORTED-> switch is OFF else ON
 	//w       int    // switch ON/OFF
 	//Read to take care off
-	CommandList []*pb.Command
+	CommandList []*pbk.Command
 	// Logging the tx, if its crashed ?
 	//	txStore	map[int]TxStore
 	//KvClient     *KvClient
@@ -128,21 +127,22 @@ type TxRecord struct {
 	commitCount  uint64
 	//	Wg           sync.WaitGroup
 	/*
-		"The record is co-located (i.e. on the same nodes in the distributed system) with the Key in the transaction record."
+		"The record is co-located (i.e. on the same nodes in the distributed system) with the Key in the transAction record."
 	*/
 
 }
 
-func NewTxStore(cl *KvClient, snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
+func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
 	m := make(map[uint64]*TxRecord)
+	q := make(map[uint64]*TxRecord)
 	n := make(map[uint64]Txn)
 	ts := &TxStore{
 		TxRecordStore: m,
-		KvClient:      cl,
 		proposeC:      proposeC,
 		snapshotter:   snapshotter,
 		txnMap:        n,
 		RaftNode:      r,
+		TxPending:     q,
 	}
 	// replay log into key-value map
 	ts.readCommits(commitC, errorC)
@@ -152,15 +152,16 @@ func NewTxStore(cl *KvClient, snapshotter *snap.Snapshotter, proposeC chan<- str
 	return ts
 }
 
+//XXX: Is this right snapshot
 func (ts *TxStore) GetSnapshot() ([]byte, error) {
 	ts.mu.RLock()
 	defer ts.mu.RUnlock()
-	return json.Marshal(ts.TxRecordStore)
+	return json.Marshal(ts)
 }
 
-func (ts *TxStore) ProposeTxRecord(tx Txn, op string) {
+func (ts *TxStore) ProposeTxRecord(tx Txn, t raftType) {
 	var buf bytes.Buffer
-	if err := gob.NewEncoder(&buf).Encode(raftMsg{Tx: tx, OpType: op}); err != nil {
+	if err := gob.NewEncoder(&buf).Encode(raftMsg{Tx: tx, OpType: t}); err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("propose txn")
@@ -173,7 +174,6 @@ func (ts *TxStore) ProposeTxRecord(tx Txn, op string) {
 
 func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 
-	log.Printf("I am in Read Commit")
 	for data := range commitC {
 		if data == nil {
 			// done replaying log; new data incoming
@@ -192,13 +192,14 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			continue
 		}
 
+		log.Printf("I am here")
 		var msg raftMsg
 		dec := gob.NewDecoder(bytes.NewBufferString(*data))
-		log.Printf("gob result: %v", dec)
+		log.Printf("gob result: %+v", dec)
 		if err := dec.Decode(&msg); err != nil {
 			log.Fatalf("Tx: could not decode message (%v)", err)
 		}
-		log.Printf("Update Tx entry: %v", msg.OpType)
+		log.Printf("Update Tx entry: %+v", msg.OpType)
 		//XXX: Not sure  we need this
 		//	ts.mu.Lock()
 		//	defer ts.mu.Unlock()
@@ -206,42 +207,78 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 		tr := tx.TxRecord
 
 		// XXX: add failure checks and log message
-		switch msg.OpType {
-		case "New":
-			// XXX: This would be redundant for leader , find a way to no-op for leader
-			ts.TxRecordStore[tr.UUID] = tr
-
-		//	log.Printf("Created new Tx entry %+v", tr)
-		//Update the state of TR
-		case "COMMITED":
-			fallthrough
-		case "ABORT":
-			if r, ok := ts.TxRecordStore[tr.UUID]; ok == false {
-				//XXX: go to update the error channel
-				log.Fatalf("Error finding the record store")
-				r.TxPhase = "ABORT"
-			} else {
-				r.TxPhase = msg.OpType
+		switch msg.OpType.RecordType {
+		case "TxPending":
+			switch msg.OpType.Action {
+			case "ADD":
+				if _, ok := ts.TxPending[tr.TxId]; ok == true {
+					//XXX: go to update the error channel
+					//log.Fatalf("Error: ADD Houston we got a problem, Entry:%+v,", r)
+					log.Printf("Warning: This entry is created while BEGIN")
+					//	break
+				}
+				ts.TxPending[tr.TxId] = tr
+				log.Printf("Added TxId to TxPending %v", tr.TxId)
+			//	log.Printf("Created new Tx entry %+v", tr)
+			//Update the state of TR
+			case "DEL":
+				if _, ok := ts.TxPending[tr.TxId]; ok == false {
+					//XXX: go to update the error channel
+					log.Fatalf("Error: DEL Houston we got a problem, TxId:%v", tr.TxId)
+					break
+				}
+				delete(ts.TxPending, tr.TxId)
+				log.Printf("Deleting the ")
 			}
-			log.Printf("Update Tx entry: %v", msg.OpType)
+		// XXX: Might keep track of the state than tr
+		case "TxRecordStore":
+			switch msg.OpType.Action {
+			case "NEW":
+				fallthrough
+			case "COMMIT":
+				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
+					//XXX: Later changed to warning
+					log.Fatalf("Warning TxStore/Commit entry is already present e:%+v,", r)
+					break
+				}
+
+				// XXX: This would be redundant for leader , find a way to no-op for leader
+				ts.TxRecordStore[tr.TxId] = tr
+				tr.TxPhase = "COMMIT"
+				log.Printf("TxID:%v COMITED", tr.TxId)
+
+			//	log.Printf("Created new Tx entry %+v", tr)
+			//Update the state of TR
+			case "ABORT":
+				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
+					//XXX: Later changed to warning
+					log.Fatalf("Warning TxStore/Commit entry is already present e:%+v,", r)
+					break
+				}
+
+				ts.TxRecordStore[tr.TxId] = tr
+				tr.TxPhase = "ABORT"
+				log.Printf("TxID:%v ABORTED", tr.TxId)
+			}
 		}
-		if ltxn, ok := ts.txnMap[tr.UUID]; ok {
+
+		if ltxn, ok := ts.txnMap[tr.TxId]; ok {
 			ltxn.RespCh <- 1
 		}
-		delete(ts.txnMap, tr.UUID)
-		log.Printf("Confirmation should have got")
+		delete(ts.txnMap, tr.TxId)
+		log.Printf("Raft update done: %+v", msg)
+
 	}
 }
 
-func NewTxRecord(cli *KvClient) *TxRecord {
+func NewTxRecord() *TxRecord {
 	tr := &TxRecord{
-		UUID:    getUUID,
+		TxId:    getTxId,
 		TxPhase: "PENDING",
 		//KvClient: cli,
 		//	Wg:          sync.WaitGroup{},
-		CommandList: make([]*pb.Command, 0),
+		CommandList: make([]*pbk.Command, 0),
 	}
-	kvStorecli = cli
 	return tr
 
 }
@@ -257,7 +294,7 @@ func (tr *TxRecord) TxAddCommand(Key, Val, Op string) bool {
 		return false
 	}
 
-	rq := &pb.Command{
+	rq := &pbk.Command{
 		Idx: tr.totalCount,
 		Key: Key,
 		Val: Val,
@@ -272,6 +309,7 @@ func (tr *TxRecord) TxAddCommand(Key, Val, Op string) bool {
 	return true
 }
 
+//COMMIT, ABORT
 func (tr *TxRecord) TxUpdateTxRecord(s string) int {
 
 	var tx Txn
@@ -281,9 +319,29 @@ func (tr *TxRecord) TxUpdateTxRecord(s string) int {
 
 	tx.RespCh = respCh
 	tx.TxRecord = tr
-	txStore.txnMap[tr.UUID] = tx
-	txStore.ProposeTxRecord(tx, s)
-	log.Printf("Done propose of TR, status:%s", s)
+	txStore.txnMap[tr.TxId] = tx
+	r := raftType{RecordType: "TxRecordStore", Action: s}
+	txStore.ProposeTxRecord(tx, r)
+	log.Printf("Done propose of TxStatus, status:%s", s)
+	val := <-respCh
+	log.Printf("Val %v", val)
+	return val
+}
+
+// ADD, DEL
+func (tr *TxRecord) TxUpdateTxPending(s string) int {
+
+	var tx Txn
+
+	respCh := make(chan int)
+	defer close(respCh)
+
+	tx.RespCh = respCh
+	tx.TxRecord = tr
+	txStore.txnMap[tr.TxId] = tx
+	r := raftType{RecordType: "TxPending", Action: s}
+	txStore.ProposeTxRecord(tx, r)
+	log.Printf("Done propose of TRPending, status:%s", s)
 	val := <-respCh
 	log.Printf("Val %v", val)
 	return val
@@ -305,44 +363,54 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	if tr.TxPrepare(rq) == false {
 		//dbg failure of the writeIntent
 		//invoke the rollback
+		res := tr.TxUpdateTxRecord("ABORT")
+		log.Printf("RAFT: TxId Abort updated")
+		res = tr.TxUpdateTxPending("DEL")
+		log.Printf("RAFT: TxId Deleted pending request")
+		// XXX: start offloading rollback
 		if ok := tr.TxRollaback(rq); ok == true {
 			log.Printf("Rollback failed: %v", ok)
 		}
-		res := tr.TxUpdateTxRecord("ABORT")
+
 		log.Printf("Update record: %d", res)
 		//tr.TxPhase = "ABORT"
 		return false
 	}
 
-	if tr.TxCommit(rq) == false {
+	res := tr.TxUpdateTxRecord("COMMIT")
+	res = tr.TxUpdateTxPending("DEL")
+	// XXX: Offload it to worker thread
+	// http://nesv.github.io/golang/2014/02/25/worker-queues-in-go.html
+	if r := tr.TxCommit(rq); r == false {
 		//retry the operation
 		// gross error
 		//	tr.TxPhase = "ABORT"
-		if ok := tr.TxRollaback(rq); ok == true {
-			log.Printf("Rollback failed: %v", ok)
-		}
+		log.Fatalf("Shouldnt be happening failure in COMMIT")
+		/*	if ok := tr.TxRollaback(rq); ok == true {
+				log.Printf("Rollback failed: %v", ok)
+			}
 
-		res := tr.TxUpdateTxRecord("ABORT")
-		log.Printf("Update record: %d", res)
+			res := tr.TxUpdateTxRecord("ABORT")
+			log.Printf("Update record: %d", res)
+		*/
 		return false
 
 	}
 
 	log.Printf(" We are good")
 
-	res := tr.TxUpdateTxRecord("COMMITED")
 	log.Printf("Update record: %d", res)
 	//tr.TxPhase = "COMMITED"
 	return true
 }
 
-func newSendPacket(tr *TxRecord) *pb.KvTxReq {
-	cx := new(pb.TxContext)
+func newSendPacket(tr *TxRecord) *pbk.KvTxReq {
+	cx := new(pbk.TxContext)
 
-	in := new(pb.KvTxReq)
+	in := new(pbk.KvTxReq)
 	in.CommandList = tr.CommandList
 	in.TxContext = cx
-	in.TxContext.TxId = tr.UUID
+	in.TxContext.TxId = tr.TxId
 	return in
 
 }
@@ -351,13 +419,13 @@ func newSendPacket(tr *TxRecord) *pb.KvTxReq {
 //staging the change ->kvstore should have logic to abort it if it happens
 //sends the prepare message to kvstore raft leader(gRPC/goRPC) and waits for it to finish
 //XXX: later we can split depending on shards here
-func (tr *TxRecord) TxPrepare(rq *pb.KvTxReq) bool {
+func (tr *TxRecord) TxPrepare(rq *pbk.KvTxReq) bool {
 	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
 	//c , err := getClient()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	rp, err := kvStorecli.Cli.KvTxPrepare(ctx, rq)
+	rp, err := KvClient.Cli.KvTxPrepare(ctx, rq)
 	//XXX: analyze the error later
 	if err != nil {
 		log.Fatalf("TxPrepare: %v", err)
@@ -370,13 +438,13 @@ func (tr *TxRecord) TxPrepare(rq *pb.KvTxReq) bool {
 	return false
 }
 
-func (tr *TxRecord) TxCommit(rq *pb.KvTxReq) bool {
+func (tr *TxRecord) TxCommit(rq *pbk.KvTxReq) bool {
 	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
 	//c , err := getClient()
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
-	rp, err := kvStorecli.Cli.KvTxCommit(ctx, rq)
+	rp, err := KvClient.Cli.KvTxCommit(ctx, rq)
 	if err != nil {
 		log.Fatalf("TxCommit: %v", err)
 	}
@@ -391,12 +459,12 @@ func (tr *TxRecord) TxCommit(rq *pb.KvTxReq) bool {
 }
 
 //Rollback sync: batch the request
-func (tr *TxRecord) TxRollaback(rq *pb.KvTxReq) bool {
+func (tr *TxRecord) TxRollaback(rq *pbk.KvTxReq) bool {
 	//canceliing the request
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	// do a batch processing
-	rp, err := kvStorecli.Cli.KvTxRollback(ctx, rq)
+	rp, err := KvClient.Cli.KvTxRollback(ctx, rq)
 	//XXX: analyze the error later
 	if err != nil {
 		log.Fatalf("TxRollback: %v", err)
@@ -414,7 +482,7 @@ func (tr *TxRecord) TxRollaback(rq *pb.KvTxReq) bool {
 
 // Reading a Value -> ask from leaseholder ?
 
-//GenerateUUID ->relies on iota
+//GenerateTxId ->relies on iota
 
 /*
 	Verify if you can send the Key with writeIntent if its alright current node since its replicated node
@@ -427,7 +495,7 @@ func (tr *TxRecord) TxRollaback(rq *pb.KvTxReq) bool {
 
 //TimeOut for abort
 //Time
-//abort the Tx with UUID
+//abort the Tx with TxId
 
 // goRPC:HTTP:$PORT each leader
 //Leader / Service Discon

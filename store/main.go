@@ -29,10 +29,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	gRPCport = ":50051"
-)
-
 func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
 	log.Printf("check Leaderstarted")
 	for {
@@ -54,6 +50,7 @@ func main() {
 	id := flag.Int("id", 1, "node ID")
 	kvport := flag.Int("port", 9121, "key-value server port")
 	join := flag.Bool("join", false, "join an existing cluster")
+	txcluster := flag.String("txcluster", "http://127.0.0.1:9021", "comma separated TxManager cluster peers")
 	grpcport := flag.String("grpcport", ":9122", "grpc server port")
 	flag.Parse()
 
@@ -72,10 +69,11 @@ func main() {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 
-	go checkLeader(ctx, kvs)
+	//	go checkLeader(ctx, kvs)
 
 	/* RPC handling */
 	go func() {
+		log.Printf("grpx port %s", *grpcport)
 		lis, err := net.Listen("tcp", *grpcport)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
@@ -86,6 +84,8 @@ func main() {
 			log.Fatalf("failed to serve: %v", err)
 		}
 	}()
+
+	go kvstore.NewKvTxManager(strings.Split(*txcluster, ","))
 
 	kvs.ServeHttpKVApi(*kvport, errorC)
 	cancel()

@@ -1,0 +1,80 @@
+syntax = "proto3";
+package txmanagerpb;
+
+//
+
+option go_package = "package/txmanagerpb";
+//Prepare
+//Commit
+//TxRead
+//RawReead
+//RawWrite
+//RawDelete
+message TxContext {
+    uint64 txId = 1;
+}
+
+message TxComplReq {
+    TxContext txContext =1;
+    Command   command = 2;
+    uint64 status = 3;
+}
+
+message TxResponse {
+    //TxContext txContext = 1;
+    //Command   command = 2;
+    Status status = 1;
+}
+
+message Command {
+    uint64 idx = 1;
+    string op = 2;
+    string key = 3;
+    string Val = 4; 
+}
+
+enum Status {
+    Pending = 0;
+    Commited = 1;
+    Aborted = 2;
+    Failed = 4;
+ }
+
+message TxReq {
+    TxContext  TxContext = 1;
+}
+
+message TxReply {
+    string Stage  = 1;
+    uint64 TxId  = 2;
+}
+
+/* message KvStoreLeader {
+    string kvStoreLeader = 1;
+    Status status = 2;
+}
+
+message TxLeader {
+    string txLeader = 1;
+
+}
+
+ message KvNode {
+    string KvNode = 1;
+    uint64 KvNodeId = 2;
+    uint64 KvLeader  = 3;
+}
+
+*/
+service txmanager {
+
+    rpc TxGetRecordState(TxReq) returns (TxReply); 
+      //KvTxRead (KvTxReadReq) returns (KvTxReadReply);
+    //rpc KvRawRead (KvReadReq) returns (KvReadReply);
+   // rpc KvRawWrite (KvWriteReq) returns (KvWriteReply);
+   // rpc KvRawDelete (KvTxWriteReq) returns (KvTxWriteReply);
+    //XXX:rpc KvGetLeader (TxLeader) returns (KvLeader);
+    //XXX:rpc KvGetRaftGroupDetails (TxLeader) returns (stream KvNode);
+    //XXX:rpc GetAll (stream Request) returnss (Response);    
+
+}
