@@ -26,8 +26,8 @@ type TxStore struct {
 	proposeC      chan<- string // channel for proposing updates
 	snapshotter   *snap.Snapshotter
 	txnMap        map[uint64]Txn
-	lastTxnId     uint64
-	mu            sync.RWMutex
+	lastTxId      uint64
+	mu            sync.Mutex
 }
 
 type Txn struct {
@@ -51,7 +51,7 @@ const (
 
 //TxManagerStore[TxId] = { TR, writeIntent }
 type TxRecord struct {
-	mu sync.RWMutex // get the lock variable
+	mu sync.Mutex // get the lock variable
 	//prOposeC    chan<- string // channel for prOposing writeIntent
 	TxId    uint64
 	TxPhase string // PENDING, ABORTED, COMMITED, if PENDING, ABORTED-> switch is OFF else ON
@@ -102,6 +102,7 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 		txnMap:        n,
 		RaftNode:      r,
 		TxPending:     q,
+		lastTxId:      0,
 	}
 	// replay log into key-value map
 	ts.readCommits(commitC, errorC)
@@ -111,11 +112,20 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 	return ts
 }
 
+func (ts *TxStore) getNewTxId() uint64 {
+	ts.mu.Lock()
+	defer ts.mu.Unlock()
+	ts.lastTxId = ts.lastTxId + 1
+	return ts.lastTxId
+}
+
 //XXX: Is this right snapshot
 func (ts *TxStore) GetSnapshot() ([]byte, error) {
-	ts.mu.RLock()
-	defer ts.mu.RUnlock()
+	ts.mu.Lock()
+	defer ts.mu.Unlock()
 	return json.Marshal(ts.TxRecordStore)
+	//XXX: Understand impact of both
+	//return json.Marshal(ts)
 }
 
 func (ts *TxStore) ProposeTxRecord(tx Txn, t raftType) {
@@ -181,6 +191,12 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 		case "TxPending":
 			switch msg.OpType.Action {
 			case "ADD":
+				//XXX: Would be useful if any node can handles the client
+				if tr.TxId > ts.lastTxId {
+					ts.mu.Lock()
+					ts.lastTxId = tr.TxId
+					ts.mu.Unlock()
+				}
 				if _, ok := ts.TxPending[tr.TxId]; ok == true {
 					//XXX: go to update the error channel
 					//log.Fatalf("Error: ADD Houston we got a problem, Entry:%+v,", r)
@@ -209,7 +225,6 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
 					//XXX: Later changed to warning
 					log.Fatalf("Warning TxStore/Commit entry is already present e:%+v,", r)
-					break
 				}
 
 				// XXX: This would be redundant for leader , find a way to no-op for leader
@@ -243,7 +258,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 
 func NewTxRecord() *TxRecord {
 	tr := &TxRecord{
-		TxId:        getTxId,
+		TxId:        txStore.getNewTxId(),
 		TxPhase:     "PENDING",
 		CommandList: make([]*pbk.Command, 0),
 	}
