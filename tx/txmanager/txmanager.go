@@ -7,75 +7,15 @@ import (
 	"encoding/json"
 	"log"
 	"sync"
-	"sync/atomic"
 	"time"
 
 	pbk "github.com/acid_kvstore/proto/package/kvstorepb"
 	"github.com/acid_kvstore/raft"
 	"go.etcd.io/etcd/etcdserver/api/snap"
+	"go.etcd.io/etcd/raft/raftpb"
 )
 
-// I am the raft leader
-// Start the TxManager/Coordinator
-// Create write intent and send the request to the raft to followers- part of prepare
-// Once successful/ Send the commit -
-//  The followers get the write intent and update the
-
-/*
-	1. Each shard has TM running ?
-	2.
-*/
-
-/*
-TransActions are executed in two phases:
-https://github.com/cockroachdb/cockroach/blob/master/docs/design.md
-Start the transAction by selecting a range which is likely to be heavily involved in the transAction and writing a new transAction record to a reserved area of that range with state "PENDING". In parallel write an "intent" Value for each datum being written as part of the transAction. These are normal MVCC Values,
-with the addition of a special flag (i.e. “intent”) indicating that the Value may be committed after the transAction itself commits. In addition,
-the transAction id (unique and chosen at txn start time by Client) is stored with intent Values.
-The txn id is used to refer to the transAction record when there are conflicts and to make tie-breaking decisions on ordering between identical timestamps.
-Each node returns the timestamp used for the write (which is the original candidate timestamp in the absence of read/write conflicts);
-the Client selects the maximum from amongst all write timestamps as the final commit timestamp.
-
-Commit the transAction by updating its transAction record. The Value of the commit entry contains the candidate timestamp (increased as necessary to accommodate any latest read timestamps). Note that the transAction is considered fully committed at this point and control may be returned to the Client.
-
-In the case of an SI transAction, a commit timestamp which was increased to accommodate concurrent readers is perfectly acceptable and the commit may continue. For SSI transActions, however, a gap between candidate and commit timestamps necessitates transAction restart (note: restart is different than abort--see below).
-
-After the transAction is committed, all written intents are upgraded in parallel by removing the “intent” flag. The transAction is considered fully committed before this step and does not wait for it to return control to the transac
-
-*/
-
-/* const (
-	commit
-)
-*/
-//Keps logs of the record
-//kvStore     map[string]kv // current committed Key-Value pairs
-
-/* implement TxRecord Operations */
-/*
-	Generate TxId
-	Create WriteIntent
-	Dispatch writeIntent on prOpose channel
-
-*/
-
-/*
-type TxRecordStore struct {
-	TxRecord *TxRecord
-	TxPhase  string // COMMMITED/ABORTED/PENDING //seems to be redundant can even have switch - actually not, TX record represent whole Tx
-}
-*/
-
-//type TxRecordStore map([uint64]TxStore)
-//var TxRecordStore = make(map[uint64]TxStore)
-
-/*
-func newTxStore() map[uint64]TxStore {
-	TxRecordStore = make(map[uint64]TxStore)
-	return TxRecordStore
-}
-*/
-
+//XXX: changing back to exported TxStore
 var txStore *TxStore
 
 //XXX: After implement TxPending, mantain only state of Commited/Abort in the list
@@ -83,12 +23,11 @@ type TxStore struct {
 	TxRecordStore map[uint64]*TxRecord
 	RaftNode      *raft.RaftNode
 	TxPending     map[uint64]*TxRecord
-	//sddhards
-	proposeC    chan<- string // channel for proposing updates
-	snapshotter *snap.Snapshotter
-	txnMap      map[uint64]Txn
-	lastTxnId   uint64
-	mu          sync.RWMutex
+	proposeC      chan<- string // channel for proposing updates
+	snapshotter   *snap.Snapshotter
+	txnMap        map[uint64]Txn
+	lastTxnId     uint64
+	mu            sync.RWMutex
 }
 
 type Txn struct {
@@ -119,17 +58,37 @@ type TxRecord struct {
 	//w       int    // switch ON/OFF
 	//Read to take care off
 	CommandList []*pbk.Command
+	//	Wg:          sync.WaitGroup{},
 	// Logging the tx, if its crashed ?
-	//	txStore	map[int]TxStore
+	//	TxStore	map[int]TxStore
 	//KvClient     *KvClient
-	totalCount   uint64
-	prepareCount uint64
-	commitCount  uint64
 	//	Wg           sync.WaitGroup
 	/*
 		"The record is co-located (i.e. on the same nodes in the distributed system) with the Key in the transAction record."
 	*/
 
+}
+
+func NewTxStoreWrapper(id int, cluster []string, join bool) *TxStore {
+
+	log.Printf("peers %v", cluster)
+
+	proposeC := make(chan string)
+	//defer close(proposeC)
+	confC := make(chan raftpb.ConfChange)
+	var confChangeC <-chan raftpb.ConfChange
+	confChangeC = confC
+	var ts *TxStore
+	getSnapshot := func() ([]byte, error) { return ts.GetSnapshot() }
+	var peerlist []raft.PeerInfo
+	for i := range cluster {
+		peerlist = append(peerlist, raft.PeerInfo{Id: i + 1, Peer: cluster[i]})
+	}
+
+	commitC, errorC, snapshotterReady, rc := raft.NewRaftNode(id, peerlist, join, getSnapshot, proposeC, confChangeC)
+
+	ts = NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
+	return ts
 }
 
 func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
@@ -156,7 +115,7 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 func (ts *TxStore) GetSnapshot() ([]byte, error) {
 	ts.mu.RLock()
 	defer ts.mu.RUnlock()
-	return json.Marshal(ts)
+	return json.Marshal(ts.TxRecordStore)
 }
 
 func (ts *TxStore) ProposeTxRecord(tx Txn, t raftType) {
@@ -170,6 +129,17 @@ func (ts *TxStore) ProposeTxRecord(tx Txn, t raftType) {
 		log.Printf("RespC is not  nil %v", tx.RespCh)
 	}
 	ts.proposeC <- buf.String()
+}
+
+func (ts *TxStore) recoverFromSnapshot(snapshot []byte) error {
+	var TxRecords map[uint64]*TxRecord
+	if err := json.Unmarshal(snapshot, &TxRecords); err != nil {
+		return err
+	}
+	ts.mu.Lock()
+	defer ts.mu.Unlock()
+	ts.TxRecordStore = TxRecords
+	return nil
 }
 
 func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
@@ -186,9 +156,9 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				log.Panic(err)
 			}
 			log.Printf("loading snapshot at term %d and index %d", snapshot.Metadata.Term, snapshot.Metadata.Index)
-			/*if err := s.recoverFromSnapshot(snapshot.Data); err != nil {
+			if err := ts.recoverFromSnapshot(snapshot.Data); err != nil {
 				log.Panic(err)
-			}*/
+			}
 			continue
 		}
 
@@ -273,10 +243,8 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 
 func NewTxRecord() *TxRecord {
 	tr := &TxRecord{
-		TxId:    getTxId,
-		TxPhase: "PENDING",
-		//KvClient: cli,
-		//	Wg:          sync.WaitGroup{},
+		TxId:        getTxId,
+		TxPhase:     "PENDING",
 		CommandList: make([]*pbk.Command, 0),
 	}
 	return tr
@@ -295,15 +263,12 @@ func (tr *TxRecord) TxAddCommand(Key, Val, Op string) bool {
 	}
 
 	rq := &pbk.Command{
-		Idx: tr.totalCount,
+		Idx: 0, //XXX: delete this field
 		Key: Key,
 		Val: Val,
 		Op:  Op,
 		//Stage: "prepare",
 	}
-
-	//We dont need this atomic since SendRequest is serial
-	atomic.AddUint64(&tr.totalCount, 1)
 
 	tr.CommandList = append(tr.CommandList, rq)
 	return true

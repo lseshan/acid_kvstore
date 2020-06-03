@@ -162,7 +162,8 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 		txid, op, key, val, res)
 }
 
-func (ts *TxStore) ServeHttpTxApi(port int, errorC <-chan error) {
+//XXX: Need to verify if errorC is required
+func (ts *TxStore) ServeHttpTxApi(port int) {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api").Subrouter().StrictSlash(true)
 

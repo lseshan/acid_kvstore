@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
-	"github.com/acid_kvstore/raft"
 	"github.com/acid_kvstore/tx/txmanager"
 	"go.etcd.io/etcd/raft/raftpb"
 	"google.golang.org/grpc"
@@ -31,11 +30,11 @@ func main() {
 
 	//start the raft service
 	var ts *txmanager.TxStore
-	getSnapshot := func() ([]byte, error) { return ts.GetSnapshot() }
+	//	getSnapshot := func() ([]byte, error) { return ts.GetSnapshot() }
 	//	tr = txmanager.NewTxRecord(cli)
-	commitC, errorC, snapshotterReady, raft := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
-	ts = txmanager.NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, raft)
-
+	//	commitC, errorC, snapshotterReady, raft := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
+	// 	ts = txmanager.NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, raft)
+	ts = txmanager.NewTxStoreWrapper(*id, strings.Split(*cluster, ","), *join)
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 
@@ -57,7 +56,7 @@ func main() {
 	log.Printf("Waiting to get kvport client")
 	<-compl
 	//XXX: Server HTTP api
-	ts.ServeHttpTxApi(*cliport, errorC)
+	ts.ServeHttpTxApi(*cliport)
 	//	go checkLeader(ctx, kvs)
 
 	/* start the grpc server */
