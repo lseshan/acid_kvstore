@@ -13,11 +13,11 @@ TM -> TM : Recovery: RAFT, pending status to Abort
 TM -> TM : Recovery: Send Abort for pended Tx
 TM -> TM : Recovery: RAFT, remove from pended,\n update to ABORT
 
-client -> TM : Begin 
-client -> TM : TxId, PUT "Key" "Val"
-client -> TM : TxId, PUT "Key" "Val"
-client -> TM : PUT "Key" "Val"
-client -> TM : Commit
+client1 -> TM : Begin 
+client1 -> TM : TxId, PUT "Key" "Val"
+client1 -> TM : TxId, PUT "Key" "Val"
+client1 -> TM : PUT "Key" "Val"
+client1 -> TM : Commit
 
 TM -->TM : RAFT, create Record
 TM -->TM : RAFT, TxRecord PENDING
