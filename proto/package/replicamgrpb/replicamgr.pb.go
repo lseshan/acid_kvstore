@@ -166,11 +166,276 @@ func (m *ReplicaUpdateReq) GetReplicaInfo() *Replica {
 	return nil
 }
 
+type TxInfo struct {
+	HttpEndpoint         string   `protobuf:"bytes,1,opt,name=HttpEndpoint,proto3" json:"HttpEndpoint,omitempty"`
+	RpcEndpoint          string   `protobuf:"bytes,2,opt,name=RpcEndpoint,proto3" json:"RpcEndpoint,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TxInfo) Reset()         { *m = TxInfo{} }
+func (m *TxInfo) String() string { return proto.CompactTextString(m) }
+func (*TxInfo) ProtoMessage()    {}
+func (*TxInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c791edbeb1c31eea, []int{3}
+}
+
+func (m *TxInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TxInfo.Unmarshal(m, b)
+}
+func (m *TxInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TxInfo.Marshal(b, m, deterministic)
+}
+func (m *TxInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TxInfo.Merge(m, src)
+}
+func (m *TxInfo) XXX_Size() int {
+	return xxx_messageInfo_TxInfo.Size(m)
+}
+func (m *TxInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_TxInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TxInfo proto.InternalMessageInfo
+
+func (m *TxInfo) GetHttpEndpoint() string {
+	if m != nil {
+		return m.HttpEndpoint
+	}
+	return ""
+}
+
+func (m *TxInfo) GetRpcEndpoint() string {
+	if m != nil {
+		return m.RpcEndpoint
+	}
+	return ""
+}
+
+type ReplicaInfo struct {
+	HttpEndpoint         string   `protobuf:"bytes,1,opt,name=HttpEndpoint,proto3" json:"HttpEndpoint,omitempty"`
+	RpcEndpoint          string   `protobuf:"bytes,2,opt,name=RpcEndpoint,proto3" json:"RpcEndpoint,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReplicaInfo) Reset()         { *m = ReplicaInfo{} }
+func (m *ReplicaInfo) String() string { return proto.CompactTextString(m) }
+func (*ReplicaInfo) ProtoMessage()    {}
+func (*ReplicaInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c791edbeb1c31eea, []int{4}
+}
+
+func (m *ReplicaInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReplicaInfo.Unmarshal(m, b)
+}
+func (m *ReplicaInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReplicaInfo.Marshal(b, m, deterministic)
+}
+func (m *ReplicaInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReplicaInfo.Merge(m, src)
+}
+func (m *ReplicaInfo) XXX_Size() int {
+	return xxx_messageInfo_ReplicaInfo.Size(m)
+}
+func (m *ReplicaInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReplicaInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReplicaInfo proto.InternalMessageInfo
+
+func (m *ReplicaInfo) GetHttpEndpoint() string {
+	if m != nil {
+		return m.HttpEndpoint
+	}
+	return ""
+}
+
+func (m *ReplicaInfo) GetRpcEndpoint() string {
+	if m != nil {
+		return m.RpcEndpoint
+	}
+	return ""
+}
+
+type ReplicaTxReq struct {
+	TxInfo               *TxInfo  `protobuf:"bytes,1,opt,name=TxInfo,proto3" json:"TxInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReplicaTxReq) Reset()         { *m = ReplicaTxReq{} }
+func (m *ReplicaTxReq) String() string { return proto.CompactTextString(m) }
+func (*ReplicaTxReq) ProtoMessage()    {}
+func (*ReplicaTxReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c791edbeb1c31eea, []int{5}
+}
+
+func (m *ReplicaTxReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReplicaTxReq.Unmarshal(m, b)
+}
+func (m *ReplicaTxReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReplicaTxReq.Marshal(b, m, deterministic)
+}
+func (m *ReplicaTxReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReplicaTxReq.Merge(m, src)
+}
+func (m *ReplicaTxReq) XXX_Size() int {
+	return xxx_messageInfo_ReplicaTxReq.Size(m)
+}
+func (m *ReplicaTxReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReplicaTxReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReplicaTxReq proto.InternalMessageInfo
+
+func (m *ReplicaTxReq) GetTxInfo() *TxInfo {
+	if m != nil {
+		return m.TxInfo
+	}
+	return nil
+}
+
+type ShardInfo struct {
+	ShardMap             map[uint64]*Shard `protobuf:"bytes,1,rep,name=ShardMap,proto3" json:"ShardMap,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
+}
+
+func (m *ShardInfo) Reset()         { *m = ShardInfo{} }
+func (m *ShardInfo) String() string { return proto.CompactTextString(m) }
+func (*ShardInfo) ProtoMessage()    {}
+func (*ShardInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c791edbeb1c31eea, []int{6}
+}
+
+func (m *ShardInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ShardInfo.Unmarshal(m, b)
+}
+func (m *ShardInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ShardInfo.Marshal(b, m, deterministic)
+}
+func (m *ShardInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ShardInfo.Merge(m, src)
+}
+func (m *ShardInfo) XXX_Size() int {
+	return xxx_messageInfo_ShardInfo.Size(m)
+}
+func (m *ShardInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_ShardInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ShardInfo proto.InternalMessageInfo
+
+func (m *ShardInfo) GetShardMap() map[uint64]*Shard {
+	if m != nil {
+		return m.ShardMap
+	}
+	return nil
+}
+
+type ReplicaQueryReq struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReplicaQueryReq) Reset()         { *m = ReplicaQueryReq{} }
+func (m *ReplicaQueryReq) String() string { return proto.CompactTextString(m) }
+func (*ReplicaQueryReq) ProtoMessage()    {}
+func (*ReplicaQueryReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c791edbeb1c31eea, []int{7}
+}
+
+func (m *ReplicaQueryReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReplicaQueryReq.Unmarshal(m, b)
+}
+func (m *ReplicaQueryReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReplicaQueryReq.Marshal(b, m, deterministic)
+}
+func (m *ReplicaQueryReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReplicaQueryReq.Merge(m, src)
+}
+func (m *ReplicaQueryReq) XXX_Size() int {
+	return xxx_messageInfo_ReplicaQueryReq.Size(m)
+}
+func (m *ReplicaQueryReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReplicaQueryReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReplicaQueryReq proto.InternalMessageInfo
+
+type ReplicaQueryResp struct {
+	TxInfo               *TxInfo      `protobuf:"bytes,1,opt,name=TxInfo,proto3" json:"TxInfo,omitempty"`
+	ShardInfo            *ShardInfo   `protobuf:"bytes,2,opt,name=ShardInfo,proto3" json:"ShardInfo,omitempty"`
+	ReplicaInfo          *ReplicaInfo `protobuf:"bytes,3,opt,name=ReplicaInfo,proto3" json:"ReplicaInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
+}
+
+func (m *ReplicaQueryResp) Reset()         { *m = ReplicaQueryResp{} }
+func (m *ReplicaQueryResp) String() string { return proto.CompactTextString(m) }
+func (*ReplicaQueryResp) ProtoMessage()    {}
+func (*ReplicaQueryResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c791edbeb1c31eea, []int{8}
+}
+
+func (m *ReplicaQueryResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReplicaQueryResp.Unmarshal(m, b)
+}
+func (m *ReplicaQueryResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReplicaQueryResp.Marshal(b, m, deterministic)
+}
+func (m *ReplicaQueryResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReplicaQueryResp.Merge(m, src)
+}
+func (m *ReplicaQueryResp) XXX_Size() int {
+	return xxx_messageInfo_ReplicaQueryResp.Size(m)
+}
+func (m *ReplicaQueryResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReplicaQueryResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReplicaQueryResp proto.InternalMessageInfo
+
+func (m *ReplicaQueryResp) GetTxInfo() *TxInfo {
+	if m != nil {
+		return m.TxInfo
+	}
+	return nil
+}
+
+func (m *ReplicaQueryResp) GetShardInfo() *ShardInfo {
+	if m != nil {
+		return m.ShardInfo
+	}
+	return nil
+}
+
+func (m *ReplicaQueryResp) GetReplicaInfo() *ReplicaInfo {
+	if m != nil {
+		return m.ReplicaInfo
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*Shard)(nil), "replicamgrpb.Shard")
 	proto.RegisterType((*Replica)(nil), "replicamgrpb.Replica")
 	proto.RegisterMapType((map[uint64]*Shard)(nil), "replicamgrpb.Replica.ShardMapEntry")
 	proto.RegisterType((*ReplicaUpdateReq)(nil), "replicamgrpb.ReplicaUpdateReq")
+	proto.RegisterType((*TxInfo)(nil), "replicamgrpb.TxInfo")
+	proto.RegisterType((*ReplicaInfo)(nil), "replicamgrpb.ReplicaInfo")
+	proto.RegisterType((*ReplicaTxReq)(nil), "replicamgrpb.ReplicaTxReq")
+	proto.RegisterType((*ShardInfo)(nil), "replicamgrpb.ShardInfo")
+	proto.RegisterMapType((map[uint64]*Shard)(nil), "replicamgrpb.ShardInfo.ShardMapEntry")
+	proto.RegisterType((*ReplicaQueryReq)(nil), "replicamgrpb.ReplicaQueryReq")
+	proto.RegisterType((*ReplicaQueryResp)(nil), "replicamgrpb.ReplicaQueryResp")
 }
 
 func init() {
@@ -178,27 +443,39 @@ func init() {
 }
 
 var fileDescriptor_c791edbeb1c31eea = []byte{
-	// 318 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x51, 0x4d, 0x4b, 0xc3, 0x40,
-	0x14, 0x64, 0x5b, 0x6b, 0xdb, 0x17, 0x85, 0xb2, 0x6a, 0x09, 0x51, 0x24, 0xd4, 0x4b, 0xbc, 0x6c,
-	0x20, 0x1e, 0x14, 0x2f, 0x82, 0x50, 0xb0, 0x56, 0x45, 0x56, 0x04, 0xd1, 0xd3, 0xa6, 0x79, 0x8d,
-	0xd2, 0x8f, 0xac, 0xeb, 0x56, 0xc8, 0x9f, 0xf3, 0xb7, 0x49, 0x37, 0x9f, 0x85, 0xde, 0x66, 0x67,
-	0xe7, 0xcd, 0xbc, 0xe1, 0x41, 0x5f, 0xaa, 0x44, 0x27, 0xbe, 0x42, 0x39, 0xff, 0x9a, 0x88, 0x45,
-	0xac, 0x98, 0x21, 0xe8, 0x5e, 0xc5, 0xc8, 0xd0, 0x39, 0x8e, 0x93, 0x24, 0x9e, 0xa3, 0x6f, 0xfe,
-	0xc2, 0xd5, 0xd4, 0xc7, 0x85, 0xd4, 0x69, 0x26, 0x1d, 0x7c, 0x40, 0xeb, 0xe5, 0x53, 0xa8, 0x88,
-	0xda, 0xd0, 0x36, 0x60, 0x14, 0xd9, 0xc4, 0x25, 0xde, 0x0e, 0x2f, 0x9e, 0xd4, 0x81, 0xce, 0xe8,
-	0xe7, 0x01, 0x45, 0x84, 0xca, 0x6e, 0xb8, 0xc4, 0xeb, 0xf0, 0xf2, 0x4d, 0x4f, 0xa0, 0x9b, 0xa1,
-	0x31, 0xa6, 0x76, 0xd3, 0x25, 0x5e, 0x97, 0x57, 0xc4, 0xe0, 0x8f, 0x40, 0x9b, 0x67, 0xab, 0x50,
-	0x17, 0xac, 0x1c, 0x3e, 0x89, 0x05, 0x9a, 0x8c, 0x2e, 0xaf, 0x53, 0xf4, 0x06, 0x3a, 0x26, 0xf2,
-	0x51, 0x48, 0xbb, 0xe1, 0x36, 0x3d, 0x2b, 0x38, 0x63, 0xf5, 0x22, 0x2c, 0x17, 0xb3, 0x42, 0x35,
-	0x5c, 0x6a, 0x95, 0xf2, 0x72, 0xc8, 0x79, 0x86, 0xfd, 0x8d, 0x2f, 0xda, 0x83, 0xe6, 0x0c, 0xd3,
-	0xbc, 0xcf, 0x1a, 0xd2, 0x73, 0x68, 0xfd, 0x8a, 0xf9, 0x0a, 0x4d, 0x11, 0x2b, 0x38, 0xd8, 0x0c,
-	0x30, 0xd3, 0x3c, 0x53, 0x5c, 0x37, 0xae, 0xc8, 0x60, 0x0c, 0xbd, 0x3c, 0xf4, 0x55, 0x46, 0x42,
-	0x23, 0xc7, 0x6f, 0x7a, 0x59, 0x16, 0x19, 0x2d, 0xa7, 0x89, 0x31, 0xb7, 0x82, 0xa3, 0xad, 0x9b,
-	0xf2, 0xba, 0x32, 0x78, 0x03, 0xa8, 0x44, 0xf4, 0xbe, 0xb4, 0xbe, 0x43, 0xa1, 0x74, 0x88, 0x42,
-	0xd3, 0xd3, 0xad, 0x2e, 0x65, 0xb4, 0xd3, 0x67, 0xd9, 0x29, 0x59, 0x71, 0x4a, 0x36, 0x5c, 0x9f,
-	0xf2, 0xb6, 0xff, 0x7e, 0x28, 0xc5, 0x64, 0x26, 0x62, 0xf4, 0xeb, 0x06, 0xe1, 0xae, 0xd1, 0x5d,
-	0xfc, 0x07, 0x00, 0x00, 0xff, 0xff, 0x0e, 0x70, 0x04, 0xc6, 0x28, 0x02, 0x00, 0x00,
+	// 502 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x54, 0x51, 0x6b, 0x13, 0x41,
+	0x10, 0x66, 0x13, 0xdb, 0x26, 0x93, 0x88, 0x75, 0xad, 0xf1, 0x3c, 0xb5, 0x1c, 0x27, 0x42, 0x04,
+	0xb9, 0x40, 0x44, 0x14, 0x15, 0xc4, 0x42, 0xa0, 0xb1, 0x36, 0xe8, 0xb6, 0xbe, 0xe8, 0xd3, 0x26,
+	0x37, 0x8d, 0xa5, 0x49, 0x6e, 0x7b, 0xd9, 0x48, 0xef, 0xdf, 0xf8, 0x23, 0x7c, 0xf6, 0x6f, 0xf9,
+	0x2a, 0x37, 0xb7, 0xb7, 0xb9, 0x83, 0x8b, 0x20, 0x88, 0x6f, 0x73, 0x33, 0xdf, 0x7c, 0x33, 0xdf,
+	0xcc, 0xdc, 0x42, 0x47, 0xc5, 0x91, 0x8e, 0x7a, 0x31, 0xaa, 0xd9, 0xf9, 0x44, 0xce, 0xa7, 0x71,
+	0x40, 0x0e, 0xde, 0x5e, 0x7b, 0xd4, 0xd8, 0xbd, 0x37, 0x8d, 0xa2, 0xe9, 0x0c, 0x7b, 0x14, 0x1b,
+	0xaf, 0xce, 0x7a, 0x38, 0x57, 0x3a, 0xc9, 0xa0, 0xfe, 0x17, 0xd8, 0x3a, 0xf9, 0x2a, 0xe3, 0x90,
+	0x3b, 0xb0, 0x43, 0xc6, 0x30, 0x74, 0x98, 0xc7, 0xba, 0xd7, 0x44, 0xfe, 0xc9, 0x5d, 0x68, 0x0c,
+	0x97, 0xef, 0x51, 0x86, 0x18, 0x3b, 0x35, 0x8f, 0x75, 0x1b, 0xc2, 0x7e, 0xf3, 0xfb, 0xd0, 0xcc,
+	0xac, 0x23, 0x4c, 0x9c, 0xba, 0xc7, 0xba, 0x4d, 0xb1, 0x76, 0xf8, 0x3f, 0x19, 0xec, 0x88, 0xac,
+	0x15, 0xee, 0x41, 0xcb, 0x98, 0x23, 0x39, 0x47, 0xaa, 0xd1, 0x14, 0x45, 0x17, 0x7f, 0x03, 0x0d,
+	0x2a, 0x79, 0x2c, 0x95, 0x53, 0xf3, 0xea, 0xdd, 0x56, 0xff, 0x61, 0x50, 0x14, 0x12, 0x18, 0x70,
+	0x90, 0xa3, 0x06, 0x0b, 0x1d, 0x27, 0xc2, 0x26, 0xb9, 0x1f, 0xe0, 0x7a, 0x29, 0xc4, 0x77, 0xa1,
+	0x7e, 0x81, 0x89, 0xd1, 0x93, 0x9a, 0xfc, 0x31, 0x6c, 0x7d, 0x93, 0xb3, 0x15, 0x92, 0x90, 0x56,
+	0xff, 0x56, 0xb9, 0x00, 0x65, 0x8b, 0x0c, 0xf1, 0xb2, 0xf6, 0x82, 0xf9, 0x47, 0xb0, 0x6b, 0x8a,
+	0x7e, 0x52, 0xa1, 0xd4, 0x28, 0xf0, 0x92, 0x3f, 0xb7, 0x42, 0x86, 0x8b, 0xb3, 0x88, 0xc8, 0x5b,
+	0xfd, 0xdb, 0x95, 0x9d, 0x8a, 0x22, 0xd2, 0x1f, 0xc1, 0xf6, 0xe9, 0x55, 0x6a, 0x71, 0x1f, 0xda,
+	0x87, 0x5a, 0xab, 0xc1, 0x22, 0x54, 0xd1, 0xf9, 0x42, 0x9b, 0x61, 0x94, 0x7c, 0x34, 0x2f, 0x35,
+	0xb1, 0x90, 0x9a, 0x99, 0xd7, 0xda, 0xe5, 0x9f, 0x94, 0x1a, 0xf9, 0x47, 0xa4, 0xaf, 0xa1, 0x6d,
+	0x48, 0x4f, 0xaf, 0x52, 0xb5, 0x4f, 0xf2, 0xa6, 0x8d, 0xd0, 0xbd, 0xb2, 0xd0, 0x2c, 0x26, 0x0c,
+	0xc6, 0xff, 0xce, 0xa0, 0x99, 0x9d, 0x4d, 0xda, 0xd1, 0xdb, 0xc2, 0x42, 0x19, 0x2d, 0xf4, 0x51,
+	0xc5, 0xbc, 0x53, 0xe8, 0x7f, 0x5c, 0xe9, 0x4d, 0xb8, 0x61, 0x04, 0x7e, 0x5c, 0x61, 0x9c, 0x08,
+	0xbc, 0xf4, 0x7f, 0x30, 0xbb, 0x66, 0xe3, 0x5b, 0xaa, 0xbf, 0x13, 0xce, 0x9f, 0x15, 0x74, 0x9b,
+	0x46, 0xee, 0x6c, 0xd0, 0x2a, 0x0a, 0x13, 0x7a, 0x55, 0xbe, 0xa5, 0x3a, 0x25, 0xde, 0xad, 0xbc,
+	0x25, 0x4a, 0x2d, 0xa2, 0xfb, 0xbf, 0x18, 0xc0, 0x1a, 0xc9, 0xdf, 0x59, 0x11, 0x87, 0x28, 0x63,
+	0x3d, 0x46, 0xa9, 0xf9, 0x7e, 0x25, 0x95, 0xbd, 0x65, 0xb7, 0x13, 0x64, 0x6f, 0x43, 0x90, 0xbf,
+	0x0d, 0xc1, 0x20, 0x7d, 0x1b, 0xf8, 0x08, 0x1c, 0x7b, 0x05, 0xd9, 0xef, 0x4c, 0x9c, 0x07, 0x29,
+	0xa7, 0x5b, 0xc9, 0x49, 0xd7, 0xb2, 0x91, 0xef, 0xd8, 0x5e, 0x15, 0x0d, 0x98, 0x3f, 0xa8, 0xe4,
+	0xc8, 0x17, 0xe2, 0xee, 0xff, 0x29, 0xbc, 0x54, 0x07, 0x9d, 0xcf, 0x7b, 0x4a, 0x4e, 0x2e, 0xe4,
+	0x14, 0x7b, 0x45, 0xe0, 0x78, 0x9b, 0xca, 0x3e, 0xfd, 0x1d, 0x00, 0x00, 0xff, 0xff, 0xc6, 0x91,
+	0xde, 0x30, 0x18, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -214,6 +491,8 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ReplicamgrClient interface {
 	ReplicaHeartbeat(ctx context.Context, in *ReplicaUpdateReq, opts ...grpc.CallOption) (*empty.Empty, error)
+	ReplicaTxLeaderHeartBeat(ctx context.Context, in *ReplicaTxReq, opts ...grpc.CallOption) (*empty.Empty, error)
+	ReplicaQuery(ctx context.Context, in *ReplicaQueryReq, opts ...grpc.CallOption) (*ReplicaQueryResp, error)
 }
 
 type replicamgrClient struct {
@@ -233,9 +512,29 @@ func (c *replicamgrClient) ReplicaHeartbeat(ctx context.Context, in *ReplicaUpda
 	return out, nil
 }
 
+func (c *replicamgrClient) ReplicaTxLeaderHeartBeat(ctx context.Context, in *ReplicaTxReq, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/replicamgrpb.replicamgr/ReplicaTxLeaderHeartBeat", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *replicamgrClient) ReplicaQuery(ctx context.Context, in *ReplicaQueryReq, opts ...grpc.CallOption) (*ReplicaQueryResp, error) {
+	out := new(ReplicaQueryResp)
+	err := c.cc.Invoke(ctx, "/replicamgrpb.replicamgr/ReplicaQuery", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ReplicamgrServer is the server API for Replicamgr service.
 type ReplicamgrServer interface {
 	ReplicaHeartbeat(context.Context, *ReplicaUpdateReq) (*empty.Empty, error)
+	ReplicaTxLeaderHeartBeat(context.Context, *ReplicaTxReq) (*empty.Empty, error)
+	ReplicaQuery(context.Context, *ReplicaQueryReq) (*ReplicaQueryResp, error)
 }
 
 // UnimplementedReplicamgrServer can be embedded to have forward compatible implementations.
@@ -244,6 +543,12 @@ type UnimplementedReplicamgrServer struct {
 
 func (*UnimplementedReplicamgrServer) ReplicaHeartbeat(ctx context.Context, req *ReplicaUpdateReq) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReplicaHeartbeat not implemented")
+}
+func (*UnimplementedReplicamgrServer) ReplicaTxLeaderHeartBeat(ctx context.Context, req *ReplicaTxReq) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReplicaTxLeaderHeartBeat not implemented")
+}
+func (*UnimplementedReplicamgrServer) ReplicaQuery(ctx context.Context, req *ReplicaQueryReq) (*ReplicaQueryResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReplicaQuery not implemented")
 }
 
 func RegisterReplicamgrServer(s *grpc.Server, srv ReplicamgrServer) {
@@ -268,6 +573,42 @@ func _Replicamgr_ReplicaHeartbeat_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Replicamgr_ReplicaTxLeaderHeartBeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReplicaTxReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReplicamgrServer).ReplicaTxLeaderHeartBeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/replicamgrpb.replicamgr/ReplicaTxLeaderHeartBeat",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReplicamgrServer).ReplicaTxLeaderHeartBeat(ctx, req.(*ReplicaTxReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Replicamgr_ReplicaQuery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReplicaQueryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReplicamgrServer).ReplicaQuery(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/replicamgrpb.replicamgr/ReplicaQuery",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReplicamgrServer).ReplicaQuery(ctx, req.(*ReplicaQueryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Replicamgr_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "replicamgrpb.replicamgr",
 	HandlerType: (*ReplicamgrServer)(nil),
@@ -275,6 +616,14 @@ var _Replicamgr_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReplicaHeartbeat",
 			Handler:    _Replicamgr_ReplicaHeartbeat_Handler,
+		},
+		{
+			MethodName: "ReplicaTxLeaderHeartBeat",
+			Handler:    _Replicamgr_ReplicaTxLeaderHeartBeat_Handler,
+		},
+		{
+			MethodName: "ReplicaQuery",
+			Handler:    _Replicamgr_ReplicaQuery_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

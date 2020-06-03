@@ -33,6 +33,7 @@ type ReplicaMgr struct {
 	CommitC     <-chan string
 	Snapshotter *snap.Snapshotter
 	MyName      string
+	TxInfo      pb.TxInfo
 }
 
 func (repl *ReplicaMgr) GetSnapshot() ([]byte, error) {
@@ -150,4 +151,20 @@ func (repl *ReplicaMgr) ReplicaHeartbeat(ctx context.Context, in *pb.ReplicaUpda
 	}
 	return new(empty.Empty), nil
 	//Store the shard details in repl.Server. Not sure if we need it now
+}
+
+func (repl *ReplicaMgr) ReplicaTxLeaderHeartBeat(ctx context.Context, in *pb.ReplicaTxReq) (*empty.Empty, error) {
+	log.Printf("received heardbeat")
+	repl.TxInfo = *in.GetTxInfo()
+	return new(empty.Empty), nil
+}
+
+func (repl *ReplicaMgr) ReplicaQuery(ctx context.Context, in *pb.ReplicaQueryReq) (*pb.ReplicaQueryResp, error) {
+	log.Printf("received ReplicaQuery")
+	var out pb.ReplicaQueryResp
+	out.TxInfo = &repl.TxInfo
+	out.ShardInfo = &pb.ShardInfo{ShardMap: repl.Shard}
+	return &out, nil
+	//out.ShardInfo = repl.ShardInfo
+	//out.ReplicaInfo = repl.ReplicaInfo
 }

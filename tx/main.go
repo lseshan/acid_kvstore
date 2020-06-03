@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"net"
+	"strconv"
 	"strings"
 
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
@@ -21,6 +22,8 @@ func main() {
 	join := flag.Bool("join", false, "join an existing cluster")
 	kvcluster := flag.String("kvcluster", "http://127.0.0.1:9021", "comma separated KvServer cluster peers")
 	grpcport := flag.String("grpcport", ":9122", "grpc server port")
+
+	replicamgrs := flag.String("replicmgrs", "127.0.0.1:9021", "comma separated replicamgrs")
 	flag.Parse()
 
 	proposeC := make(chan string)
@@ -37,6 +40,20 @@ func main() {
 	ts = txmanager.NewTxStoreWrapper(*id, strings.Split(*cluster, ","), *join)
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
+
+	ts.HttpEndpoint = "http://127.0.0.1:" + strconv.Itoa(*cliport)
+	ts.RpcEndpoint = *grpcport
+
+	//Create Connection to all servers
+	for _, servers := range strings.Split(*replicamgrs, ",") {
+		ts.StartReplicaServerConnection(context.Background(), servers)
+	}
+	// Keep Updating the replicaLeader
+	//go QueryReplManagerForLeader(ctx)
+	server := strings.Split(*replicamgrs, ",")
+	//Update to ReplicaLeader
+	ts.ReplLeaderClient = ts.ReplMgrs[server[0]]
+	go ts.UpdateLeader(ctx)
 
 	// XXX: TxManager Server
 	go func() {

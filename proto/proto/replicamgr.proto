@@ -18,6 +18,36 @@ message ReplicaUpdateReq {
     Replica ReplicaInfo = 1;
 }
 
+
+message TxInfo {
+      string HttpEndpoint = 1;
+      string RpcEndpoint = 2;
+}
+
+message ReplicaInfo {
+    string HttpEndpoint  = 1;
+    string RpcEndpoint = 2;
+}
+
+message ReplicaTxReq {
+    TxInfo TxInfo = 1;
+    
+}
+
+message ShardInfo {
+    map<uint64, Shard> ShardMap = 1;
+}
+
+message ReplicaQueryReq {}
+message ReplicaQueryResp {
+    TxInfo     TxInfo= 1;
+    ShardInfo  ShardInfo=2;    
+    ReplicaInfo ReplicaInfo=3;
+ 
+}
+
 service replicamgr {
     rpc ReplicaHeartbeat(ReplicaUpdateReq) returns (google.protobuf.Empty);
+    rpc ReplicaTxLeaderHeartBeat(ReplicaTxReq) returns (google.protobuf.Empty);
+    rpc ReplicaQuery(ReplicaQueryReq) returns (ReplicaQueryResp);
 }
