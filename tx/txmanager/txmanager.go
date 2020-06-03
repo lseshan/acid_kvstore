@@ -10,9 +10,11 @@ import (
 	"time"
 
 	pbk "github.com/acid_kvstore/proto/package/kvstorepb"
+	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	"github.com/acid_kvstore/raft"
 	"go.etcd.io/etcd/etcdserver/api/snap"
 	"go.etcd.io/etcd/raft/raftpb"
+	"google.golang.org/grpc"
 )
 
 //XXX: changing back to exported TxStore
@@ -23,11 +25,17 @@ type TxStore struct {
 	TxRecordStore map[uint64]*TxRecord
 	RaftNode      *raft.RaftNode
 	TxPending     map[uint64]*TxRecord
-	proposeC      chan<- string // channel for proposing updates
-	snapshotter   *snap.Snapshotter
-	txnMap        map[uint64]Txn
-	lastTxId      uint64
-	mu            sync.Mutex
+	//sddhards
+	proposeC         chan<- string // channel for proposing updates
+	snapshotter      *snap.Snapshotter
+	txnMap           map[uint64]Txn
+	lastTxId         uint64
+	HttpEndpoint     string
+	RpcEndpoint      string
+	ShardInfo        *replpb.ShardInfo
+	ReplMgrs         map[string]replpb.ReplicamgrClient
+	ReplLeaderClient replpb.ReplicamgrClient
+	mu               sync.Mutex
 }
 
 type Txn struct {
@@ -89,6 +97,38 @@ func NewTxStoreWrapper(id int, cluster []string, join bool) *TxStore {
 
 	ts = NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
 	return ts
+}
+func (ts *TxStore) UpdateLeader(ctx context.Context) {
+	log.Printf("UpdateTxLeader")
+	for {
+		select {
+		case <-time.After(5 * time.Second):
+			if ts.ReplLeaderClient == nil {
+				continue
+			}
+			var out replpb.ReplicaTxReq
+			var TxInfo replpb.TxInfo
+			TxInfo.HttpEndpoint = ts.HttpEndpoint
+			TxInfo.RpcEndpoint = ts.RpcEndpoint
+			out.TxInfo = &TxInfo
+			if ts.RaftNode.IsLeader() {
+				_, err := ts.ReplLeaderClient.ReplicaTxLeaderHeartBeat(context.Background(), &out)
+				if err != nil {
+					log.Printf("error in leader update: %v", err)
+				} else {
+					log.Printf("sent leader update")
+				}
+			}
+			resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
+			if err != nil {
+				ts.ShardInfo = resp.ShardInfo
+			}
+
+		case <-ctx.Done():
+			log.Printf("Done with Update leader")
+		}
+	}
+
 }
 
 func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
@@ -458,6 +498,17 @@ func (tr *TxRecord) TxRollaback(rq *pbk.KvTxReq) bool {
 	return false
 
 	//Fail the request--> Move state to FAILED to ABORT and unStage all
+}
+
+func (ts *TxStore) StartReplicaServerConnection(ctx context.Context, server string) {
+	log.Printf("connecting to replmgr")
+	conn, err := grpc.Dial(server, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect:%v", err)
+	}
+	cli := replpb.NewReplicamgrClient(conn)
+	ts.ReplMgrs[server] = cli
+
 }
 
 // Reading a Value -> ask from leaseholder ?

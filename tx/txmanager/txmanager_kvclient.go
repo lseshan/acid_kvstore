@@ -18,7 +18,9 @@ type TxKvManager struct {
 	ClientAddress []string
 	KvLeader      string
 	Cli           pb.KvstoreClient
-	conn          *grpc.ClientConn
+	Conn          *grpc.ClientConn
+	AllClient     map[string]pb.KvstoreClient
+	AllConn       map[string]*grpc.ClientConn
 }
 
 var KvClient *TxKvManager
@@ -27,9 +29,15 @@ var KvClient *TxKvManager
 func NewTxKvManager(s []string, compl chan int) {
 
 	t := new(TxKvManager)
+	t.AllClient = make(map[string]pb.KvstoreClient)
+	t.AllConn = make(map[string]*grpc.ClientConn)
 	t.ClientAddress = s
 	t.KvLeader = s[0]
-	t.TxKvCreateClientCtx()
+	for _, servers := range t.ClientAddress {
+		t.TxKvCreateClientCtx(servers)
+	}
+	t.Cli = t.AllClient[s[0]]
+	t.Conn = t.AllConn[s[0]]
 
 	KvClient = t
 	compl <- 1
@@ -42,7 +50,7 @@ func (t *TxKvManager) TxKvGetClient() pb.KvstoreClient {
 
 func (t *TxKvManager) KvCloseTxClient() {
 
-	t.conn.Close()
+	t.Conn.Close()
 }
 
 func (t *TxKvManager) TxKvAddNode() {
@@ -56,17 +64,17 @@ func (t *TxKvManager) TxKvUpdateLeader() {
 
 }
 
-func (t *TxKvManager) TxKvCreateClientCtx() {
+func (t *TxKvManager) TxKvCreateClientCtx(s string) {
 	// XXX: Got to find better way
-	if len(t.KvLeader) > 0 {
-		log.Printf("Leader:%s", t.KvLeader)
-		conn, err := grpc.Dial(t.KvLeader, grpc.WithInsecure(), grpc.WithBlock())
+	if len(s) > 0 {
+		log.Printf("Server:%s", s)
+		conn, err := grpc.Dial(s, grpc.WithInsecure(), grpc.WithBlock())
 		if err != nil {
 			log.Fatalf("grpc connection failed")
 		}
 
-		t.Cli = pb.NewKvstoreClient(conn)
-		t.conn = conn
+		t.AllClient[s] = pb.NewKvstoreClient(conn)
+		t.AllConn[s] = conn
 
 	}
 
