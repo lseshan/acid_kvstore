@@ -213,6 +213,7 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 	q := make(map[uint64]*TxRecord)
 	n := make(map[uint64]Txn)
 	s := r.GetStatus()
+	rep := make(map[string]replpb.ReplicamgrClient)
 	ts := &TxStore{
 		TxRecordStore: m,
 		proposeC:      proposeC,
@@ -222,6 +223,7 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 		TxPending:     q,
 		lastTxId:      0,
 		raftStats:     s,
+		ReplMgrs:      rep,
 	}
 	// replay log into key-value map
 	ts.readCommits(commitC, errorC)
@@ -601,13 +603,14 @@ func (tr *TxRecord) TxRollback(rq *pbk.KvTxReq) bool {
 }
 
 func (ts *TxStore) StartReplicaServerConnection(ctx context.Context, server string) {
-	log.Printf("connecting to replmgr")
+	log.Printf("connecting to replmgr: %s", server)
 	conn, err := grpc.Dial(server, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect:%v", err)
 	}
 	cli := replpb.NewReplicamgrClient(conn)
 	ts.ReplMgrs[server] = cli
+	log.Printf("connection done")
 
 }
 

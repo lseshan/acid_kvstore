@@ -141,7 +141,7 @@ func (repl *ReplicaMgr) StartServerConnection(ctx context.Context, Server Server
 
 // Routine to receive information from Replica
 func (repl *ReplicaMgr) ReplicaHeartbeat(ctx context.Context, in *pb.ReplicaUpdateReq) (*empty.Empty, error) {
-	log.Printf("received heardbeat")
+	log.Printf("received Kv heartbeat")
 	//ReplicaKey := in.GetReplicaInfo().GetReplicaName()
 	shardMap := in.GetReplicaInfo().GetShardMap()
 	for id, shard := range shardMap {
@@ -154,7 +154,7 @@ func (repl *ReplicaMgr) ReplicaHeartbeat(ctx context.Context, in *pb.ReplicaUpda
 }
 
 func (repl *ReplicaMgr) ReplicaTxLeaderHeartBeat(ctx context.Context, in *pb.ReplicaTxReq) (*empty.Empty, error) {
-	log.Printf("received heardbeat")
+	log.Printf("received TxLeader heartbeat")
 	repl.TxInfo = *in.GetTxInfo()
 	return new(empty.Empty), nil
 }

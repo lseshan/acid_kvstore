@@ -23,7 +23,7 @@ func main() {
 	kvcluster := flag.String("kvcluster", "http://127.0.0.1:9021", "comma separated KvServer cluster peers")
 	grpcport := flag.String("grpcport", ":9122", "grpc server port")
 
-	replicamgrs := flag.String("replicmgrs", "127.0.0.1:9021", "comma separated replicamgrs")
+	replicamgrs := flag.String("replicamgrs", "127.0.0.1:9021", "comma separated replicamgrs")
 	flag.Parse()
 
 	proposeC := make(chan string)

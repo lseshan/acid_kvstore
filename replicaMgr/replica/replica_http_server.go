@@ -11,7 +11,10 @@ import (
 )
 
 func (repl *ReplicaMgr) handleReplicaMgrGet(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(repl.Shard)
+	m := make(map[string]interface{})
+	m["Shard"] = repl.Shard
+	m["txmgr"] = repl.TxInfo
+	json.NewEncoder(w).Encode(m)
 }
 
 func (repl *ReplicaMgr) ServeHttpReplicamgrApi(port int) {
