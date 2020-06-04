@@ -32,7 +32,8 @@ func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
 	for {
 		select {
 		case <-time.After(500 * time.Millisecond):
-			if kvs.Node.IsLeader() {
+			s := kvs.Node.GetStatus()
+			if kvs.Node.IsLeader(s) {
 				log.Printf("Is leader")
 			} else {
 				log.Printf("Is not Leader")

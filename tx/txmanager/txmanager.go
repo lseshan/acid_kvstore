@@ -12,6 +12,7 @@ import (
 	pbk "github.com/acid_kvstore/proto/package/kvstorepb"
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	"github.com/acid_kvstore/raft"
+	"github.com/acid_kvstore/utils"
 	"go.etcd.io/etcd/etcdserver/api/snap"
 	raftstat "go.etcd.io/etcd/raft"
 	"go.etcd.io/etcd/raft/raftpb"
@@ -58,6 +59,8 @@ type raftMsg struct {
 	OpType raftType
 }
 
+type shardServer string
+
 //TxManagerStore[TxId] = { TR, writeIntent }
 type TxRecord struct {
 	mu sync.Mutex // get the lock variable
@@ -69,7 +72,9 @@ type TxRecord struct {
 	//w       int    // switch ON/OFF
 	//Read to take care off
 	CommandList []*pbk.Command
-
+	/// Split between read and writes
+	shardedCommands map[string][]*pbk.Command
+	shardTxResult   map[string]string
 	//	Wg:          sync.WaitGroup{},
 	// Logging the tx, if its crashed ?
 	//	TxStore	map[int]TxStore
@@ -131,7 +136,7 @@ func (ts *TxStore) TxCommitWorker() {
 		case tr := <-ts.commitC:
 			for {
 				//success then break
-				if tr.TxCommit(tr.txPacket) == false {
+				if tr.TxCommit() == false {
 					break
 				}
 				//XXX: Update the leader ctx
@@ -152,7 +157,7 @@ func (ts *TxStore) TxAbortWorker() {
 		case tr := <-ts.abortC:
 			for {
 				//success then break
-				if tr.TxRollback(tr.txPacket) == false {
+				if tr.TxRollback() == false {
 					break
 				}
 				//XXX: Update the leader ctx
@@ -397,9 +402,11 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 
 func NewTxRecord() *TxRecord {
 	tr := &TxRecord{
-		TxId:        txStore.getNewTxId(),
-		TxPhase:     "PENDING",
-		CommandList: make([]*pbk.Command, 0),
+		TxId:            txStore.getNewTxId(),
+		TxPhase:         "PENDING",
+		CommandList:     make([]*pbk.Command, 0),
+		shardedCommands: make(map[string][]*pbk.Command),
+		shardTxResult:   make(map[string]string),
 	}
 	tr.raftTerm = txStore.raftStats.Term
 	return tr
@@ -478,9 +485,8 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	   	//	tr.mu.RUnLock()
 	*/
 
-	rq := newSendPacket(tr)
-	tr.txPacket = rq
-	if tr.TxPrepare(rq) == false {
+	tr.shardRequest()
+	if tr.TxPrepare() == false {
 		//dbg failure of the writeIntent
 		//invoke the rollback
 		/* res := tr.TxUpdateTxRecord("ABORT")
@@ -501,11 +507,12 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	res := tr.TxUpdateTxRecord("COMMIT")
 	res = tr.TxUpdateTxPending("DEL")
 
+	//Assign commit operation to Commit Channel
 	txStore.commitC <- *tr
 
 	// XXX: Offload it to worker thread
 	// http://nesv.github.io/golang/2014/02/25/worker-queues-in-go.html
-	if r := tr.TxCommit(rq); r == false {
+	/*	if r := tr.TxCommit(); r == false {
 		//retry the operation
 		// gross error
 		//	tr.TxPhase = "ABORT"
@@ -516,11 +523,11 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 
 			res := tr.TxUpdateTxRecord("ABORT")
 			log.Printf("Update record: %d", res)
-		*/
-		return false
+	*/
+	/*		return false
 
 	}
-
+	*/
 	log.Printf(" We are good")
 
 	log.Printf("Update record: %d", res)
@@ -540,11 +547,29 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 //For each leader (3)
 //Send KvTxReq
 
-func newSendPacket(tr *TxRecord) *pbk.KvTxReq {
-	cx := new(pbk.TxContext)
+func getShardLeader(s uint64) string {
 
+	return txStore.ShardInfo.ShardMap[s].LeaderKey
+	//retrun txStore.ShardInfo.ShardMap[s].getLeaderKey()
+
+}
+
+// Provide the map of Server with commands
+func (tr *TxRecord) shardRequest() {
+
+	/// XXX: var cache map[uint64]string
+	for _, cmd := range tr.CommandList {
+		shard := utils.Keytoshard(cmd.Key)
+		s := getShardLeader(shard)
+		tr.shardedCommands[s] = append(tr.shardedCommands[s], cmd)
+	}
+
+}
+
+func (tr *TxRecord) newSendPacket(s string) *pbk.KvTxReq {
+	cx := new(pbk.TxContext)
 	in := new(pbk.KvTxReq)
-	in.CommandList = tr.CommandList
+	in.CommandList = tr.shardedCommands[s]
 	in.TxContext = cx
 	in.TxContext.TxId = tr.TxId
 	return in
@@ -555,65 +580,112 @@ func newSendPacket(tr *TxRecord) *pbk.KvTxReq {
 //staging the change ->kvstore should have logic to abort it if it happens
 //sends the prepare message to kvstore raft leader(gRPC/goRPC) and waits for it to finish
 //XXX: later we can split depending on shards here
-func (tr *TxRecord) TxPrepare(rq *pbk.KvTxReq) bool {
+
+func getTxGrpcContext() (context.Context, context.CancelFunc) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	return ctx, cancel
+
+}
+
+func (tr *TxRecord) SendGrpcRequest(s string, doneC chan bool, op string) {
+
+	ctx, cancel := getTxGrpcContext()
+	defer cancel()
+
+	var rp *pbk.KvTxReply
+	var err error
+	req := tr.newSendPacket(s)
+	switch op {
+
+	case "prepare":
+		rp, err = KvClient[s].Cli.KvTxPrepare(ctx, req)
+
+	case "commit":
+		rp, err = KvClient[s].Cli.KvTxCommit(ctx, req)
+
+	case "rollback":
+		rp, err = KvClient[s].Cli.KvTxRollback(ctx, req)
+	}
+	//XXX: analyze the error later
+	if err != nil {
+		log.Fatalf("op:%v, err:%v", op, err)
+		doneC <- false
+	}
+
+	if rp.Status == pbk.Status_Failure {
+		tr.shardTxResult[s] = "FAIL"
+		doneC <- false
+		log.Printf("op:%s failed", op)
+
+	} else {
+		tr.shardTxResult[s] = "PASS"
+		doneC <- true
+		log.Printf("op:%s failed", op)
+
+	}
+}
+
+func (tr *TxRecord) TxPrepare() bool {
 	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
 	//c , err := getClient()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	rp, err := KvClient.Cli.KvTxPrepare(ctx, rq)
-	//XXX: analyze the error later
-	if err != nil {
-		log.Fatalf("TxPrepare: %v", err)
+	tr.shardRequest()
+	l := len(tr.shardedCommands)
+	doneC := make(chan bool, l)
+	for server, _ := range tr.shardedCommands {
+		go tr.SendGrpcRequest(server, doneC, "prepare")
+
 	}
-	if rp.Status == 0 {
-		log.Printf("TxPrepare succeeded")
-		return true
+	res := true
+	for i := 0; i < l; i++ {
+		val := <-doneC
+		if val == false {
+			res = false
+		}
 	}
-	log.Fatalf("TxPrepare failed")
-	return false
+	return res
 }
 
-func (tr *TxRecord) TxCommit(rq *pbk.KvTxReq) bool {
+func (tr *TxRecord) TxCommit() bool {
 	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
 	//c , err := getClient()
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	defer cancel()
+	l := len(tr.shardedCommands)
+	doneC := make(chan bool, l)
 
-	rp, err := KvClient.Cli.KvTxCommit(ctx, rq)
-	if err != nil {
-		log.Fatalf("TxCommit: %v", err)
-	}
-	//XXX: analyze the error later
-	if rp.Status == 0 {
-		log.Printf("TxCommit succeeded")
-		return true
-	}
+	for server, _ := range tr.shardedCommands {
+		go tr.SendGrpcRequest(server, doneC, "commit")
 
-	log.Fatalf("TxCommit failed")
-	return false
+	}
+	res := true
+	for i := 0; i < l; i++ {
+		val := <-doneC
+		if val == false {
+			res = false
+		}
+	}
+	return res
 }
 
-//Rollback sync: batch the request
-func (tr *TxRecord) TxRollback(rq *pbk.KvTxReq) bool {
-	//canceliing the request
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	defer cancel()
-	// do a batch processing
-	rp, err := KvClient.Cli.KvTxRollback(ctx, rq)
-	//XXX: analyze the error later
-	if err != nil {
-		log.Fatalf("TxRollback: %v", err)
-	}
+func (tr *TxRecord) TxRollback() bool {
+	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
+	//c , err := getClient()
+	l := len(tr.shardedCommands)
+	doneC := make(chan bool, l)
 
-	if rp.Status == 0 {
-		log.Printf("Rollback succeeded")
-		return true
+	for server, _ := range tr.shardedCommands {
+		go tr.SendGrpcRequest(server, doneC, "rollback")
+
+	}
+	res := true
+	for i := 0; i < l; i++ {
+		val := <-doneC
+		if val == false {
+			res = false
+		}
 	}
 	log.Fatalf("TxRollback failed")
-	return false
-
-	//Fail the request--> Move state to FAILED to ABORT and unStage all
+	return res
 }
 
 func (ts *TxStore) StartReplicaServerConnection(ctx context.Context, server string) {

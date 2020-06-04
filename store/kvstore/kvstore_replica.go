@@ -24,7 +24,8 @@ func (repl *Replica) UpdateLeader(ctx context.Context) {
 			for i, stores := range repl.Stores {
 				var shard replpb.Shard
 				shard.LeaderKey = repl.ReplicaName
-				shard.IsLeader = stores.Node.IsLeader()
+				s := stores.Node.GetStatus()
+				shard.IsLeader = stores.Node.IsLeader(s)
 				shard.ShardId = i
 				replica.ShardMap[i] = &shard
 			}

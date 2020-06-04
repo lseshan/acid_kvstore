@@ -15,40 +15,30 @@ Currently it keeps track of leader and get information from leader
 
 */
 type TxKvManager struct {
-	ClientAddress []string
-	KvLeader      string
-	Cli           pb.KvstoreClient
-	Conn          *grpc.ClientConn
-	AllClient     map[string]pb.KvstoreClient
-	AllConn       map[string]*grpc.ClientConn
+	shardServer string
+	Cli         pb.KvstoreClient
+	Conn        *grpc.ClientConn
 }
 
-var KvClient *TxKvManager
+//KvClient[server] = TxKvManager
+var KvClient map[string]*TxKvManager
 
 // XXX: Check if race can happen
 func NewTxKvManager(s []string, compl chan int) {
 
-	t := new(TxKvManager)
-	t.AllClient = make(map[string]pb.KvstoreClient)
-	t.AllConn = make(map[string]*grpc.ClientConn)
-	t.ClientAddress = s
-	t.KvLeader = s[0]
-	for _, servers := range t.ClientAddress {
-		t.TxKvCreateClientCtx(servers)
+	KvClient = make(map[string]*TxKvManager)
+
+	for _, server := range s {
+		t := new(TxKvManager)
+		t.shardServer = server
+		t.TxKvCreateClientCtx(server)
+		KvClient[server] = t
 	}
-	t.Cli = t.AllClient[s[0]]
-	t.Conn = t.AllConn[s[0]]
-
-	KvClient = t
 	compl <- 1
-	log.Printf("KVCli context setup")
+	log.Printf("grpc client for shardservers are setup")
 }
 
-func (t *TxKvManager) TxKvGetClient() pb.KvstoreClient {
-	return t.Cli
-}
-
-func (t *TxKvManager) KvCloseTxClient() {
+func (t *TxKvManager) KvCloseTxClient(s string) {
 
 	t.Conn.Close()
 }
@@ -64,18 +54,35 @@ func (t *TxKvManager) TxKvUpdateLeader() {
 
 }
 
+func (t *TxKvManager) TxKvCloseConn(s string) {
+
+}
+
+func (t *TxKvManager) TxKvUpdateCtxForServer(s string) {
+	// XXX: Got to find better way
+	if len(s) > 0 {
+		log.Printf("Creating grpc conn for Server:%s", s)
+		conn, err := grpc.Dial(s, grpc.WithInsecure(), grpc.WithBlock())
+		if err != nil {
+			log.Fatalf("ERROR: grpc connection failed")
+			return
+		}
+		t.Cli = pb.NewKvstoreClient(conn)
+		t.Conn = conn
+	}
+}
+
 func (t *TxKvManager) TxKvCreateClientCtx(s string) {
 	// XXX: Got to find better way
 	if len(s) > 0 {
-		log.Printf("Server:%s", s)
+		log.Printf("Creating grpc conn for Server:%s", s)
 		conn, err := grpc.Dial(s, grpc.WithInsecure(), grpc.WithBlock())
 		if err != nil {
-			log.Fatalf("grpc connection failed")
+			log.Fatalf("ERROR: grpc connection failed")
+			return
 		}
-
-		t.AllClient[s] = pb.NewKvstoreClient(conn)
-		t.AllConn[s] = conn
-
+		t.Cli = pb.NewKvstoreClient(conn)
+		t.Conn = conn
 	}
 
 }
