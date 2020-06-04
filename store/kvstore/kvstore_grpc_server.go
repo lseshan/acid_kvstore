@@ -39,6 +39,20 @@ func (kv *Kvstore) KvTxPrepare(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply
 	txn.TxId = in.GetTxContext().GetTxId()
 	txn.Cmd = "Prep"
 
+	var readCommandResp []*pb.Command
+
+	readcl := in.GetReadCommandList()
+	for _, cm := range readcl {
+		rkv, err := kv.HandleKVOperation(cm.Key, cm.Val, "GET")
+		if err == nil {
+			readCommandResp = append(readCommandResp, &pb.Command{Key: rkv.Key, Val: rkv.Val})
+		} else {
+			resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList(), ReadCommandList: in.GetReadCommandList()}
+			resp.Status = pb.Status_Failure
+			return &resp, nil
+		}
+	}
+
 	cl := in.GetCommandList()
 	var oper operation
 	for _, cm := range cl {
@@ -48,6 +62,7 @@ func (kv *Kvstore) KvTxPrepare(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply
 		log.Printf("Operation: %+v", oper)
 		txn.Oper = append(txn.Oper, oper)
 	}
+
 	/* oper.Optype = in.GetCommand().GetOp()
 	oper.Key = strconv.FormatUint(in.GetCommand().GetKey(), 10)
 	oper.Val = strconv.FormatUint(in.GetCommand().GetVal(), 10)
@@ -60,7 +75,7 @@ func (kv *Kvstore) KvTxPrepare(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply
 	log.Printf("Done propose txn")
 	val := <-respCh
 	log.Printf("Val %v", val)
-	resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList()}
+	resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList(), ReadCommandList: readCommandResp}
 	// XXX: val is 1 translated to sucess, might need to switch for uniformity
 	if val == 1 {
 		resp.Status = pb.Status_Success
