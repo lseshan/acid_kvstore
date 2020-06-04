@@ -17,7 +17,9 @@ PACKAGES            := $$($(PACKAGE_LIST))
 CUR_DIR := $(shell pwd)
 export PATH := $(CUR_DIR)/bin/:$(PATH)
 
-.PHONY: clean proto
+.PHONY: clean proto tx store replicamgr
+
+all: proto tx store replicamgr
 
 proto:
 	(proto/generate_go.sh)
@@ -28,3 +30,5 @@ tx:
 
 store:
 	$(GO_BUILD) -o store/store store/main.go
+replicamgr:
+	$(GO_BUILD) -o replicaMgr/replicamgr replicaMgr/main.go

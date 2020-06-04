@@ -570,7 +570,7 @@ func (tr *TxRecord) shardRequest() {
 
 	/// XXX: var cache map[uint64]string
 	for _, cmd := range tr.CommandList {
-		shard := utils.Keytoshard(cmd.Key)
+		shard := utils.Keytoshard(cmd.Key, 3)
 		s := getShardLeader(shard)
 		tr.shardedCommands[s] = append(tr.shardedCommands[s], cmd)
 	}

@@ -1,6 +1,6 @@
 ACID KV Store
 ReplicMgr
-./replicaMgr --id 1 --cluster http://127.0.0.1:12379 --servers 127.0.0.1:22379,127.0.0.1:22380,127.0.0.1:22381 --grpcport :21224 --httport 1026 --shards 3
+./replicamgr --id 1 --cluster http://127.0.0.1:12379 --servers 127.0.0.1:22379,127.0.0.1:22380,127.0.0.1:22381 --grpcport :21224 --httport 1026 --shards 3
 
 KVstore:
 ./store --grpcport :22379 --httpport 1024
@@ -8,4 +8,4 @@ KVstore:
 ./store  --grpcport :22381 --httpport 1025
 
 TxStore:
-./tx --id 1 --kvcluster localhost:22379  --cluster http://127.0.0.1:23479 --cliport 23480 --grpcport :20051 --replicamgrs 127.0.0.1:21224
+./tx --id 1   --cluster http://127.0.0.1:23479 --cliport 23480 --grpcport :20051 --replicamgrs 127.0.0.1:21224

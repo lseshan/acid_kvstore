@@ -53,7 +53,7 @@ func main() {
 	join := flag.Bool("join", false, "join an existing cluster")
 	txcluster := flag.String("txcluster", "http://127.0.0.1:9021", "comma separated TxManager cluster peers")
 	*/
-	grpcport := flag.String("grpcport", ":9122", "grpc server port")
+	grpcport := flag.String("grpcport", "127.0.0.1:9122", "grpc server port")
 	flag.Parse()
 	ctx := context.Background()
 
@@ -61,7 +61,7 @@ func main() {
 
 	var replica kvstore.Replica
 	replica.Stores = make(map[uint64]*kvstore.Kvstore)
-	replica.ReplicaName = "127.0.0.1" + *grpcport
+	replica.ReplicaName = *grpcport
 
 	go replica.UpdateLeader(ctx)
 	//	go checkLeader(ctx, kvs)
