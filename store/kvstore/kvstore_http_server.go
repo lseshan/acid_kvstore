@@ -17,7 +17,7 @@ func (repl *Replica) handleKVGet(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 	var kv KV
-	kv = kvs.HandleKVOperation(key, "", "GET")
+	kv, _ = kvs.HandleKVOperation(key, "", "GET")
 	json.NewEncoder(w).Encode(kv)
 }
 
@@ -25,7 +25,7 @@ func (kvs *Kvstore) handleKVGet(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 	var kv KV
-	kv = kvs.HandleKVOperation(key, "", "GET")
+	kv, _ = kvs.HandleKVOperation(key, "", "GET")
 	json.NewEncoder(w).Encode(kv)
 
 }

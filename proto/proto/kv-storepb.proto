@@ -33,7 +33,8 @@ message KvTxReq {
 message KvTxReply {
     TxContext TxContext = 1;
     repeated Command CommandList = 2;
-    Status Status = 3;
+    repeated Command ReadCommandList = 3;
+    Status Status = 4;
 }
 
 message Command {

@@ -231,7 +231,7 @@ func (s *kvstore) Prep(txn Txn) {
 		if len(v.writeIntent) > 0 {
 			ok = s.KvResolveTx(&v)
 		}
-		if ok == "ABORT" {
+		if ok == "PENDING" {
 			res = 0
 			break
 		}
@@ -305,11 +305,15 @@ func (s *kvstore) ProposeTxn(txn Txn) {
 	s.proposeC <- buf.String()
 }
 
-func (s *kvstore) HandleKVOperation(key string, val string, op string) KV {
+func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, error) {
 	var kv KV
 	switch op {
 	case "GET":
 		log.Printf("Got get")
+		v := s.KvStore[key]
+		if len(v.writeIntent) > 0 {
+			s.KvResolveTx(&v)
+		}
 		kv.Key = key
 		kv.Val = s.KvStore[key].val
 		log.Printf("%v", s.KvStore[key])
@@ -320,7 +324,7 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) KV {
 	case "DEL":
 		delete(s.KvStore, key)
 	}
-	return kv
+	return kv, nil
 }
 
 func (s *kvstore) readCommits(commitC <-chan *string, errorC <-chan error) {
