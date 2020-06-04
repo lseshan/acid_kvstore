@@ -60,9 +60,6 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Invalid TxId %v", txid)
 		return
 	}
-	ret := tr.TxUpdateTxPending("ADD")
-	log.Printf("TxHttp: Update Record res:  %v", ret)
-
 	res := tr.TxSendBatchRequest()
 
 	if res == true {

@@ -105,6 +105,7 @@ func NewTxStoreWrapper(id int, cluster []string, join bool) *TxStore {
 	commitC, errorC, snapshotterReady, rc := raft.NewRaftNode(id, peerlist, join, getSnapshot, proposeC, confChangeC)
 
 	ts = NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
+	InitTxKvMapper()
 	return ts
 }
 
@@ -198,12 +199,13 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 				}
 
 			}
-			resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
+			/* resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
 			if err != nil {
 				log.Printf("error in leader update: %v", err)
 			} else {
 				ts.ShardInfo = resp.ShardInfo
 			}
+			*/
 
 		case <-ctx.Done():
 			log.Printf("Done with Update leader")
@@ -219,7 +221,6 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 	m := make(map[uint64]*TxRecord)
 	q := make(map[uint64]*TxRecord)
 	n := make(map[uint64]Txn)
-	s := r.GetStatus()
 	rep := make(map[string]replpb.ReplicamgrClient)
 	ts := &TxStore{
 		TxRecordStore: m,
@@ -229,7 +230,6 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 		RaftNode:      r,
 		TxPending:     q,
 		lastTxId:      0,
-		raftStats:     s,
 		ReplMgrs:      rep,
 	}
 	// replay log into key-value map
@@ -239,6 +239,7 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 	txStore = ts
 
 	//Start commitC and AbortC worker threadsd
+	ts.raftStats = r.GetStatus()
 	ts.commitC = make(chan TxRecord, WorkerBufferLen)
 	ts.abortC = make(chan TxRecord, WorkerBufferLen)
 	ts.quitC = make(chan int, 2)
@@ -335,7 +336,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 					//XXX: go to update the error channel
 					//log.Fatalf("Error: ADD Houston we got a problem, Entry:%+v,", r)
 					log.Printf("Warning: This entry is created while BEGIN")
-					//	break
+					break
 				}
 				ts.TxPending[tr.TxId] = tr
 				ts.mu.Unlock()
@@ -393,8 +394,8 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 
 		if ltxn, ok := ts.txnMap[tr.TxId]; ok {
 			ltxn.RespCh <- 1
+			delete(ts.txnMap, tr.TxId)
 		}
-		delete(ts.txnMap, tr.TxId)
 		log.Printf("Raft update done: %+v", msg)
 
 	}
@@ -484,6 +485,8 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	   	}
 	   	//	tr.mu.RUnLock()
 	*/
+	ret := tr.TxUpdateTxPending("ADD")
+	log.Printf("TxRAFT: Update Record res:  %v", ret)
 
 	tr.shardRequest()
 	if tr.TxPrepare() == false {
@@ -549,9 +552,14 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 
 func getShardLeader(s uint64) string {
 
-	return txStore.ShardInfo.ShardMap[s].LeaderKey
-	//retrun txStore.ShardInfo.ShardMap[s].getLeaderKey()
-
+	if val, ok := txStore.ShardInfo.ShardMap[s]; ok == false {
+		log.Fatalf("looks like we have a failure here")
+		log.Fatalf("Missing details about shard S")
+		return ""
+	} else {
+		return val.LeaderKey
+		//retrun txStore.ShardInfo.ShardMap[s].getLeaderKey()
+	}
 }
 
 // Provide the map of Server with commands

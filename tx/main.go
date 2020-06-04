@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
 	"github.com/acid_kvstore/tx/txmanager"
 	"go.etcd.io/etcd/raft/raftpb"
@@ -18,9 +19,9 @@ func main() {
 
 	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
 	id := flag.Int("id", 1, "node ID")
-	cliport := flag.Int("cliport", 9121, "key-value server port")
+	cliport := flag.Int("cliport", 9121, "http port")
 	join := flag.Bool("join", false, "join an existing cluster")
-	kvcluster := flag.String("kvcluster", "http://127.0.0.1:9021", "comma separated KvServer cluster peers")
+	//kvcluster := flag.String("kvcluster", "http://127.0.0.1:9021", "comma separated KvServer cluster peers")
 	grpcport := flag.String("grpcport", ":9122", "grpc server port")
 
 	replicamgrs := flag.String("replicamgrs", "127.0.0.1:9021", "comma separated replicamgrs")
@@ -58,7 +59,16 @@ func main() {
 	//Update to ReplicaLeader
 	ts.ReplLeaderClient = ts.ReplMgrs[server[0]]
 	go ts.UpdateLeader(ctx)
+	resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
+	if err != nil {
+		log.Printf("error in leader update: %v", err)
+	} else {
+		ts.ShardInfo = resp.ShardInfo
+	}
 
+	for _, shard := range ts.ShardInfo.ShardMap {
+		txmanager.TxKvCreateClientCtx(shard.LeaderKey)
+	}
 	// XXX: TxManager Server
 	go func() {
 		lis, err := net.Listen("tcp", *grpcport)
@@ -72,10 +82,11 @@ func main() {
 		}
 	}()
 	log.Printf("Starting setting up KvCLient")
-	compl := make(chan int)
-	go txmanager.NewTxKvManager(strings.Split(*kvcluster, ","), compl)
-	log.Printf("Waiting to get kvport client")
-	<-compl
+	//compl := make(chan int)
+	//go txmanager.NewTxKvManager(strings.Split(*kvcluster, ","), compl)
+
+	//log.Printf("Waiting to get kvport client")
+	//<-compl
 	//XXX: Server HTTP api
 	ts.ServeHttpTxApi(*cliport)
 	//	go checkLeader(ctx, kvs)

@@ -2,6 +2,7 @@ package txmanager
 
 import (
 	"log"
+	"strings"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
 	"google.golang.org/grpc"
@@ -24,6 +25,11 @@ type TxKvManager struct {
 var KvClient map[string]*TxKvManager
 
 // XXX: Check if race can happen
+func InitTxKvMapper() {
+	KvClient = make(map[string]*TxKvManager)
+}
+
+/*
 func NewTxKvManager(s []string, compl chan int) {
 
 	KvClient = make(map[string]*TxKvManager)
@@ -37,7 +43,9 @@ func NewTxKvManager(s []string, compl chan int) {
 	compl <- 1
 	log.Printf("grpc client for shardservers are setup")
 }
+*/
 
+/*
 func (t *TxKvManager) KvCloseTxClient(s string) {
 
 	t.Conn.Close()
@@ -57,7 +65,8 @@ func (t *TxKvManager) TxKvUpdateLeader() {
 func (t *TxKvManager) TxKvCloseConn(s string) {
 
 }
-
+*/
+/*
 func (t *TxKvManager) TxKvUpdateCtxForServer(s string) {
 	// XXX: Got to find better way
 	if len(s) > 0 {
@@ -71,20 +80,27 @@ func (t *TxKvManager) TxKvUpdateCtxForServer(s string) {
 		t.Conn = conn
 	}
 }
-
-func (t *TxKvManager) TxKvCreateClientCtx(s string) {
+*/
+func TxKvCreateClientCtx(s string) {
 	// XXX: Got to find better way
-	if len(s) > 0 {
-		log.Printf("Creating grpc conn for Server:%s", s)
-		conn, err := grpc.Dial(s, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("ERROR: grpc connection failed")
-			return
-		}
-		t.Cli = pb.NewKvstoreClient(conn)
-		t.Conn = conn
+	port := strings.Split(s, ":")
+	grpcServer := "localhost:"
+	ip := grpcServer + port[1]
+	log.Printf("GRPC connection server:%v", ip)
+	if _, ok := KvClient[s]; ok == true {
+		log.Printf("Ctx is alreay present: Resulting in noperation")
 	}
+	t := new(TxKvManager)
+	t.shardServer = s
+
+	conn, err := grpc.Dial(ip, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("ERROR: grpc connection failed")
+		return
+	}
+	t.Cli = pb.NewKvstoreClient(conn)
+	t.Conn = conn
 
 }
 
-func (t *TxKvManager) TxFindNearClient() {}
+///func (t *TxKvManager) TxFindNearClient() {}
