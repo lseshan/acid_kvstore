@@ -489,9 +489,18 @@ func (rc *RaftNode) serveRaft() {
 	close(rc.httpdonec)
 }
 
-func (rc *RaftNode) IsLeader() bool {
-	raftState := rc.Node.Status()
-	return raftState.RaftState == raft.StateLeader
+func (rc *RaftNode) IsLeader(s raft.Status) bool {
+	return s.RaftState == raft.StateLeader
+}
+
+func (rc *RaftNode) GetStatus() raft.Status {
+	status := rc.Node.Status()
+	return status
+}
+
+func (rc *RaftNode) GetLeaderInfo(s raft.Status) (uint64, uint64) {
+	return s.ID, s.Term
+
 }
 
 func (rc *RaftNode) Process(ctx context.Context, m raftpb.Message) error {
