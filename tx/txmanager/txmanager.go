@@ -199,13 +199,14 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 				}
 
 			}
-			/* resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
+			resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
 			if err != nil {
 				log.Printf("error in leader update: %v", err)
 			} else {
+				ts.mu.Lock()
 				ts.ShardInfo = resp.ShardInfo
+				ts.mu.Unlock()
 			}
-			*/
 
 		case <-ctx.Done():
 			log.Printf("Done with Update leader")
@@ -551,6 +552,8 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 //Send KvTxReq
 
 func getShardLeader(s uint64) string {
+	txStore.mu.Lock()
+	defer txStore.mu.Unlock()
 
 	if val, ok := txStore.ShardInfo.ShardMap[s]; ok == false {
 		log.Fatalf("looks like we have a failure here")
@@ -604,6 +607,9 @@ func (tr *TxRecord) SendGrpcRequest(s string, doneC chan bool, op string) {
 	var rp *pbk.KvTxReply
 	var err error
 	req := tr.newSendPacket(s)
+	if _, ok := KvClient[s]; ok == false {
+		TxKvCreateClientCtx(s)
+	}
 	switch op {
 
 	case "prepare":
