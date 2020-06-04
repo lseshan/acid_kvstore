@@ -27,6 +27,7 @@ type Server struct {
 type ReplicaMgr struct {
 	ProposeC    chan<- string
 	Servers     map[string]Server
+	serverlist  []string
 	Shards      int // number of shards
 	Node        *raft.RaftNode
 	Shard       map[uint64]*pb.Shard //
@@ -55,9 +56,16 @@ func NewReplicaMgr(name string, cluster []string, servers []string, shards int, 
 	replicamgr.ProposeC = proposeC
 	replicamgr.Snapshotter = <-snapshotterReady
 	replicamgr.MyName = name
+	replicamgr.serverlist = servers
+	replicamgr.Shards = shards
+
+	return replicamgr
+}
+
+func (repl *ReplicaMgr) Start() {
 
 	//For each server send ReplicaInformation
-	for i, servername := range servers {
+	for i, servername := range repl.serverlist {
 		localServer := Server{}
 		localServer.ShardConfig = make(map[int32]*kvpb.ShardConfig)
 		var shardportstart int
@@ -66,31 +74,30 @@ func NewReplicaMgr(name string, cluster []string, servers []string, shards int, 
 		//Shard start = 1 22345  22346  22347
 		//                22348
 		//				3 106
-		for j := 0; j < shards; j++ {
+		for j := 0; j < repl.Shards; j++ {
 			var peerServers []string
-			for i := range servers {
-				peerServers = append(peerServers, "http://127.0.0.1:"+strconv.Itoa(shardportstart+j*len(servers)+i))
+			for i := range repl.serverlist {
+				peerServers = append(peerServers, "http://127.0.0.1:"+strconv.Itoa(shardportstart+j*len(repl.serverlist)+i))
 			}
 			localServer.ShardConfig[int32(j+1)] = &kvpb.ShardConfig{Peers: peerServers}
 		}
 
 		localServer.ServerKey = servername
 		localServer.ReplicaId = uint32(i + 1)
-		localServer.Peers = servers
-		replicamgr.Servers[servername] = localServer
-		replicamgr.StartServerConnection(context.Background(), replicamgr.Servers[servername])
+		localServer.Peers = repl.serverlist
+		repl.Servers[servername] = localServer
+		repl.StartServerConnection(context.Background(), repl.Servers[servername])
 	}
 	//time.Sleep(10 * time.Second)
-	for _, servername := range servers {
-		replicamgr.SendReplicaInformation(replicamgr.Servers[servername])
-		for j := 0; j < shards; j++ {
-			replicamgr.SendShardJoinInformation(replicamgr.Servers[servername], int32(j+1))
+	for _, servername := range repl.serverlist {
+		repl.SendReplicaInformation(repl.Servers[servername])
+		for j := 0; j < repl.Shards; j++ {
+			repl.SendShardJoinInformation(repl.Servers[servername], int32(j+1))
 		}
 		//replicamgr.SendShardJoinInformation(replicamgr.Servers[servername], 2)
 		//replicamgr.SendShardJoinInformation(replicamgr.Servers[servername], 3)
 
 	}
-	return replicamgr
 	//For each server send Shard Join
 }
 

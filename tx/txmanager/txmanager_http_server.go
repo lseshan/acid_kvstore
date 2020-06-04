@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/http/pprof"
 	"net/url"
 	"strconv"
 
@@ -161,6 +162,12 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Tx Post is TxId:%d op:%s key: %s, val: %s, Result: %v",
 		txid, op, key, val, res)
 }
+func (ts *TxStore) handleTxQuery(w http.ResponseWriter, r *http.Request) {
+	m := make(map[string]interface{})
+	m["shardinfo"] = ts.ShardInfo
+	json.NewEncoder(w).Encode(m)
+
+}
 
 //XXX: Need to verify if errorC is required
 func (ts *TxStore) ServeHttpTxApi(port int) {
@@ -177,6 +184,18 @@ func (ts *TxStore) ServeHttpTxApi(port int) {
 	//Methods to control Raft
 
 	// Methods to configures KV store - number of shards,
+	//Debug profile methods
+	r.HandleFunc("/debug/pprof/", pprof.Index)
+	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	r.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	r.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
+	r.Handle("/debug/pprof/heap", pprof.Handler("heap"))
+	r.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
+	r.Handle("/debug/pprof/block", pprof.Handler("block"))
+
+	//Dump internal memory
+	api.Methods("GET").Subrouter().HandleFunc("/txmgrquery/", ts.handleTxQuery)
 
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), r))
 }
