@@ -121,6 +121,8 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 			}
 			resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
 			if err != nil {
+				log.Printf("error in leader update: %v", err)
+			} else {
 				ts.ShardInfo = resp.ShardInfo
 			}
 
@@ -410,6 +412,18 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	//tr.TxPhase = "COMMITED"
 	return true
 }
+
+//func newSednPacket(tr *TxRecord) [string]*pbk.KvTxReq
+//{
+//Wallk all TxRecord for each command:
+//   command
+//   shard :=  key2shard (each keys in commandList)
+//   Leader: TxManager.ShardMap(shard).GetLeader()
+//   KvTxReq[Leader] = command
+//}
+
+//For each leader (3)
+//Send KvTxReq
 
 func newSendPacket(tr *TxRecord) *pbk.KvTxReq {
 	cx := new(pbk.TxContext)

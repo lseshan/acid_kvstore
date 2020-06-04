@@ -161,6 +161,32 @@ func (s *kvstore) Lock(txn Txn) {
 
 }
 
+/*Txn0: completed 10
+
+Key
+Val,  Txn2
+
+WriteIntent : Txn1
+Read :Txn2
+
+Txn1: Write     20
+Txn2: Read of Txn0
+
+Written:
+10 20 30 40
+
+Read:
+10 10 20 20 30 30 30 30 40
+
+Read:
+10 10 20 20 10 30 20 30 40
+
+Txn0  Txn1 Prep  Txn2Read   Txn1 Commit     Txn3 Read
+--------------------------------------------------->
+t0    t1          t2           t3             t4
+10    10          10           20             20
+*/
+
 func (s *kvstore) KvResolveTx(v *value) string {
 	cli := TxManager.KvTxGetClient()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -177,7 +203,7 @@ func (s *kvstore) KvResolveTx(v *value) string {
 
 	switch res.Stage {
 	case "PENDING":
-		return "ABORT"
+		return "PENDING"
 	case "ABORT":
 		v.writeIntent = ""
 		v.txnId = 0
