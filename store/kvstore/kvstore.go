@@ -269,7 +269,7 @@ func (s *kvstore) Prep(txn Txn) {
 		}
 		res = 1
 		v.writeIntent = oper.Val
-		// v.TxId = ctx
+		v.txnId = txn.TxId
 		s.KvStore[oper.Key] = v
 		v.mu.Unlock()
 	}

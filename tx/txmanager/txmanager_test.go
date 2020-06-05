@@ -3,6 +3,7 @@ package txmanager_test
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -34,9 +35,26 @@ func TestTxSendBatchRequest(t *testing.T) {
 }
 */
 
-func TestHttpRequest(t *testing.T) {
+/*func init() {
+	httpport := flag.String("httpport", "23480", "r1:23480, r2:24480, r3:25480")
+	flag.Parse()
+	log.Printf("%+v", httpport)
+	port = *httpport
 
-	ul := "http://127.0.0.1:23480/api/tx/"
+}
+*/
+var port = flag.String("port", "23480", "r1:23480, r2:24480, r3:25480")
+
+func TestHttpRequest(t *testing.T) {
+	//	httpport := flag.String("httpport", "9121", "r1:23480, r2:24480, r3:25480")
+	//	flag.Parse()
+	var buffer bytes.Buffer
+	buffer.WriteString("http://127.0.0.1:")
+	buffer.WriteString(*port)
+	buffer.WriteString("/api/tx")
+
+	ul := buffer.String()
+
 	resp, err := http.Get(ul)
 	if err != nil {
 		log.Fatalf("Error Occurred")
@@ -47,6 +65,11 @@ func TestHttpRequest(t *testing.T) {
 	var tx txmanager.TxJson
 	json.Unmarshal(body, &tx)
 
+	if tx.Status != "SUCCESS" {
+		log.Printf("Test FAILED %s", tx.Status)
+		log.Fatalf("Test Failed")
+		return
+	}
 	txid := tx.TxId
 	log.Printf("TxId:%s", txid)
 
@@ -57,8 +80,6 @@ func TestHttpRequest(t *testing.T) {
 	_, _ = http.PostForm(ul,
 		url.Values{"txid": {txid}, "op": {"PUT"}, "key": {"Vijaendra"}, "val": {"VMware"}})
 
-	var buffer bytes.Buffer
-	buffer.WriteString(ul)
 	buffer.WriteString("commit/")
 	buffer.WriteString(txid)
 	buffer.WriteString("/")

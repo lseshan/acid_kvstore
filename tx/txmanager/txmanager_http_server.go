@@ -13,7 +13,8 @@ import (
 )
 
 type TxJson struct {
-	TxId string `json:"TxID"`
+	TxId   string `json:"TxID"`
+	Status string `json:"Status"`
 }
 
 type PostReq struct {
@@ -24,19 +25,23 @@ type PostReq struct {
 func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 
 	// XXX: find a way to get the leader
-	/*	if ts.RaftNode.IsLeader() {
-			log.Printf("Sorry, I am not a leader")
-			log.Fatalf("Leader is: XXX")
-			return
-		}
-	*/
+	var res TxJson
+	s := ts.RaftNode.GetStatus()
+	if ts.RaftNode.IsLeader(s) == false {
+		res.Status = "NoLeader"
+		json.NewEncoder(w).Encode(res)
+		log.Printf("Sorry, I am not a leader")
+		log.Printf("Leader is: %v", s.Lead)
+		return
+	}
+
 	//Creates the Tr with Begin Tx and sends it part of the cookie ?
 	tr := NewTxRecord()
 	//ts.TxRecordStore[tr.TxId] = tr
 	// XXX: ? no need to update with raft as if we fail here dont bother
 	ts.TxPending[tr.TxId] = tr
-	var res TxJson
 	res.TxId = strconv.FormatUint(tr.TxId, 10)
+	res.Status = "SUCCESS"
 	json.NewEncoder(w).Encode(res)
 
 	//	ts.ProposeTxRecord(*tr)
@@ -51,7 +56,7 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	txid, err := strconv.ParseUint(vars["txid"], 10, 64)
 	if err != nil {
-		log.Fatalf("Invalid TxId %v", txid)
+		log.Printf("Invalid TxId %v", txid)
 	}
 
 	log.Printf("TxId:%d ", txid)
