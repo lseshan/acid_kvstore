@@ -224,8 +224,18 @@ func (repl *Replica) KvRawDelete(_ context.Context, in *pb.KvRawReq) (*pb.KvRawR
 }
 
 func (repl *Replica) KvReplicaUpdateConfig(_ context.Context, in *pb.ReplicaConfigReq) (*pb.ReplicaConfigResp, error) {
-	repl.Config = in.GetConfig()
-	go repl.StartReplMgrGrpcClient()
+	localConfig := in.GetConfig()
+
+	if repl.Config == nil {
+		repl.Config = localConfig
+		go repl.StartReplMgrGrpcClient()
+	} else if repl.Config.ReplLeader != localConfig.ReplLeader {
+		repl.Conn.Close()
+		repl.Replclient = nil
+		repl.Config.ReplLeader = localConfig.ReplLeader
+		go repl.StartReplMgrGrpcClient()
+	}
+	//TODO:Handle TxLeader
 	return &pb.ReplicaConfigResp{Status: pb.Status_Success}, nil
 }
 

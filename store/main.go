@@ -55,6 +55,7 @@ func main() {
 	*/
 	grpcport := flag.String("grpcport", "127.0.0.1:9122", "grpc server port")
 	flag.Parse()
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	ctx := context.Background()
 
 	ctx, cancel := context.WithCancel(ctx)
