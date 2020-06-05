@@ -242,7 +242,20 @@ func (s *kvstore) Prep(txn Txn) {
 		//Should we take lock
 
 		//XXX: Use Read and Write Locks
-		v := s.KvStore[oper.Key]
+		var v *value
+
+		// XXX:Can think of readwrite locks
+		s.mu.Lock()
+		if _, ok := s.KvStore[oper.Key]; !ok {
+			log.Printf("v is nil")
+			v = &value{}
+			log.Printf("v is : %+v", v)
+			s.KvStore[oper.Key] = v
+		} else {
+			v = s.KvStore[oper.Key]
+		}
+		s.mu.Unlock()
+		log.Printf("The current Val: %+v for the key:%v", v, oper.Key)
 		v.mu.Lock()
 		ok := "STAGE"
 		if len(v.writeIntent) > 0 {
@@ -250,10 +263,12 @@ func (s *kvstore) Prep(txn Txn) {
 		}
 		if ok == "PENDING" {
 			res = 0
+			v.mu.Unlock()
 			break
 		}
 		res = 1
 		v.writeIntent = oper.Val
+		// v.TxId = ctx
 		s.KvStore[oper.Key] = v
 		v.mu.Unlock()
 	}

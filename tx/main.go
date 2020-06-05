@@ -26,7 +26,7 @@ func main() {
 
 	replicamgrs := flag.String("replicamgrs", "127.0.0.1:9021", "comma separated replicamgrs")
 	flag.Parse()
-
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	proposeC := make(chan string)
 	defer close(proposeC)
 	confChangeC := make(chan raftpb.ConfChange)

@@ -584,6 +584,7 @@ func getShardLeader(s uint64) string {
 func (tr *TxRecord) shardRequest() {
 
 	/// XXX: var cache map[uint64]string
+	log.Printf("CommandList:%+v", tr.CommandList)
 	for _, cmd := range tr.CommandList {
 		//XXX
 		shard := utils.Keytoshard(cmd.Key, 1)
@@ -599,6 +600,7 @@ func (tr *TxRecord) newSendPacket(shard uint64) *pbk.KvTxReq {
 	in.TxContext = cx
 	in.TxContext.TxId = tr.TxId
 	in.TxContext.ShardId = shard
+	log.Printf("Packet Sent: %+v", in)
 	return in
 
 }
@@ -610,7 +612,7 @@ func (tr *TxRecord) newSendPacket(shard uint64) *pbk.KvTxReq {
 
 func getTxGrpcContext() (context.Context, context.CancelFunc) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	return ctx, cancel
 
 }
@@ -625,12 +627,13 @@ func (tr *TxRecord) SendGrpcRequest(shard uint64, doneC chan bool, op string) {
 	server := getShardLeader(shard)
 	req := tr.newSendPacket(shard)
 	if _, ok := KvClient[server]; ok == false {
-		log.Fatalf("Missig client for server: %s, op:%s", server, op)
 		TxKvCreateClientCtx(server)
+		log.Printf("Missed client for server: %s, op:%s", server, op)
 	}
 	switch op {
 
 	case "prepare":
+		log.Printf("Send Prepare")
 		rp, err = KvClient[server].Cli.KvTxPrepare(ctx, req)
 
 	case "commit":
@@ -662,7 +665,7 @@ func (tr *TxRecord) TxPrepare() bool {
 	//send the prepare message to kvstore raft leader (where they Stage the message) using gRPC/goRPC
 	//c , err := getClient()
 
-	tr.shardRequest()
+	//tr.shardRequest()
 	l := len(tr.shardedCommands)
 	doneC := make(chan bool, l)
 	for shards, _ := range tr.shardedCommands {
