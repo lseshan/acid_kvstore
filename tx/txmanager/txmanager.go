@@ -37,6 +37,7 @@ type TxStore struct {
 	ShardInfo        *replpb.ShardInfo
 	ReplMgrs         map[string]replpb.ReplicamgrClient
 	ReplLeaderClient replpb.ReplicamgrClient
+	ReplInfo         *replpb.ReplicaInfo
 	mu               sync.Mutex
 	raftStats        raftstat.Status
 	commitC          chan TxRecord
@@ -205,6 +206,7 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 			} else {
 				ts.mu.Lock()
 				ts.ShardInfo = resp.ShardInfo
+				ts.ReplInfo = resp.ReplicaInfo
 				ts.mu.Unlock()
 			}
 
@@ -586,8 +588,10 @@ func (tr *TxRecord) shardRequest() {
 	/// XXX: var cache map[uint64]string
 	log.Printf("CommandList:%+v", tr.CommandList)
 	for _, cmd := range tr.CommandList {
-		//XXX
-		shard := utils.Keytoshard(cmd.Key, 3)
+		//XXX: To DO: Take lock on  txStore. Preferably a read lock
+		nshards := txStore.ReplInfo.Nshards
+		log.Printf("Number of shards : %v", nshards)
+		shard := utils.Keytoshard(cmd.Key, int(nshards))
 		tr.shardedCommands[shard] = append(tr.shardedCommands[shard], cmd)
 	}
 
@@ -676,7 +680,7 @@ func (tr *TxRecord) TxPrepare() bool {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val == false {
-			log.Fatalf("TxPrepare is failed")
+			log.Printf("TxPrepare is failed")
 			res = false
 		}
 	}

@@ -27,6 +27,7 @@ message TxInfo {
 message ReplicaInfo {
     string HttpEndpoint  = 1;
     string RpcEndpoint = 2;
+    uint32 Nshards = 3;
 }
 
 message ReplicaTxReq {

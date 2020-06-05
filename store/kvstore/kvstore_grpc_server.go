@@ -211,8 +211,12 @@ func (repl *Replica) KvTxRead(_ context.Context, in *pb.KvTxReadReq) (*pb.KvTxRe
 
 	return nil, status.Errorf(codes.Unimplemented, "method KvTxRead not implemented")
 }
-func (repl *Replica) KvTxRollback(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method KvTxRollback not implemented")
+func (repl *Replica) KvTxRollback(ctx context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
+	shardId := in.GetTxContext().GetShardId()
+	if kv, ok := repl.Stores[shardId]; ok {
+		return kv.KvTxRollback(ctx, in)
+	}
+	return &pb.KvTxReply{Status: pb.Status_Failure}, nil
 }
 func (repl *Replica) KvRawRead(_ context.Context, in *pb.KvRawReq) (*pb.KvRawReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method KvRawRead not implemented")

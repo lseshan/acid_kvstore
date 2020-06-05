@@ -167,6 +167,7 @@ func (repl *ReplicaMgr) ReplicaQuery(ctx context.Context, in *pb.ReplicaQueryReq
 	var out pb.ReplicaQueryResp
 	out.TxInfo = &repl.TxInfo
 	out.ShardInfo = &pb.ShardInfo{ShardMap: repl.Shard}
+	out.ReplicaInfo = &pb.ReplicaInfo{Nshards: uint32(repl.Shards)}
 	return &out, nil
 	//out.ShardInfo = repl.ShardInfo
 	//out.ReplicaInfo = repl.ReplicaInfo
