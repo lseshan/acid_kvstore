@@ -8,14 +8,16 @@ import (
 	"net/http/pprof"
 	"strconv"
 
+	"github.com/acid_kvstore/utils"
 	"github.com/gorilla/mux"
 )
 
 func (repl *Replica) handleKVGet(w http.ResponseWriter, r *http.Request) {
 	//Get the kvstore-for now use 0
-	kvs := repl.Stores[1]
 	vars := mux.Vars(r)
 	key := vars["id"]
+	shard := utils.Keytoshard(key, int(repl.Config.Nshards))
+	kvs := repl.Stores[shard]
 	var kv KV
 	kv, _ = kvs.HandleKVOperation(key, "", "GET")
 	json.NewEncoder(w).Encode(kv)

@@ -587,7 +587,7 @@ func (tr *TxRecord) shardRequest() {
 	log.Printf("CommandList:%+v", tr.CommandList)
 	for _, cmd := range tr.CommandList {
 		//XXX
-		shard := utils.Keytoshard(cmd.Key, 1)
+		shard := utils.Keytoshard(cmd.Key, 3)
 		tr.shardedCommands[shard] = append(tr.shardedCommands[shard], cmd)
 	}
 

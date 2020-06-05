@@ -83,6 +83,7 @@ type kvstore struct {
 	writeIntent []operation // Write intent for the entire store/ shard
 	txnId       int
 	Node        *raft.RaftNode
+	txnMap      map[uint64]Txn
 }
 
 type KV struct {
@@ -147,7 +148,7 @@ func (repl *Replica) NewKVStoreWrapper(gid uint64, id int, cluster []string, joi
 }
 
 func NewKVStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, rc *raft.RaftNode) *kvstore {
-	s := &kvstore{proposeC: proposeC, KvStore: make(map[string]*value), snapshotter: snapshotter, Node: rc}
+	s := &kvstore{proposeC: proposeC, KvStore: make(map[string]*value), snapshotter: snapshotter, Node: rc, txnMap: make(map[uint64]Txn)}
 	// replay log into key-value map
 	s.readCommits(commitC, errorC)
 	// read commits from raft into kvStore map until error
@@ -273,11 +274,11 @@ func (s *kvstore) Prep(txn Txn) {
 		v.mu.Unlock()
 	}
 
-	log.Printf("Sending commit response")
-	if stxn, found := txnMap[txn.TxId]; found {
+	if stxn, found := s.txnMap[txn.TxId]; found {
+		log.Printf("Sending commit response")
 		stxn.RespCh <- res
 	}
-	delete(txnMap, txn.TxId)
+	delete(s.txnMap, txn.TxId)
 }
 
 func (s *kvstore) Commit(txn Txn) {
@@ -293,10 +294,10 @@ func (s *kvstore) Commit(txn Txn) {
 	log.Printf("key : %v val : %v", oper.Key, s.KvStore[oper.Key].val)
 	s.writeIntent = []operation{}
 	log.Printf("Sending response")
-	if stxn, found := txnMap[txn.TxId]; found {
+	if stxn, found := s.txnMap[txn.TxId]; found {
 		stxn.RespCh <- 1
 	}
-	delete(txnMap, txn.TxId)
+	delete(s.txnMap, txn.TxId)
 	//Snapshot
 }
 
@@ -327,7 +328,7 @@ func (s *kvstore) ProposeKV(k string, v string) {
 
 func (s *kvstore) ProposeTxn(txn Txn) {
 	var buf bytes.Buffer
-	txnMap[txn.TxId] = txn
+	s.txnMap[txn.TxId] = txn
 	if err := gob.NewEncoder(&buf).Encode(raftMsg{MsgType: "txn", Rawkv: operation{}, Txn: txn}); err != nil {
 		log.Fatal(err)
 	}
@@ -434,5 +435,5 @@ func (s *kvstore) recoverFromSnapshot(snapshot []byte) error {
 	return nil
 }*/
 func init() {
-	txnMap = make(map[uint64]Txn)
+	//txnMap = make(map[uint64]Txn)
 }

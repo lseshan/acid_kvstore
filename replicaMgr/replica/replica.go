@@ -66,20 +66,24 @@ func NewReplicaMgr(name string, cluster []string, servers []string, shards int, 
 func (repl *ReplicaMgr) Start() {
 
 	//For each server send ReplicaInformation
+	log.Printf("serverlist:%v", repl.serverlist)
 	for i, servername := range repl.serverlist {
 		localServer := Server{}
 		localServer.ShardConfig = make(map[int32]*kvpb.ShardConfig)
 		var shardportstart int
+
 		shardportstart = 22345
 
 		//Shard start = 1 22345  22346  22347
 		//                22348
 		//				3 106
 		for j := 0; j < repl.Shards; j++ {
+
 			var peerServers []string
 			for i := range repl.serverlist {
 				peerServers = append(peerServers, "http://127.0.0.1:"+strconv.Itoa(shardportstart+j*len(repl.serverlist)+i))
 			}
+			log.Printf("%v", peerServers)
 			localServer.ShardConfig[int32(j+1)] = &kvpb.ShardConfig{Peers: peerServers}
 		}
 
@@ -104,7 +108,7 @@ func (repl *ReplicaMgr) Start() {
 
 func (repl *ReplicaMgr) SendReplicaInformation(Server Server) {
 	var out kvpb.ReplicaConfigReq
-	out.Config = &kvpb.ReplicaConfig{TxLeader: repl.TxInfo.RpcEndpoint, ReplLeader: repl.MyName, ReplicaId: Server.ReplicaId}
+	out.Config = &kvpb.ReplicaConfig{TxLeader: repl.TxInfo.RpcEndpoint, ReplLeader: repl.MyName, ReplicaId: Server.ReplicaId, Nshards: uint32(repl.Shards)}
 	if Server.Client != nil {
 		_, _ = Server.Client.KvReplicaUpdateConfig(context.Background(), &out)
 		log.Printf("done sending replica information")

@@ -81,6 +81,7 @@ message ReplicaConfig {
     string TxLeader = 1;
     string ReplLeader = 2;
     uint32 ReplicaId = 3;
+    uint32 Nshards = 4;
 }
 
 message ShardConfig {
