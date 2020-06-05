@@ -137,7 +137,7 @@ func (ts *TxStore) TxCommitWorker() {
 		case tr := <-ts.commitC:
 			for {
 				//success then break
-				if tr.TxCommit() == false {
+				if tr.TxCommit() == true {
 					break
 				}
 				//XXX: Update the leader ctx

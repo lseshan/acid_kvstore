@@ -21,6 +21,7 @@ func main() {
 	httport := flag.Int("httport", 9121, "http port")
 	servers := flag.String("servers", "http://127.0.0.1:10221", "comma seperated replica servers")
 	flag.Parse()
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	replicaMgr := replicamgr.NewReplicaMgr("127.0.0.1"+*grpcport, strings.Split(*cluster, ","), strings.Split(*servers, ","), *shards, *join, *id)
 

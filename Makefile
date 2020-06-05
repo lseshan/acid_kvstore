@@ -21,14 +21,18 @@ export PATH := $(CUR_DIR)/bin/:$(PATH)
 
 all: proto tx store replicamgr
 
+
 proto:
 	(proto/generate_go.sh)
 	GO111MODULE=on go build ./proto/package/...
 
 tx:
+	rm -rf tx/raftexample*
 	$(GO_BUILD) -o tx/tx tx/main.go
 
 store:
+	rm -rf store/raftexample*
 	$(GO_BUILD) -o store/store store/main.go
 replicamgr:
+	rm -rf replicamgr/raftexample*
 	$(GO_BUILD) -o replicaMgr/replicamgr replicaMgr/main.go
