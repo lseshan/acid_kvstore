@@ -36,7 +36,7 @@ func TestTxSendBatchRequest(t *testing.T) {
 
 func TestHttpRequest(t *testing.T) {
 
-	ul := "http://127.0.0.1:24480/api/tx/"
+	ul := "http://127.0.0.1:23480/api/tx/"
 	resp, err := http.Get(ul)
 	if err != nil {
 		log.Fatalf("Error Occurred")

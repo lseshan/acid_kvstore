@@ -100,6 +100,7 @@ func TxKvCreateClientCtx(s string) {
 	}
 	t.Cli = pb.NewKvstoreClient(conn)
 	t.Conn = conn
+	KvClient[s] = t
 
 }
 

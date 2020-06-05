@@ -4,7 +4,8 @@
 #raft6:./tx --id 3 --kvcluster http://127.0.0.1:50051,http://127.0.0.1:50052,http://127.0.0.1:50053  --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 25480 --grpcport :20053 
 
 
-node1:./tx --id 1 --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 23480 --grpcport :20051
-node2:./tx --id 2  --replicamgrs 127.0.0.1:21224  --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 24480 --grpcport :20052
-node3:./tx --id 3   --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 25480 --grpcport :20053 
+node1:./tx --id 1 --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479 --cliport 23480 --grpcport :20051 > node1.log
+#node1:./tx --id 1 --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 23480 --grpcport :20051
+#node2:./tx --id 2  --replicamgrs 127.0.0.1:21224  --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 24480 --grpcport :20052
+#node3:./tx --id 3   --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 25480 --grpcport :20053 
 

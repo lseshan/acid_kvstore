@@ -77,7 +77,7 @@ type Kvstore = kvstore
 type kvstore struct {
 	proposeC    chan<- string // channel for proposing updates
 	mu          sync.RWMutex
-	KvStore     map[string]value // current committed key-value pairs
+	KvStore     map[string]*value // current committed key-value pairs
 	snapshotter *snap.Snapshotter
 	txnPhase    string      // "Locked"/ "Prepared" / "Committed" / "Abort"
 	writeIntent []operation // Write intent for the entire store/ shard
@@ -141,7 +141,7 @@ func (repl *Replica) NewKVStoreWrapper(gid uint64, id int, cluster []string, joi
 }
 
 func NewKVStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, rc *raft.RaftNode) *kvstore {
-	s := &kvstore{proposeC: proposeC, KvStore: make(map[string]value), snapshotter: snapshotter, Node: rc}
+	s := &kvstore{proposeC: proposeC, KvStore: make(map[string]*value), snapshotter: snapshotter, Node: rc}
 	// replay log into key-value map
 	s.readCommits(commitC, errorC)
 	// read commits from raft into kvStore map until error
@@ -153,7 +153,7 @@ func (s *kvstore) Put(kv operation) {
 	log.Printf("Put value")
 	var v value
 	v.val = kv.Val
-	s.KvStore[kv.Key] = v
+	s.KvStore[kv.Key] = &v
 }
 
 // Locks the db
@@ -187,10 +187,18 @@ t0    t1          t2           t3             t4
 10    10          10           20             20
 */
 
+func getContext() (context.Context, context.CancelFunc) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	return ctx, cancel
+}
+
+// should be called with locks
 func (s *kvstore) KvResolveTx(v *value) string {
-	cli := TxManager.KvTxGetClient()
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	log.Printf("KvResolveTx: Resolving the Txn")
+	ctx, cancel := getContext()
 	defer cancel()
+
+	cli := TxManager.KvTxGetClient()
 
 	txc := &pbt.TxContext{TxId: v.txnId}
 	res, err := cli.TxGetRecordState(ctx, &pbt.TxReq{TxContext: txc})
@@ -198,8 +206,8 @@ func (s *kvstore) KvResolveTx(v *value) string {
 		log.Fatalf("TxPrepare: %v", err)
 	}
 
-	v.mu.Lock()
-	defer v.mu.Unlock()
+	//v.mu.Lock()
+	//defer v.mu.Unlock()
 
 	switch res.Stage {
 	case "PENDING":
@@ -226,10 +234,13 @@ func (s *kvstore) Prep(txn Txn) {
 
 	for _, oper := range txn.Oper {
 		//Should we take lock
+
+		//XXX: Use Read and Write Locks
 		v := s.KvStore[oper.Key]
+		v.mu.Lock()
 		ok := "STAGE"
 		if len(v.writeIntent) > 0 {
-			ok = s.KvResolveTx(&v)
+			ok = s.KvResolveTx(v)
 		}
 		if ok == "PENDING" {
 			res = 0
@@ -238,6 +249,7 @@ func (s *kvstore) Prep(txn Txn) {
 		res = 1
 		v.writeIntent = oper.Val
 		s.KvStore[oper.Key] = v
+		v.mu.Unlock()
 	}
 
 	log.Printf("Sending commit response")
@@ -311,11 +323,13 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, erro
 	case "GET":
 		log.Printf("Got get")
 		v := s.KvStore[key]
+		v.mu.Lock()
 		if len(v.writeIntent) > 0 {
-			s.KvResolveTx(&v)
+			s.KvResolveTx(v)
 		}
 		kv.Key = key
 		kv.Val = s.KvStore[key].val
+		v.mu.Unlock()
 		log.Printf("%v", s.KvStore[key])
 	case "PUT":
 		fallthrough

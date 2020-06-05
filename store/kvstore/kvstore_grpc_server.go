@@ -43,6 +43,7 @@ func (kv *Kvstore) KvTxPrepare(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply
 
 	readcl := in.GetReadCommandList()
 	for _, cm := range readcl {
+		log.Printf("Shouldnt be here: This has Read command")
 		rkv, err := kv.HandleKVOperation(cm.Key, cm.Val, "GET")
 		if err == nil {
 			readCommandResp = append(readCommandResp, &pb.Command{Key: rkv.Key, Val: rkv.Val})

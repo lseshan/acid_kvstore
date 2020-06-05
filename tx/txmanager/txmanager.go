@@ -73,7 +73,7 @@ type TxRecord struct {
 	//Read to take care off
 	CommandList []*pbk.Command
 	/// Split between read and writes
-	shardedCommands map[string][]*pbk.Command
+	shardedCommands map[uint64][]*pbk.Command
 	shardTxResult   map[string]string
 	//	Wg:          sync.WaitGroup{},
 	// Logging the tx, if its crashed ?
@@ -407,7 +407,7 @@ func NewTxRecord() *TxRecord {
 		TxId:            txStore.getNewTxId(),
 		TxPhase:         "PENDING",
 		CommandList:     make([]*pbk.Command, 0),
-		shardedCommands: make(map[string][]*pbk.Command),
+		shardedCommands: make(map[uint64][]*pbk.Command),
 		shardTxResult:   make(map[string]string),
 	}
 	tr.raftTerm = txStore.raftStats.Term
@@ -555,14 +555,29 @@ func getShardLeader(s uint64) string {
 	txStore.mu.Lock()
 	defer txStore.mu.Unlock()
 
-	if val, ok := txStore.ShardInfo.ShardMap[s]; ok == false {
-		log.Fatalf("looks like we have a failure here")
-		log.Fatalf("Missing details about shard S")
-		return ""
-	} else {
-		return val.LeaderKey
-		//retrun txStore.ShardInfo.ShardMap[s].getLeaderKey()
+	for i := 0; i < 2; i++ {
+		val, ok := txStore.ShardInfo.ShardMap[s]
+		if ok == false {
+			log.Fatalf("Missing shard server details: IsQueried:%d, shard: %v", i, s)
+			log.Fatalf("Missing details about shard S")
+			ctx, cancel := getTxGrpcContext()
+			defer cancel()
+			resp, err := txStore.ReplLeaderClient.ReplicaQuery(ctx, &replpb.ReplicaQueryReq{})
+			if err != nil {
+				log.Printf("error in leader update: %v", err)
+			} else {
+				txStore.mu.Lock()
+				txStore.ShardInfo = resp.ShardInfo
+				txStore.mu.Unlock()
+			}
+
+		} else {
+			log.Printf("Returning the shard:%v leader details %v", s, val.LeaderKey)
+			return val.LeaderKey
+			//retrun txStore.ShardInfo.ShardMap[s].getLeaderKey()
+		}
 	}
+	return ""
 }
 
 // Provide the map of Server with commands
@@ -570,19 +585,20 @@ func (tr *TxRecord) shardRequest() {
 
 	/// XXX: var cache map[uint64]string
 	for _, cmd := range tr.CommandList {
-		shard := utils.Keytoshard(cmd.Key, 3)
-		s := getShardLeader(shard)
-		tr.shardedCommands[s] = append(tr.shardedCommands[s], cmd)
+		//XXX
+		shard := utils.Keytoshard(cmd.Key, 1)
+		tr.shardedCommands[shard] = append(tr.shardedCommands[shard], cmd)
 	}
 
 }
 
-func (tr *TxRecord) newSendPacket(s string) *pbk.KvTxReq {
+func (tr *TxRecord) newSendPacket(shard uint64) *pbk.KvTxReq {
 	cx := new(pbk.TxContext)
 	in := new(pbk.KvTxReq)
-	in.CommandList = tr.shardedCommands[s]
+	in.CommandList = tr.shardedCommands[shard]
 	in.TxContext = cx
 	in.TxContext.TxId = tr.TxId
+	in.TxContext.ShardId = shard
 	return in
 
 }
@@ -599,27 +615,29 @@ func getTxGrpcContext() (context.Context, context.CancelFunc) {
 
 }
 
-func (tr *TxRecord) SendGrpcRequest(s string, doneC chan bool, op string) {
+func (tr *TxRecord) SendGrpcRequest(shard uint64, doneC chan bool, op string) {
 
 	ctx, cancel := getTxGrpcContext()
 	defer cancel()
 
 	var rp *pbk.KvTxReply
 	var err error
-	req := tr.newSendPacket(s)
-	if _, ok := KvClient[s]; ok == false {
-		TxKvCreateClientCtx(s)
+	server := getShardLeader(shard)
+	req := tr.newSendPacket(shard)
+	if _, ok := KvClient[server]; ok == false {
+		log.Fatalf("Missig client for server: %s, op:%s", server, op)
+		TxKvCreateClientCtx(server)
 	}
 	switch op {
 
 	case "prepare":
-		rp, err = KvClient[s].Cli.KvTxPrepare(ctx, req)
+		rp, err = KvClient[server].Cli.KvTxPrepare(ctx, req)
 
 	case "commit":
-		rp, err = KvClient[s].Cli.KvTxCommit(ctx, req)
+		rp, err = KvClient[server].Cli.KvTxCommit(ctx, req)
 
 	case "rollback":
-		rp, err = KvClient[s].Cli.KvTxRollback(ctx, req)
+		rp, err = KvClient[server].Cli.KvTxRollback(ctx, req)
 	}
 	//XXX: analyze the error later
 	if err != nil {
@@ -628,14 +646,14 @@ func (tr *TxRecord) SendGrpcRequest(s string, doneC chan bool, op string) {
 	}
 
 	if rp.Status == pbk.Status_Failure {
-		tr.shardTxResult[s] = "FAIL"
+		tr.shardTxResult[server] = "FAIL"
 		doneC <- false
 		log.Printf("op:%s failed", op)
 
 	} else {
-		tr.shardTxResult[s] = "PASS"
+		tr.shardTxResult[server] = "PASS"
 		doneC <- true
-		log.Printf("op:%s failed", op)
+		log.Printf("op:%s passed", op)
 
 	}
 }
@@ -647,14 +665,15 @@ func (tr *TxRecord) TxPrepare() bool {
 	tr.shardRequest()
 	l := len(tr.shardedCommands)
 	doneC := make(chan bool, l)
-	for server, _ := range tr.shardedCommands {
-		go tr.SendGrpcRequest(server, doneC, "prepare")
+	for shards, _ := range tr.shardedCommands {
+		go tr.SendGrpcRequest(shards, doneC, "prepare")
 
 	}
 	res := true
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val == false {
+			log.Fatalf("TxPrepare is failed")
 			res = false
 		}
 	}
