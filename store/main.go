@@ -19,7 +19,6 @@ import (
 	"flag"
 	"log"
 	"net"
-	"strings"
 	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
@@ -45,13 +44,12 @@ func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
 }
 
 func main() {
-	txcluster := flag.String("txcluster", "http://127.0.0.1:9021", "comma separated TxManager cluster peers")
+	//txcluster := flag.String("txcluster", "http://127.0.0.1:9021", "comma separated TxManager cluster peers")
 	httport := flag.Int("httpport", 1024, "http server port")
 	/* cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
 	id := flag.Int("id", 1, "node ID")
 	kvport := flag.Int("port", 9121, "key-value server port")
 	join := flag.Bool("join", false, "join an existing cluster")
-	txcluster := flag.String("txcluster", "http://127.0.0.1:9021", "comma separated TxManager cluster peers")
 	*/
 	grpcport := flag.String("grpcport", "127.0.0.1:9122", "grpc server port")
 	flag.Parse()
@@ -80,8 +78,6 @@ func main() {
 			log.Fatalf("failed to serve: %v", err)
 		}
 	}()
-
-	go kvstore.NewKvTxManager(strings.Split(*txcluster, ","))
 
 	//kvs.ServeHttpKVApi(*kvport, errorC)
 	replica.ServeHttpReplicaApi(*httport)

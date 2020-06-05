@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"net"
@@ -23,6 +24,7 @@ func main() {
 
 	replicaMgr := replicamgr.NewReplicaMgr("127.0.0.1"+*grpcport, strings.Split(*cluster, ","), strings.Split(*servers, ","), *shards, *join, *id)
 
+	ctx := context.Background()
 	//start grpc server
 	go func() {
 		log.Printf("grpcport %v", *grpcport)
@@ -39,6 +41,7 @@ func main() {
 
 	//start http server
 	go replicaMgr.ServeHttpReplicamgrApi(*httport)
+	go replicaMgr.SendReplicaInfo(ctx)
 	replicaMgr.Start()
 	select {}
 

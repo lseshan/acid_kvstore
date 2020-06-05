@@ -235,6 +235,21 @@ func (repl *Replica) KvReplicaUpdateConfig(_ context.Context, in *pb.ReplicaConf
 		repl.Config.ReplLeader = localConfig.ReplLeader
 		go repl.StartReplMgrGrpcClient()
 	}
+
+	if TxManager == nil {
+		if localConfig.TxLeader != "" {
+			NewKvTxManager([]string{localConfig.TxLeader})
+			//To debug this info is stored here
+			repl.Config.TxLeader = localConfig.TxLeader
+		}
+	} else if TxManager.TxLeader != localConfig.TxLeader {
+		TxManager.KvCloseTxClient()
+		NewKvTxManager([]string{localConfig.TxLeader})
+		repl.Config.TxLeader = localConfig.TxLeader
+	} else {
+		log.Printf("No change in TxConfig")
+	}
+
 	//TODO:Handle TxLeader
 	return &pb.ReplicaConfigResp{Status: pb.Status_Success}, nil
 }

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"strconv"
+	"time"
 
 	kvpb "github.com/acid_kvstore/proto/package/kvstorepb"
 	pb "github.com/acid_kvstore/proto/package/replicamgrpb"
@@ -102,11 +103,12 @@ func (repl *ReplicaMgr) Start() {
 }
 
 func (repl *ReplicaMgr) SendReplicaInformation(Server Server) {
-	log.Printf("send replica")
 	var out kvpb.ReplicaConfigReq
-	out.Config = &kvpb.ReplicaConfig{ReplLeader: repl.MyName, ReplicaId: Server.ReplicaId}
-	_, _ = Server.Client.KvReplicaUpdateConfig(context.Background(), &out)
-	log.Printf("done sending replica information")
+	out.Config = &kvpb.ReplicaConfig{TxLeader: repl.TxInfo.RpcEndpoint, ReplLeader: repl.MyName, ReplicaId: Server.ReplicaId}
+	if Server.Client != nil {
+		_, _ = Server.Client.KvReplicaUpdateConfig(context.Background(), &out)
+		log.Printf("done sending replica information")
+	}
 }
 
 func (repl *ReplicaMgr) SendShardJoinInformation(Server Server, id int32) {
@@ -130,16 +132,6 @@ func (repl *ReplicaMgr) StartServerConnection(ctx context.Context, Server Server
 	localServer.Client = cli
 	repl.Servers[Server.ServerKey] = localServer
 	log.Printf("server connected")
-
-	/*
-		for {
-			select {
-			case <-ctx.Done():
-				log.Printf("Done with serverConnection")
-				return
-			}
-		}*/
-
 }
 
 // Routine to Send information to Replica
@@ -174,4 +166,25 @@ func (repl *ReplicaMgr) ReplicaQuery(ctx context.Context, in *pb.ReplicaQueryReq
 	return &out, nil
 	//out.ShardInfo = repl.ShardInfo
 	//out.ReplicaInfo = repl.ReplicaInfo
+}
+
+func (repl *ReplicaMgr) SendReplicaInfo(ctx context.Context) {
+	for {
+		select {
+		case <-time.After(1 * time.Second):
+			//Send to replica Server
+			for _, servername := range repl.serverlist {
+				if server, ok := repl.Servers[servername]; ok {
+					repl.SendReplicaInformation(server)
+				}
+			}
+
+		case <-ctx.Done():
+			log.Printf("close SendReplicaInfo")
+			return
+
+		}
+
+	}
+
 }
