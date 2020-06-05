@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export GO111MODULE=on
 go build
 if [[ $?  -eq 0 ]] ; then
 '''    ./store --id 1 --cluster http://127.0.0.1:13379,http://127.0.0.1:14479,http://127.0.0.1:15479  --port 13380 --grpcport :50051 &

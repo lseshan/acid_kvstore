@@ -7,3 +7,7 @@ node1:./store --grpcport :22379 --httpport 10024 --txcluster http://127.0.0.1:20
 #node1:./store --grpcport :22379 --httpport 10024 --txcluster http://127.0.0.1:20051
 #node2:./store  --grpcport :22380 --httpport 10025 --txcluster http://127.0.0.1:20051
 #node3:./store  --grpcport :22381 --httpport 10026 --txcluster http://127.0.0.1:20051
+
+#node1:./store --grpcport :22379 --httpport 10024
+#node2:./store  --grpcport :22380 --httpport 10025
+#node3:./store  --grpcport :22381 --httpport 10026

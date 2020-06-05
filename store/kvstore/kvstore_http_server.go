@@ -79,6 +79,13 @@ func (kvs *Kvstore) handleKVCreate(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Create Key is %s %s", kv.Key, kv.Val)
 }
 
+func (repl *Replica) handleReplicaConfigGet(w http.ResponseWriter, r *http.Request) {
+	m := make(map[string]interface{})
+	m["ReplicaInfo"] = repl.Config
+	json.NewEncoder(w).Encode(m)
+
+}
+
 func (kvs *Kvstore) ServeHttpKVApi(port int, errorC <-chan error) {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api").Subrouter().StrictSlash(true)
@@ -106,6 +113,7 @@ func (kvs *Kvstore) ServeHttpKVApi(port int, errorC <-chan error) {
 func (repl *Replica) ServeHttpReplicaApi(port int) {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api").Subrouter().StrictSlash(true)
+	api.Methods("GET").Subrouter().HandleFunc("/replicaconfig/", repl.handleReplicaConfigGet)
 
 	api.Methods("GET").Subrouter().HandleFunc("/key/{id}", repl.handleKVGet)
 	api.Methods("PUT").Subrouter().HandleFunc("/key/{id}", repl.handleKVPut)

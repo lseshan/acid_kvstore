@@ -56,7 +56,7 @@ var txnMap map[uint64]Txn
 type Replica struct {
 	Stores      map[uint64]*kvstore //map of kvstores keys by region id/shard id
 	Config      *pb.ReplicaConfig
-	Conn        grpc.ClientConnInterface
+	Conn        *grpc.ClientConn
 	Replclient  replpb.ReplicamgrClient
 	ReplicaName string
 }
@@ -121,6 +121,12 @@ func (repl *Replica) StartReplMgrGrpcClient() {
 
 func (repl *Replica) NewKVStoreWrapper(gid uint64, id int, cluster []string, join bool) {
 	log.Printf("peers %v", cluster)
+
+	if _, ok := repl.Stores[gid]; ok {
+		log.Printf("Shard : %d already present", gid)
+		//TODO: To handle config changes
+		return
+	}
 
 	proposeC := make(chan string)
 	//defer close(proposeC)
