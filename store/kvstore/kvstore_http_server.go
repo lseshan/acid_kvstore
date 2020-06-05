@@ -13,7 +13,7 @@ import (
 
 func (repl *Replica) handleKVGet(w http.ResponseWriter, r *http.Request) {
 	//Get the kvstore-for now use 0
-	kvs := repl.Stores[0]
+	kvs := repl.Stores[1]
 	vars := mux.Vars(r)
 	key := vars["id"]
 	var kv KV
