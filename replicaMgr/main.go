@@ -17,19 +17,21 @@ func main() {
 	shards := flag.Int("shards", 1, "number of shards")
 	id := flag.Int("id", 1, "node ID")
 	join := flag.Bool("join", false, "join an existing cluster")
-	grpcport := flag.String("grpcport", ":9121", "grpc port")
+	grpcport := flag.String("grpcport", "127.0.0.1:9121", "grpc port")
 	httport := flag.Int("httport", 9121, "http port")
 	servers := flag.String("servers", "http://127.0.0.1:10221", "comma seperated replica servers")
 	flag.Parse()
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	replicaMgr := replicamgr.NewReplicaMgr("127.0.0.1"+*grpcport, strings.Split(*cluster, ","), strings.Split(*servers, ","), *shards, *join, *id)
+	replicaMgr := replicamgr.NewReplicaMgr(*grpcport, strings.Split(*cluster, ","), strings.Split(*servers, ","), *shards, *join, *id)
 
 	ctx := context.Background()
 	//start grpc server
 	go func() {
 		log.Printf("grpcport %v", *grpcport)
-		lis, err := net.Listen("tcp", *grpcport)
+		port := ":" + strings.Split(*grpcport, ":")[1]
+		log.Printf("listen port")
+		lis, err := net.Listen("tcp", port)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}

@@ -239,7 +239,7 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 }
 
 //XXX: may be start multiple threads
-const WorkerBufferLen = 10
+const WorkerBufferLen = 100
 
 func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
 	m := make(map[uint64]*TxRecord)
@@ -416,8 +416,10 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			}
 		}
 
+		ts.txnMapM.Lock()
 		if ltxn, ok := ts.txnMap[tr.TxId]; ok {
 			ltxn.RespCh <- 1
+			ts.txnMapM.Unlock()
 			delete(ts.txnMap, tr.TxId)
 		}
 		log.Printf("Raft update done: %+v", msg)
@@ -471,7 +473,9 @@ func (tr *TxRecord) TxUpdateTxRecord(s string) int {
 
 	tx.RespCh = respCh
 	tx.TxRecord = tr
+	txStore.txnMapM.Lock()
 	txStore.txnMap[tr.TxId] = tx
+	txStore.txnMapM.Unlock()
 	r := raftType{RecordType: "TxRecordStore", Action: s}
 	txStore.ProposeTxRecord(tx, r)
 	log.Printf("Done propose of TxStatus, status:%s", s)
@@ -491,8 +495,8 @@ func (tr *TxRecord) TxUpdateTxPending(s string) int {
 	tx.RespCh = respCh
 	tx.TxRecord = tr
 	txStore.txnMapM.Lock()
-	defer txStore.txnMapM.Unlock()
 	txStore.txnMap[tr.TxId] = tx
+	txStore.txnMapM.Unlock()
 	r := raftType{RecordType: "TxPending", Action: s}
 	txStore.ProposeTxRecord(tx, r)
 	log.Printf("Done propose of TRPending, status:%s", s)

@@ -95,9 +95,10 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 }
 
-func TestMultipleConcurrentWriteTxnDifferentKeyScale(t *testing.T) {
+func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 
 	var buffer bytes.Buffer
+	var sucTxn, failTxn int
 	status := make(chan string, 1000)
 	buffer.WriteString("http://127.0.0.1:")
 	buffer.WriteString(*port)
@@ -105,17 +106,24 @@ func TestMultipleConcurrentWriteTxnDifferentKeyScale(t *testing.T) {
 
 	start := time.Now()
 	path := buffer.String()
-	for i := 0; i < 1000; i++ {
+	for i := 1000; i < 2000; i++ {
 		go func(val int) {
 			WriteTxn(path, []string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
 		}(i)
 	}
-	for i := 0; i < 1000; i++ {
+	for i := 1001; i < 2000; i++ {
 		result := <-status
 		log.Printf("received %s", result)
+		if result == "SUCCESS" {
+			sucTxn += 1
+		} else if result == "FAILURE" {
+			failTxn += 1
+		}
 	}
 	end := time.Since(start)
-	log.Printf("TxnPerSecond %.2f ", end.Seconds()/float64(3))
+	log.Printf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Printf("Succesful txns: %d", sucTxn)
+	log.Printf("Failure txns: %d", failTxn)
 
 }
 func TestMultipleConcurrentWriteTxnDifferentKey(t *testing.T) {

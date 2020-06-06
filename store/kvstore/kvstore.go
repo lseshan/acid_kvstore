@@ -372,7 +372,7 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, erro
 	var kv KV
 	switch op {
 	case "GET":
-		log.Printf("Got get")
+		log.Printf("Got get for key %s val %s", key, val)
 		v := s.KvStore[key]
 
 		v.mu.Lock()
