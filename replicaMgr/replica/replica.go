@@ -84,7 +84,7 @@ func (repl *ReplicaMgr) Start() {
 				peerServers = append(peerServers, "http://127.0.0.1:"+strconv.Itoa(shardportstart+j*len(repl.serverlist)+i))
 			}
 			log.Printf("%v", peerServers)
-			localServer.ShardConfig[int32(j+1)] = &kvpb.ShardConfig{Peers: peerServers}
+			localServer.ShardConfig[int32(j+1)] = &kvpb.ShardConfig{Peers: peerServers, ShardId: int32(j + 1)}
 		}
 
 		localServer.ServerKey = servername
@@ -174,8 +174,27 @@ func (repl *ReplicaMgr) ReplicaQuery(ctx context.Context, in *pb.ReplicaQueryReq
 }
 
 func (repl *ReplicaMgr) SendReplicaInfo(ctx context.Context) {
+	shardtimeout := time.After(2 * time.Second)
 	for {
 		select {
+		case <-shardtimeout:
+			//Send shard info to servers : needed in case of server crash and joins.
+			//ToDo:We need a health check service which checks for the state and then pushes the config
+			log.Printf("Sending periodic shard info")
+			for _, servername := range repl.serverlist {
+				if server, ok := repl.Servers[servername]; ok {
+					var out kvpb.ShardConfigReq
+					for id, _ := range server.ShardConfig {
+						out.Config = append(out.Config, server.ShardConfig[id])
+					}
+					if server.Client != nil {
+						server.Client.KvShardUpdateConfig(context.Background(), &out)
+						log.Printf("done sending shard information to server %s", server.ServerKey)
+
+					}
+				}
+			}
+			shardtimeout = time.After(2 * time.Second)
 		case <-time.After(1 * time.Second):
 			//Send to replica Server
 			for _, servername := range repl.serverlist {

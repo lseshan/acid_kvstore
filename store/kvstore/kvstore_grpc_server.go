@@ -260,5 +260,14 @@ func (repl *Replica) KvReplicaUpdateConfig(_ context.Context, in *pb.ReplicaConf
 }
 
 func (repl *Replica) KvShardUpdateConfig(_ context.Context, in *pb.ShardConfigReq) (*pb.ShardConfigResp, error) {
+	for _, shardConfig := range in.GetConfig() {
+		if _, ok := repl.Stores[uint64(shardConfig.GetShardId())]; !ok {
+			log.Printf("Add new shard")
+			if repl != nil {
+				repl.NewKVStoreWrapper(uint64(shardConfig.GetShardId()), int(shardConfig.GetShardId())*100+int(repl.Config.ReplicaId), shardConfig.GetPeers(), false)
+			}
+		}
+
+	}
 	return nil, status.Errorf(codes.Unimplemented, "method KvShardUpdateConfig not implemented")
 }

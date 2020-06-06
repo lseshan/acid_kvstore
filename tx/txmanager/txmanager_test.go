@@ -51,7 +51,7 @@ func TestHttpRequest(t *testing.T) {
 	var buffer bytes.Buffer
 	buffer.WriteString("http://127.0.0.1:")
 	buffer.WriteString(*port)
-	buffer.WriteString("/api/tx")
+	buffer.WriteString("/api/tx/")
 
 	ul := buffer.String()
 

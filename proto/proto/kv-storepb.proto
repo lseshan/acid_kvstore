@@ -85,9 +85,10 @@ message ReplicaConfig {
 }
 
 message ShardConfig {
-    repeated string   Peers = 1;
-    string            TxLeader = 2; 
-    KeyRange Key = 3; 
+    int32        ShardId  = 1;
+    repeated string   Peers = 2;
+    string            TxLeader = 3; 
+    KeyRange Key = 4; 
 }
 message ReplicaJoinReq {
     int32         ShardId = 1;
@@ -113,7 +114,7 @@ message ReplicaConfigResp {
 }
 
 message ShardConfigReq {
-    ShardConfig Config = 1;
+    repeated ShardConfig Config = 1;
 }
 
 message ShardConfigResp {

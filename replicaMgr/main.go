@@ -40,10 +40,12 @@ func main() {
 		}
 	}()
 
+	replicaMgr.Start()
+
 	//start http server
 	go replicaMgr.ServeHttpReplicamgrApi(*httport)
 	go replicaMgr.SendReplicaInfo(ctx)
-	replicaMgr.Start()
+	//replicaMgr.Start()
 	select {}
 
 }

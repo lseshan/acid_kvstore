@@ -121,7 +121,7 @@ func (repl *Replica) StartReplMgrGrpcClient() {
 }
 
 func (repl *Replica) NewKVStoreWrapper(gid uint64, id int, cluster []string, join bool) {
-	log.Printf("peers %v", cluster)
+	log.Printf("peers %v shard id %v", cluster, gid)
 
 	if _, ok := repl.Stores[gid]; ok {
 		log.Printf("Shard : %d already present", gid)
