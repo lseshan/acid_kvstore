@@ -19,6 +19,7 @@ import (
 	"flag"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
@@ -68,10 +69,12 @@ func main() {
 	/* RPC handling */
 	go func() {
 		log.Printf("grpx port %s", *grpcport)
-		lis, err := net.Listen("tcp", *grpcport)
+		port := ":" + strings.Split(*grpcport, ":")[1]
+		lis, err := net.Listen("tcp", port)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
+		log.Printf("Started listent")
 		s := grpc.NewServer()
 		pb.RegisterKvstoreServer(s, &replica)
 		if err := s.Serve(lis); err != nil {

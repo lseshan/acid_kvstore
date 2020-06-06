@@ -83,7 +83,8 @@ func main() {
 	// XXX: TxManager Server
 	go func() {
 		log.Printf("grpc port %s", *grpcport)
-		lis, err := net.Listen("tcp", *grpcport)
+		port := ":" + strings.Split(*grpcport, ":")[1]
+		lis, err := net.Listen("tcp", port)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
