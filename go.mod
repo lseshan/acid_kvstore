@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
+	github.com/divan/num2words v0.0.0-20170904212200-57dba452f942
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/mock v1.1.1
 	github.com/golang/protobuf v1.4.1

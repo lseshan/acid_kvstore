@@ -35,10 +35,12 @@ type TxStore struct {
 	TxRecordStore map[uint64]*TxRecord
 	RaftNode      *raft.RaftNode
 	TxPending     map[uint64]*TxRecord
+	TxPendingM    sync.Mutex
 	//sddhards
 	proposeC         chan<- string // channel for proposing updates
 	snapshotter      *snap.Snapshotter
 	txnMap           map[uint64]Txn
+	txnMapM          sync.Mutex
 	lastTxId         uint64
 	HttpEndpoint     string
 	RpcEndpoint      string
@@ -488,6 +490,8 @@ func (tr *TxRecord) TxUpdateTxPending(s string) int {
 
 	tx.RespCh = respCh
 	tx.TxRecord = tr
+	txStore.txnMapM.Lock()
+	defer txStore.txnMapM.Unlock()
 	txStore.txnMap[tr.TxId] = tx
 	r := raftType{RecordType: "TxPending", Action: s}
 	txStore.ProposeTxRecord(tx, r)

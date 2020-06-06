@@ -78,15 +78,18 @@ func main() {
 	}
 
 	for _, shard := range ts.ShardInfo.ShardMap {
-		txmanager.TxKvCreateClientCtx(shard.LeaderKey)
+		go txmanager.TxKvCreateClientCtx(shard.LeaderKey)
 	}
 	// XXX: TxManager Server
 	go func() {
+		log.Printf("grpc port %s", *grpcport)
 		lis, err := net.Listen("tcp", *grpcport)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
+		log.Printf("started listening")
 		s := grpc.NewServer()
+
 		pbt.RegisterTxmanagerServer(s, ts)
 		if err := s.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)

@@ -39,6 +39,8 @@ func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 	tr := NewTxRecord()
 	//ts.TxRecordStore[tr.TxId] = tr
 	// XXX: ? no need to update with raft as if we fail here dont bother
+	ts.TxPendingM.Lock()
+	defer ts.TxPendingM.Unlock()
 	ts.TxPending[tr.TxId] = tr
 	res.TxId = strconv.FormatUint(tr.TxId, 10)
 	res.Status = "SUCCESS"
