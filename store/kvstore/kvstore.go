@@ -215,7 +215,8 @@ func (s *kvstore) KvResolveTx(v *value) string {
 
 	//v.mu.Lock()
 	//defer v.mu.Unlock()
-
+	//XXX: DO we need to update the result in RAFT, we dont need to since its done by
+	// commit TXn
 	switch res.Stage {
 	case "PENDING":
 		return "PENDING"
@@ -263,7 +264,7 @@ func (s *kvstore) Prep(txn Txn) {
 			ok = s.KvResolveTx(v)
 		}
 		if ok == "PENDING" {
-			res = 0
+			res = 0 //abort
 			v.mu.Unlock()
 			break
 		}
@@ -339,12 +340,41 @@ func (s *kvstore) ProposeTxn(txn Txn) {
 	s.proposeC <- buf.String()
 }
 
+func (s *kvstore) KvHandleTxRead(key string, txId uint64) (KV, error) {
+	var kv KV
+	log.Printf("Got Tx Read")
+	s.mu.Lock()
+	if _, ok := s.KvStore[key]; ok == false {
+		kv.Key = key
+		kv.Val = ""
+		s.mu.Unlock()
+		return kv, nil
+	}
+	v := s.KvStore[key]
+	s.mu.Unlock()
+	v.mu.Lock()
+	//XXX: Raw operation TxId ==0
+	if len(v.writeIntent) > 0 {
+		if v.txnId < txId {
+			_ = s.KvResolveTx(v)
+
+		}
+	}
+	kv.Key = key
+	kv.Val = v.val
+	v.mu.Unlock()
+	log.Printf("%v", kv)
+
+	return kv, nil
+}
+
 func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, error) {
 	var kv KV
 	switch op {
 	case "GET":
 		log.Printf("Got get")
 		v := s.KvStore[key]
+
 		v.mu.Lock()
 		if len(v.writeIntent) > 0 {
 			s.KvResolveTx(v)

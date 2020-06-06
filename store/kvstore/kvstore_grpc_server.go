@@ -32,27 +32,37 @@ out.Command = cm
 
 }
 */
+func (kv *Kvstore) KvTxRead(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
+
+	var readCommandResp []*pb.Command
+
+	readcl := in.GetCommandList()
+	for _, cm := range readcl {
+		rkv, err := kv.KvHandleTxRead(cm.Key, in.TxContext.TxId)
+		if err != nil {
+			readCommandResp = append(readCommandResp, &pb.Command{Key: rkv.Key, Val: rkv.Val})
+		} else {
+			resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList()}
+			resp.Status = pb.Status_Failure
+			return &resp, nil
+		}
+
+	}
+
+	resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: readCommandResp}
+	// XXX: val is 1 translated to sucess, might need to switch for uniformity
+	resp.Status = pb.Status_Success
+	log.Printf("Read success")
+
+	return &resp, nil
+
+}
 
 func (kv *Kvstore) KvTxPrepare(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
 	var txn Txn
 	log.Printf("in kvtx prepare")
 	txn.TxId = in.GetTxContext().GetTxId()
 	txn.Cmd = "Prep"
-
-	var readCommandResp []*pb.Command
-
-	readcl := in.GetReadCommandList()
-	for _, cm := range readcl {
-		log.Printf("Shouldnt be here: This has Read command")
-		rkv, err := kv.HandleKVOperation(cm.Key, cm.Val, "GET")
-		if err == nil {
-			readCommandResp = append(readCommandResp, &pb.Command{Key: rkv.Key, Val: rkv.Val})
-		} else {
-			resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList(), ReadCommandList: in.GetReadCommandList()}
-			resp.Status = pb.Status_Failure
-			return &resp, nil
-		}
-	}
 
 	cl := in.GetCommandList()
 	var oper operation
@@ -76,7 +86,7 @@ func (kv *Kvstore) KvTxPrepare(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply
 	log.Printf("Done propose txn")
 	val := <-respCh
 	log.Printf("Val %v", val)
-	resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList(), ReadCommandList: readCommandResp}
+	resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList()}
 	// XXX: val is 1 translated to sucess, might need to switch for uniformity
 	if val == 1 {
 		resp.Status = pb.Status_Success
@@ -166,11 +176,6 @@ func (kv *Kvstore) KvTxRollback(_ context.Context, in *pb.KvTxReq) (*pb.KvTxRepl
 	return &resp, nil
 }
 
-func (kv *Kvstore) KvTxRead(_ context.Context, in *pb.KvTxReadReq) (*pb.KvTxReadReply, error) {
-
-	return nil, status.Errorf(codes.Unimplemented, "method KvTxRead not implemented")
-}
-
 func (kv *Kvstore) KvRawRead(_ context.Context, in *pb.KvRawReq) (*pb.KvRawReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method KvRawRead not implemented")
 }
@@ -182,6 +187,15 @@ func (kv *Kvstore) KvRawDelete(_ context.Context, in *pb.KvRawReq) (*pb.KvRawRep
 }
 
 //Replica
+
+func (repl *Replica) KvTxRead(ctx context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
+	shardId := in.GetTxContext().GetShardId()
+	if kv, ok := repl.Stores[shardId]; ok {
+		return kv.KvTxRead(ctx, in)
+	}
+	return &pb.KvTxReply{Status: pb.Status_Failure}, nil
+
+}
 
 func (repl *Replica) KvTxPrepare(ctx context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
 	shardId := in.GetTxContext().GetShardId()
@@ -207,10 +221,6 @@ func (repl *Replica) KvTxCommit(ctx context.Context, in *pb.KvTxReq) (*pb.KvTxRe
 	return &pb.KvTxReply{Status: pb.Status_Failure}, nil
 }
 
-func (repl *Replica) KvTxRead(_ context.Context, in *pb.KvTxReadReq) (*pb.KvTxReadReply, error) {
-
-	return nil, status.Errorf(codes.Unimplemented, "method KvTxRead not implemented")
-}
 func (repl *Replica) KvTxRollback(ctx context.Context, in *pb.KvTxReq) (*pb.KvTxReply, error) {
 	shardId := in.GetTxContext().GetShardId()
 	if kv, ok := repl.Stores[shardId]; ok {

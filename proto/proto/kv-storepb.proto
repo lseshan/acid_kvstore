@@ -27,13 +27,11 @@ message KvTxReadReply {
 message KvTxReq {
     TxContext TxContext = 1;
     repeated Command CommandList = 2;
-    repeated Command ReadCommandList = 3;
 }
 
 message KvTxReply {
     TxContext TxContext = 1;
     repeated Command CommandList = 2;
-    repeated Command ReadCommandList = 3;
     Status Status = 4;
 }
 
@@ -171,7 +169,7 @@ service kvstore {
     rpc KvTxPrepare (KvTxReq) returns (KvTxReply);
     rpc KvTxCommit (KvTxReq) returns (KvTxReply);
     rpc KvTxRollback (KvTxReq) returns (KvTxReply);
-    rpc KvTxRead (KvTxReadReq) returns (KvTxReadReply);
+    rpc KvTxRead (KvTxReq) returns (KvTxReply);
     rpc KvRawRead (KvRawReq) returns (KvRawReply);
     rpc KvRawWrite (KvRawReq) returns (KvRawReply);
     rpc KvRawDelete (KvRawReq) returns (KvRawReply);

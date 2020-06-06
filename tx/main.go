@@ -3,17 +3,27 @@ package main
 import (
 	"context"
 	"flag"
-	"log"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
 	"github.com/acid_kvstore/tx/txmanager"
+	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/raft/raftpb"
 	"google.golang.org/grpc"
 )
+
+// XXX:Setup properly
+func setLogger() {
+
+	log.SetOutput(os.Stdout)
+	// Only log the warning severity or above.
+	log.SetLevel(log.InfoLevel)
+
+}
 
 func main() {
 
@@ -26,7 +36,8 @@ func main() {
 
 	replicamgrs := flag.String("replicamgrs", "127.0.0.1:9021", "comma separated replicamgrs")
 	flag.Parse()
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	//log.SetFlags(log.LstdFlags | log.Lshortfile)
+	log.SetReportCaller(true)
 	proposeC := make(chan string)
 	defer close(proposeC)
 	confChangeC := make(chan raftpb.ConfChange)
