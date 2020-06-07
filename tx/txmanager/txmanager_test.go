@@ -3,7 +3,6 @@ package txmanager_test
 import (
 	"bytes"
 	"encoding/json"
-	"flag"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -49,9 +48,25 @@ func TestTxSendBatchRequest(t *testing.T) {
 
 }
 */
-var port = flag.String("port", "23480", "r1:23480, r2:24480, r3:25480")
+
+const replicaURL = "http://127.0.0.1:1026/api/txmanager"
 
 //var num2port map[string]string
+func getTxManagerIp() (string, error) {
+
+	resp, err := netClient.Get(replicaURL)
+	if err != nil {
+		log.Printf("Error Occrred %s", err)
+		return "", err
+	}
+	defer resp.Body.Close()
+	//json.Unmarshal(body, &tx)
+	//	m := make(map[string]string)
+	var m string
+	json.NewDecoder(resp.Body).Decode(&m)
+	log.Printf("Received Body : %+v Txmanager Tx: %+v", resp.Body, m)
+	return m, nil
+}
 
 func WriteTxn(path string, key []string, val []string, status chan string) {
 	var buffer bytes.Buffer
@@ -60,7 +75,7 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 	resp, err := netClient.Get(ul)
 	if err != nil {
-		log.Printf("Error Occrred %s", err)
+		log.Printf("GET: Error Occrred %s", err)
 		status <- "FAILURE"
 		return
 	}
@@ -71,8 +86,9 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 	json.Unmarshal(body, &tx)
 
 	if tx.Status != "SUCCESS" {
-		log.Printf("Test FAILED %s", tx.Status)
+		log.Printf("Test FAILED at GET %s", tx.Status)
 		log.Fatalf("Test Failed")
+		status <- "FAILURE"
 		return
 	}
 	txid := tx.TxId
@@ -90,7 +106,9 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 	ul = buffer.String()
 	resp, err = http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred, %v", err)
+		log.Fatalf("Error Occurred while Commit, %v", err)
+		status <- "FAILURE"
+		return
 	}
 	defer resp.Body.Close()
 	var res txmanager.TxJson
@@ -212,16 +230,12 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 
 func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 
-	var buffer bytes.Buffer
 	var sucTxn, failTxn int
 	status := make(chan string, 1000)
-	buffer.WriteString("http://127.0.0.1:")
-	buffer.WriteString(*port)
-	buffer.WriteString("/api/tx/")
-
 	start := time.Now()
-	path := buffer.String()
+	path := getPath()
 	for i := 1000; i < 2000; i++ {
+		time.Sleep(time.Millisecond)
 		go func(val int) {
 			WriteTxn(path, []string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
 		}(i)
@@ -241,16 +255,56 @@ func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 	log.Printf("Failure txns: %d", failTxn)
 
 }
+
+func getPath() string {
+	var buffer bytes.Buffer
+	//buffer.WriteString("http://127.0.0.1:")
+	//buffer.WriteString(*port)
+
+	//m["txmgrId"] = repl.TxInfo.HttpEndpoint
+	for i := 0; i < 6; i++ {
+		s, err := getTxManagerIp()
+		if err != nil {
+			log.Printf("TxManager/ReplicaMgr is not preset")
+			time.Sleep(time.Second)
+		} else {
+			buffer.WriteString(s)
+			break
+		}
+		if i == 5 {
+			log.Fatalf("Something has gone wrong")
+
+		}
+	}
+	buffer.WriteString("/api/tx/")
+	return buffer.String()
+
+}
 func TestMultipleConcurrentWriteTxnDifferentKey(t *testing.T) {
 
-	var buffer bytes.Buffer
+	//	var buffer bytes.Buffer
 	status := make(chan string, 10)
-	buffer.WriteString("http://127.0.0.1:")
-	buffer.WriteString(*port)
-	buffer.WriteString("/api/tx/")
+	//buffer.WriteString("http://127.0.0.1:")
+	//buffer.WriteString(*port)
 
+	/*	for i := 0; i < 6; i++ {
+				s, err := getTxManagerIp()
+				if err != nil {
+					log.Printf("TxManager/ReplicaMgr is not preset")
+					time.Sleep(time.Second)
+				} else {
+					buffer.WriteString(s)
+				}
+				if i == 5 {
+					log.Fatalf("Something has gone wrong")
+
+				}
+			}
+		buffer.WriteString("/api/tx/")
+
+	*/
 	start := time.Now()
-	path := buffer.String()
+	path := getPath()
 
 	go func() {
 		WriteTxn(path, []string{"India"}, []string{"newdelhi"}, status)
@@ -273,12 +327,12 @@ func TestMultipleConcurrentWriteTxnDifferentKey(t *testing.T) {
 func TestSimpleWriteTxn(t *testing.T) {
 	//	httpport := flag.String("httpport", "9121", "r1:23480, r2:24480, r3:25480")
 	//	flag.Parse()
-	var buffer bytes.Buffer
-	buffer.WriteString("http://127.0.0.1:")
-	buffer.WriteString(*port)
-	buffer.WriteString("/api/tx/")
-
-	ul := buffer.String()
+	/*
+		buffer.WriteString("http://127.0.0.1:")
+		buffer.WriteString(*port)
+		buffer.WriteString("/api/tx/")
+	*/
+	ul := getPath()
 
 	resp, err := http.Get(ul)
 	if err != nil {
@@ -305,6 +359,8 @@ func TestSimpleWriteTxn(t *testing.T) {
 	_, _ = http.PostForm(ul,
 		url.Values{"txid": {txid}, "op": {"PUT"}, "key": {"Vijaendra"}, "val": {"VMware"}})
 
+	var buffer bytes.Buffer
+	buffer.WriteString(ul)
 	buffer.WriteString("commit/")
 	buffer.WriteString(txid)
 	buffer.WriteString("/")
@@ -347,12 +403,7 @@ func TestSimpleWriteTxn(t *testing.T) {
 func TestSimpleReadWriteTxn(t *testing.T) {
 	//	httpport := flag.String("httpport", "9121", "r1:23480, r2:24480, r3:25480")
 	//	flag.Parse()
-	var buffer bytes.Buffer
-	buffer.WriteString("http://127.0.0.1:")
-	buffer.WriteString(*port)
-	buffer.WriteString("/api/tx/")
-
-	ul := buffer.String()
+	ul := getPath()
 
 	resp, err := http.Get(ul)
 	if err != nil {
@@ -379,6 +430,8 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 	_, _ = http.PostForm(ul,
 		url.Values{"txid": {txid}, "op": {"PUT"}, "key": {"Vijaendra"}, "val": {"VMWARE"}})
 
+	var buffer bytes.Buffer
+	buffer.WriteString(ul)
 	buffer.WriteString("commit/")
 	buffer.WriteString(txid)
 	buffer.WriteString("/")
@@ -421,12 +474,8 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 func TestSimpleReadTxn(t *testing.T) {
 	//	httpport := flag.String("httpport", "9121", "r1:23480, r2:24480, r3:25480")
 	//	flag.Parse()
-	var buffer bytes.Buffer
-	buffer.WriteString("http://127.0.0.1:")
-	buffer.WriteString(*port)
-	buffer.WriteString("/api/tx/")
 
-	ul := buffer.String()
+	ul := getPath()
 
 	resp, err := http.Get(ul)
 	if err != nil {
@@ -453,6 +502,8 @@ func TestSimpleReadTxn(t *testing.T) {
 	_, _ = http.PostForm(ul,
 		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"Vijaendra"}})
 
+	var buffer bytes.Buffer
+	buffer.WriteString(ul)
 	buffer.WriteString("commit/")
 	buffer.WriteString(txid)
 	buffer.WriteString("/")

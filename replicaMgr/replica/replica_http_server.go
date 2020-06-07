@@ -17,11 +17,20 @@ func (repl *ReplicaMgr) handleReplicaMgrGet(w http.ResponseWriter, r *http.Reque
 	json.NewEncoder(w).Encode(m)
 }
 
+func (repl *ReplicaMgr) handleTxMgrGet(w http.ResponseWriter, r *http.Request) {
+	var m string
+	//m := make(map[string]string)
+	//m["txmgrId"] = repl.TxInfo.HttpEndpoint
+	m = repl.TxInfo.HttpEndpoint
+	json.NewEncoder(w).Encode(&m)
+}
+
 func (repl *ReplicaMgr) ServeHttpReplicamgrApi(port int) {
 	log.Printf("Server replicamgr")
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api").Subrouter().StrictSlash(true)
 	api.Methods("GET").Subrouter().HandleFunc("/replica", repl.handleReplicaMgrGet)
+	api.Methods("GET").Subrouter().HandleFunc("/txmanager", repl.handleTxMgrGet)
 
 	r.HandleFunc("/debug/pprof/", pprof.Index)
 	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)

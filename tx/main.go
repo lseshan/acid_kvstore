@@ -53,6 +53,8 @@ func setLogger() {
 
 }
 
+const WorkerThreads = 10
+
 func main() {
 
 	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
@@ -80,8 +82,10 @@ func main() {
 	ts = txmanager.NewTxStoreWrapper(*id, strings.Split(*cluster, ","), *join)
 
 	// start worker threads
-	go ts.TxCommitWorker()
-	go ts.TxAbortWorker()
+	for k := 0; k < WorkerThreads; k++ {
+		go ts.TxCommitWorker()
+		go ts.TxAbortWorker()
+	}
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 

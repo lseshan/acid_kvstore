@@ -46,7 +46,7 @@ func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 	//XXX:
 	rt := tr.TxUpdateTxPending("ADD")
 	if rt == 0 {
-		log.Fatalf("Error: TxCleanPending failed")
+		log.Printf("Error: TxCleanPending failed")
 	}
 
 	res.TxId = strconv.FormatUint(tr.TxId, 10)
@@ -108,12 +108,13 @@ func (ts *TxStore) handleTxGet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-
+	ts.mu.Lock()
 	tr, ok := ts.TxRecordStore[txid]
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
 
+	ts.mu.Unlock()
 	key := vars["key"]
 	tr.TxAddCommand(key, "None", "GET")
 	json.NewEncoder(w).Encode(tr.TxId)

@@ -30,21 +30,25 @@ func init() {
 }
 
 */
+//XXX: modify to increase the rate of abort abd commit
+const WorkerBufferLen = 10
 
 //XXX: changing back to exported TxStore
 var txStore *TxStore
+
+var prevleader uint64
 
 //XXX: After implement TxPending, mantain only state of Commited/Abort in the list
 type TxStore struct {
 	TxRecordStore map[uint64]*TxRecord
 	RaftNode      *raft.RaftNode
 	TxPending     map[uint64]*TxRecord
-	//TxPendingM    sync.Mutex
+	txPendingLock sync.Mutex
 	//sddhards
-	proposeC    chan<- string // channel for proposing updates
-	snapshotter *snap.Snapshotter
-	txnMap      map[uint64]Txn
-	//txnMapM          sync.Mutex
+	proposeC         chan<- string // channel for proposing updates
+	snapshotter      *snap.Snapshotter
+	txnMap           map[uint64]Txn
+	txnMapLock       sync.Mutex
 	lastTxId         uint64
 	HttpEndpoint     string
 	RpcEndpoint      string
@@ -56,7 +60,6 @@ type TxStore struct {
 	raftStats        raftstat.Status
 	commitC          chan TxRecord
 	abortC           chan TxRecord
-	quitC            chan int
 }
 
 type Txn struct {
@@ -142,12 +145,12 @@ func (ts *TxStore) TxCleanPendingList() {
 		if tr.raftTerm != ts.raftStats.Term {
 			///XXX: send to channel to service the Cleanup
 			res := tr.TxUpdateTxRecord("ABORT")
-			if res == 1 {
+			if res == 0 {
 				log.Fatalf("Error: TxCleanPending failed")
 			}
 			log.Printf("RAFT: TxId Abort updated")
 			res = tr.TxUpdateTxPending("DEL")
-			log.Printf("RAFT: TxId Deleted pending request")
+			log.Printf("RAFT: TxId Deleted pending request %d", res)
 			ts.abortC <- *tr
 		}
 
@@ -155,45 +158,30 @@ func (ts *TxStore) TxCleanPendingList() {
 
 }
 
-var prevleader uint64
-
 func (ts *TxStore) TxCommitWorker() {
-	for {
-		select {
-		case tr := <-ts.commitC:
-			for {
-				//success then break
-				if tr.TxCommit() == true {
-					break
-				}
-				//XXX: Update the leader ctx
-				//return only successful
+
+	for tr := range ts.commitC {
+		for {
+			//success then break
+			if tr.TxCommit() == true {
+				break
 			}
-			// No need to update here, as this has to happen
-
-		case <-ts.quitC:
-			return
-
+			//XXX: Update the leader ctx
+			//return only successful
 		}
 	}
+
 }
 
 func (ts *TxStore) TxAbortWorker() {
-	for {
-		select {
-		case tr := <-ts.abortC:
-			for {
-				//success then break
-				if tr.TxRollback() == false {
-					break
-				}
-				//XXX: Update the leader ctx
-				//return only successful
+	for tr := range ts.abortC {
+		for {
+			//success then break
+			if tr.TxRollback() == true {
+				break
 			}
-			// No need to update here, as this has to happen
-
-		case <-ts.quitC:
-			return
+			//XXX: Update the leader ctx
+			//return only successful
 		}
 	}
 }
@@ -243,7 +231,6 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 }
 
 //XXX: may be start multiple threads
-const WorkerBufferLen = 10
 
 func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
 	m := make(map[uint64]*TxRecord)
@@ -269,7 +256,6 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 	//Start commitC and AbortC worker threadsd
 	ts.commitC = make(chan TxRecord, WorkerBufferLen)
 	ts.abortC = make(chan TxRecord, WorkerBufferLen)
-	ts.quitC = make(chan int, 2)
 	return ts
 }
 
@@ -353,13 +339,13 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 		case "TxPending":
 			switch msg.OpType.Action {
 			case "ADD":
-				ts.mu.Lock()
+				ts.txPendingLock.Lock()
 				//XXX: Would be useful if any node can handles the client
 				if tr.TxId > ts.lastTxId {
 					ts.lastTxId = tr.TxId
 				}
 				if _, ok := ts.TxPending[tr.TxId]; ok == true {
-					ts.mu.Unlock()
+					ts.txPendingLock.Unlock()
 					//XXX: go to update the error channel
 					//log.Fatalf("Error: ADD Houston we got a problem, Entry:%+v,", r)
 					log.Printf("Warning: This entry is created while BEGIN")
@@ -367,20 +353,20 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				}
 				/* make sure deadlock not happenned*/
 				ts.TxPending[tr.TxId] = tr
-				ts.mu.Unlock()
+				ts.txPendingLock.Unlock()
 				log.Printf("Added TxId to TxPending %v", tr.TxId)
 			//	log.Printf("Created new Tx entry %+v", tr)
 			//Update the state of TR
 			case "DEL":
-				ts.mu.Lock()
+				ts.txPendingLock.Lock()
 				if _, ok := ts.TxPending[tr.TxId]; ok == false {
-					ts.mu.Unlock()
+					ts.txPendingLock.Unlock()
 					//XXX: go to update the error channel
 					log.Fatalf("Warning: TxPending missing here, TxId:%v", tr.TxId)
 					break
 				}
 				delete(ts.TxPending, tr.TxId)
-				ts.mu.Unlock()
+				ts.txPendingLock.Unlock()
 				log.Printf("Deleting from Pending list %v", tr.TxId)
 			}
 		// XXX: Might keep track of the state than tr
@@ -393,7 +379,8 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
 					ts.mu.Unlock()
 					//XXX: Later changed to warning
-					log.Fatalf("Warning TxStore/Commit entry is already present e:%+v,", r)
+					log.Printf("Warning TxStore/Commit entry is already present e:%+v,", r)
+					break
 				}
 
 				// XXX: This would be redundant for leader , find a way to no-op for leader
@@ -408,7 +395,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				ts.mu.Lock()
 				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
 					//XXX: Later changed to warning
-					log.Fatalf("Warning TxStore/Commit entry is already present e:%+v,", r)
+					log.Printf("Warning TxStore/Commit entry is already present e:%+v,", r)
 					ts.mu.Unlock()
 					break
 				}
@@ -420,12 +407,12 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			}
 		}
 
-		ts.mu.Lock()
+		txStore.txnMapLock.Lock()
 		if ltxn, ok := ts.txnMap[tr.TxId]; ok {
 			ltxn.RespCh <- 1
 			delete(ts.txnMap, tr.TxId)
 		}
-		ts.mu.Unlock()
+		txStore.txnMapLock.Unlock()
 		log.Printf("Raft update done: %+v", msg)
 
 	}
@@ -476,9 +463,9 @@ func (tr *TxRecord) TxUpdateTxRecord(s string) int {
 
 	tx.RespCh = respCh
 	tx.TxRecord = tr
-	txStore.mu.Lock()
+	txStore.txnMapLock.Lock()
 	txStore.txnMap[tr.TxId] = tx
-	txStore.mu.Unlock()
+	txStore.txnMapLock.Unlock()
 	r := raftType{RecordType: "TxRecordStore", Action: s}
 	txStore.ProposeTxRecord(tx, r)
 	log.Printf("Done propose of TxStatus, status:%s", s)
@@ -497,9 +484,11 @@ func (tr *TxRecord) TxUpdateTxPending(s string) int {
 
 	tx.RespCh = respCh
 	tx.TxRecord = tr
-	txStore.mu.Lock()
+	//txStore.mu.Lock()
+	txStore.txnMapLock.Lock()
 	txStore.txnMap[tr.TxId] = tx
-	txStore.mu.Unlock()
+	txStore.txnMapLock.Unlock()
+	//txStore.mu.Unlock()
 	r := raftType{RecordType: "TxPending", Action: s}
 	txStore.ProposeTxRecord(tx, r)
 	log.Printf("Done propose of TRPending, status:%s", s)
