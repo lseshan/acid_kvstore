@@ -189,23 +189,9 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 		log.Fatalf("Error Occurred, %v", err)
 	}
 
-	/*
-		resp1, err := netClient.Get(ul)
-		if err != nil {
-			log.Printf("Error Occurred %s", err)
-			status <- "FAILURE"
-			return
-		}
-		defer resp1.Body.Close()
-	*/
 	var res txmanager.TxJson
-	//json.Unmarshal(body, &tx)
 	json.NewDecoder(resp.Body).Decode(&res)
 
-	/*
-		body, err = ioutil.ReadAll(resp.Body)
-		log.Printf("Http Result %+v", body)
-	*/
 	if res.Status != "SUCCESS" {
 		log.Printf("Test FAILED %+v", res)
 		log.Fatalf("Test Failed")
@@ -223,15 +209,12 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 		}
 
 	}
-
 	status <- "SUCCESS"
-
 }
 
-func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
-
+func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 	var sucTxn, failTxn int
-	value := 2
+	value := 3
 	status := make(chan string, 1000)
 	start := time.Now()
 	path := getPath()
@@ -240,9 +223,45 @@ func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 		time.Sleep(time.Millisecond)
 		var key []string
 		var val []string
-		for j := 1; j <= value; j++ {
-			key = append(key, strconv.Itoa(i*j*1000))
-			val = append(val, num2words.Convert(i*j*1000))
+		for j := 0; j < value; j++ {
+			key = append(key, strconv.Itoa(i+j*1000))
+			val = append(val, num2words.Convert(i+j*1000))
+		}
+		go func(value int) {
+			ReadTxn(path, key, val, status) //[]string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
+		}(i)
+	}
+	for i := 1000; i < 2000; i++ {
+		result := <-status
+		log.Printf("received %s", result)
+		if result == "SUCCESS" {
+			sucTxn += 1
+		} else if result == "FAILURE" {
+			failTxn += 1
+		}
+	}
+	end := time.Since(start)
+	log.Printf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Printf("Succesful txns: %d", sucTxn)
+	log.Printf("Failure txns: %d", failTxn)
+
+}
+
+func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
+
+	var sucTxn, failTxn int
+	value := 3
+	status := make(chan string, 1000)
+	start := time.Now()
+	path := getPath()
+	log.Printf(path)
+	for i := 1000; i < 2000; i++ {
+		time.Sleep(time.Millisecond)
+		var key []string
+		var val []string
+		for j := 0; j < value; j++ {
+			key = append(key, strconv.Itoa(i+j*1000))
+			val = append(val, num2words.Convert(i+j*1000))
 		}
 		go func(value int) {
 			WriteTxn(path, key, val, status) //[]string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
@@ -364,6 +383,18 @@ func TestMultipleConcurrentWriteTxnDifferentKey(t *testing.T) {
 
 }
 
+func TestSimpleReadMultiOpTxn(t *testing.T) {
+	path := getPath()
+	status := make(chan string, 1)
+
+	val := 1
+	ReadTxn(path, []string{strconv.Itoa(val), strconv.Itoa(val * 1000)}, []string{num2words.Convert(val), num2words.Convert(val * 1000)}, status)
+	result := <-status
+	log.Printf("%s", result)
+
+	log.Printf("Done")
+}
+
 func TestSimpleWriteMultiOpTxn(t *testing.T) {
 	path := getPath()
 	status := make(chan string, 1)
@@ -434,7 +465,6 @@ func TestSimpleWriteTxn(t *testing.T) {
 			}
 
 		}
-
 	}
 
 	log.Printf("Done")
