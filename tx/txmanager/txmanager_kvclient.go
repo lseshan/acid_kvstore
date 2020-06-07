@@ -2,7 +2,6 @@ package txmanager
 
 import (
 	"log"
-	"strings"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
 	"google.golang.org/grpc"
@@ -83,9 +82,6 @@ func (t *TxKvManager) TxKvUpdateCtxForServer(s string) {
 */
 func TxKvCreateClientCtx(s string) {
 	// XXX: Got to find better way
-	port := strings.Split(s, ":")
-	grpcServer := "localhost:"
-	ip := grpcServer + port[1]
 	log.Printf("GRPC connection server:%v", s)
 
 	if _, ok := KvClient[s]; ok == true {
@@ -94,7 +90,7 @@ func TxKvCreateClientCtx(s string) {
 	t := new(TxKvManager)
 	t.shardServer = s
 
-	conn, err := grpc.Dial(ip, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(s, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("ERROR: grpc connection failed")
 		return
