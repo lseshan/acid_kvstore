@@ -228,6 +228,34 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 
 }
 
+func TestMultipleConcurrentReadTxnDifferentScale(t *testing.T) {
+
+	var sucTxn, failTxn int
+	status := make(chan string, 1000)
+	start := time.Now()
+	path := getPath()
+	for i := 1000; i < 2000; i++ {
+		time.Sleep(time.Millisecond)
+		go func(val int) {
+			ReadTxn(path, []string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
+		}(i)
+	}
+	for i := 1000; i < 2000; i++ {
+		result := <-status
+		log.Printf("received %s", result)
+		if result == "SUCCESS" {
+			sucTxn += 1
+		} else if result == "FAILURE" {
+			failTxn += 1
+		}
+	}
+	end := time.Since(start)
+	log.Printf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Printf("Succesful txns: %d", sucTxn)
+	log.Printf("Failure txns: %d", failTxn)
+
+}
+
 func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 
 	var sucTxn, failTxn int
@@ -240,7 +268,7 @@ func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 			WriteTxn(path, []string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
 		}(i)
 	}
-	for i := 1001; i < 2000; i++ {
+	for i := 1000; i < 2000; i++ {
 		result := <-status
 		log.Printf("received %s", result)
 		if result == "SUCCESS" {
