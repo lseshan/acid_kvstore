@@ -18,6 +18,7 @@ import (
 	"errors"
 	"log"
 	"net"
+	"strings"
 	"time"
 )
 
@@ -30,7 +31,8 @@ type stoppableListener struct {
 
 //NewStoppableListener creates a stoppable listener
 func NewStoppableListener(addr string, stopc <-chan struct{}) (*stoppableListener, error) {
-	ln, err := net.Listen("tcp", addr)
+	port := ":" + strings.Split(addr, ":")[1]
+	ln, err := net.Listen("tcp", port)
 	if err != nil {
 		return nil, err
 	}

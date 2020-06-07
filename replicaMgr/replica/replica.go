@@ -127,7 +127,7 @@ func (repl *ReplicaMgr) SendShardJoinInformation(Server Server, id int32) {
 }
 
 func (repl *ReplicaMgr) StartServerConnection(ctx context.Context, Server Server) {
-	log.Printf("Trying to connect")
+	log.Printf("Trying to connect %v", Server.ServerKey)
 	conn, err := grpc.Dial(Server.ServerKey, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
