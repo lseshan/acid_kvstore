@@ -88,7 +88,7 @@ func main() {
 	}
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
-	ip := ":" + strings.Split(*grpcport, ":")[0]
+	ip := strings.Split(*grpcport, ":")[0]
 
 	ts.HttpEndpoint = "http://" + ip + ":" + strconv.Itoa(*cliport)
 	ts.RpcEndpoint = *grpcport
