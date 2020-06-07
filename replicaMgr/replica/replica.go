@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	kvpb "github.com/acid_kvstore/proto/package/kvstorepb"
@@ -80,8 +81,9 @@ func (repl *ReplicaMgr) Start() {
 		for j := 0; j < repl.Shards; j++ {
 
 			var peerServers []string
-			for i := range repl.serverlist {
-				peerServers = append(peerServers, "http://127.0.0.1:"+strconv.Itoa(shardportstart+j*len(repl.serverlist)+i))
+			for i, servers := range repl.serverlist {
+				serverIp := strings.Split(servers, ":")[0]
+				peerServers = append(peerServers, "http://"+serverIp+":"+strconv.Itoa(shardportstart+j*len(repl.serverlist)+i))
 			}
 			log.Printf("%v", peerServers)
 			localServer.ShardConfig[int32(j+1)] = &kvpb.ShardConfig{Peers: peerServers, ShardId: int32(j + 1)}
