@@ -88,8 +88,9 @@ func main() {
 	}
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
+	ip := ":" + strings.Split(*grpcport, ":")[0]
 
-	ts.HttpEndpoint = "http://127.0.0.1:" + strconv.Itoa(*cliport)
+	ts.HttpEndpoint = "http://" + ip + ":" + strconv.Itoa(*cliport)
 	ts.RpcEndpoint = *grpcport
 
 	//Create Connection to all servers
