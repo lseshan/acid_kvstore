@@ -3,26 +3,52 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
+	"log"
 	"net"
 	"os"
+	"runtime"
 	"strconv"
 	"strings"
 
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
 	"github.com/acid_kvstore/tx/txmanager"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
+
+	//log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/raft/raftpb"
 	"google.golang.org/grpc"
 )
 
+func formatFilePath(path string) string {
+	arr := strings.Split(path, "/")
+	return arr[len(arr)-1]
+}
+
 // XXX:Setup properly
 func setLogger() {
 
-	log.SetFormatter(&log.TextFormatter{})
+	logrus.SetReportCaller(true)
+	formatter := &logrus.TextFormatter{
+		TimestampFormat:        "02-01-2006 15:04:05", // the "time" field configuratiom
+		FullTimestamp:          true,
+		DisableLevelTruncation: true, // log level field configuration
+		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
+			// this function is required when you want to introduce your custom format.
+			// In my case I wanted file and line to look like this `file="engine.go:141`
+			// but f.File provides a full path along with the file name.
+			// So in `formatFilePath()` function I just trimmet everything before the file name
+			// and added a line number in the end
+			return "", fmt.Sprintf("%s:%d", formatFilePath(f.File), f.Line)
+		},
+	}
+	logrus.SetFormatter(formatter)
+
+	//log.SetFormatter(&log.TextFormatter{})
 	log.SetOutput(os.Stdout)
 	// Only log the warning severity or above.
-	log.SetLevel(log.InfoLevel)
+	//log.SetLevel(log.InfoLevel)
 	// log.SetLevel(log.WarnLevel)
 
 }
@@ -38,8 +64,8 @@ func main() {
 
 	replicamgrs := flag.String("replicamgrs", "127.0.0.1:9021", "comma separated replicamgrs")
 	flag.Parse()
-	//log.SetFlags(log.LstdFlags | log.Lshortfile)
-	log.SetReportCaller(true)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	//log.SetReportCaller(true)
 	proposeC := make(chan string)
 	defer close(proposeC)
 	confChangeC := make(chan raftpb.ConfChange)
@@ -80,7 +106,7 @@ func main() {
 	}
 
 	for _, shard := range ts.ShardInfo.ShardMap {
-		go txmanager.TxKvCreateClientCtx(shard.LeaderKey)
+		txmanager.TxKvCreateClientCtx(shard.LeaderKey)
 	}
 	// XXX: TxManager Server
 	go func() {
@@ -90,9 +116,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
-		log.Printf("started listening")
 		s := grpc.NewServer()
-
 		pbt.RegisterTxmanagerServer(s, ts)
 		if err := s.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)

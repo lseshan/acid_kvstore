@@ -39,9 +39,10 @@ func (kv *Kvstore) KvTxRead(_ context.Context, in *pb.KvTxReq) (*pb.KvTxReply, e
 	readcl := in.GetCommandList()
 	for _, cm := range readcl {
 		rkv, err := kv.KvHandleTxRead(cm.Key, in.TxContext.TxId)
-		if err != nil {
+		if err == nil {
 			readCommandResp = append(readCommandResp, &pb.Command{Key: rkv.Key, Val: rkv.Val})
 		} else {
+			log.Fatalf("Error in return of value: %+v", rkv)
 			resp := pb.KvTxReply{TxContext: in.GetTxContext(), CommandList: in.GetCommandList()}
 			resp.Status = pb.Status_Failure
 			return &resp, nil

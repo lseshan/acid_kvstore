@@ -201,7 +201,7 @@ func getContext() (context.Context, context.CancelFunc) {
 
 // should be called with locks
 func (s *kvstore) KvResolveTx(v *value) string {
-	log.Printf("KvResolveTx: Resolving the Txn")
+	log.Printf("KvResolveTx: Resolving the Txn:%+v", v)
 	ctx, cancel := getContext()
 	defer cancel()
 
@@ -342,11 +342,12 @@ func (s *kvstore) ProposeTxn(txn Txn) {
 
 func (s *kvstore) KvHandleTxRead(key string, txId uint64) (KV, error) {
 	var kv KV
-	log.Printf("Got Tx Read")
+	log.Printf("Got Tx Read for read:%s", key)
 	s.mu.Lock()
 	if _, ok := s.KvStore[key]; ok == false {
 		kv.Key = key
 		kv.Val = ""
+		log.Printf("Key:%s is not present", key)
 		s.mu.Unlock()
 		return kv, nil
 	}

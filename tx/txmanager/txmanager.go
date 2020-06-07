@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/gob"
 	"encoding/json"
-	"os"
+	"log"
 	"sync"
 	"time"
 
@@ -13,19 +13,23 @@ import (
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	"github.com/acid_kvstore/raft"
 	"github.com/acid_kvstore/utils"
-	log "github.com/sirupsen/logrus"
+
+	//log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/etcdserver/api/snap"
 	raftstat "go.etcd.io/etcd/raft"
 	"go.etcd.io/etcd/raft/raftpb"
 	"google.golang.org/grpc"
 )
 
+/*
 func init() {
 	log.SetOutput(os.Stdout)
 	// Only log the warning severity or above.
 	log.SetLevel(log.InfoLevel)
 
 }
+
+*/
 
 //XXX: changing back to exported TxStore
 var txStore *TxStore
@@ -35,12 +39,12 @@ type TxStore struct {
 	TxRecordStore map[uint64]*TxRecord
 	RaftNode      *raft.RaftNode
 	TxPending     map[uint64]*TxRecord
-	TxPendingM    sync.Mutex
+	//TxPendingM    sync.Mutex
 	//sddhards
-	proposeC         chan<- string // channel for proposing updates
-	snapshotter      *snap.Snapshotter
-	txnMap           map[uint64]Txn
-	txnMapM          sync.Mutex
+	proposeC    chan<- string // channel for proposing updates
+	snapshotter *snap.Snapshotter
+	txnMap      map[uint64]Txn
+	//txnMapM          sync.Mutex
 	lastTxId         uint64
 	HttpEndpoint     string
 	RpcEndpoint      string
@@ -91,11 +95,9 @@ type TxRecord struct {
 	//Read to take care off
 	CommandList []*pbk.Command
 	/// Split between read and writes
-	shardedCommands      map[uint64][]*pbk.Command
-	shardTxResult        map[string]string
-	sshardedReadCommands map[uint64][]*pbk.Command
-	ShardedReadReq       []*pbk.KvTxReq
-	ShardedWriteReq      []*pbk.KvTxReq
+	shardedCommands map[uint64][]*pbk.Command
+	ShardedReadReq  []*pbk.KvTxReq
+	ShardedWriteReq []*pbk.KvTxReq
 
 	//	Wg:          sync.WaitGroup{},
 	// Logging the tx, if its crashed ?
@@ -128,6 +130,8 @@ func NewTxStoreWrapper(id int, cluster []string, join bool) *TxStore {
 
 	ts = NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
 	InitTxKvMapper()
+	time.Sleep(time.Second)
+	ts.raftStats = rc.GetStatus()
 	return ts
 }
 
@@ -239,7 +243,7 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 }
 
 //XXX: may be start multiple threads
-const WorkerBufferLen = 100
+const WorkerBufferLen = 10
 
 func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <-chan *string, errorC <-chan error, r *raft.RaftNode) *TxStore {
 	m := make(map[uint64]*TxRecord)
@@ -263,7 +267,6 @@ func NewTxStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 	txStore = ts
 
 	//Start commitC and AbortC worker threadsd
-	ts.raftStats = r.GetStatus()
 	ts.commitC = make(chan TxRecord, WorkerBufferLen)
 	ts.abortC = make(chan TxRecord, WorkerBufferLen)
 	ts.quitC = make(chan int, 2)
@@ -362,6 +365,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 					log.Printf("Warning: This entry is created while BEGIN")
 					break
 				}
+				/* make sure deadlock not happenned*/
 				ts.TxPending[tr.TxId] = tr
 				ts.mu.Unlock()
 				log.Printf("Added TxId to TxPending %v", tr.TxId)
@@ -416,12 +420,12 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			}
 		}
 
-		ts.txnMapM.Lock()
+		ts.mu.Lock()
 		if ltxn, ok := ts.txnMap[tr.TxId]; ok {
 			ltxn.RespCh <- 1
-			ts.txnMapM.Unlock()
 			delete(ts.txnMap, tr.TxId)
 		}
+		ts.mu.Unlock()
 		log.Printf("Raft update done: %+v", msg)
 
 	}
@@ -433,7 +437,6 @@ func NewTxRecord() *TxRecord {
 		TxPhase:         "PENDING",
 		CommandList:     make([]*pbk.Command, 0),
 		shardedCommands: make(map[uint64][]*pbk.Command),
-		shardTxResult:   make(map[string]string),
 	}
 	tr.raftTerm = txStore.raftStats.Term
 	return tr
@@ -473,9 +476,9 @@ func (tr *TxRecord) TxUpdateTxRecord(s string) int {
 
 	tx.RespCh = respCh
 	tx.TxRecord = tr
-	txStore.txnMapM.Lock()
+	txStore.mu.Lock()
 	txStore.txnMap[tr.TxId] = tx
-	txStore.txnMapM.Unlock()
+	txStore.mu.Unlock()
 	r := raftType{RecordType: "TxRecordStore", Action: s}
 	txStore.ProposeTxRecord(tx, r)
 	log.Printf("Done propose of TxStatus, status:%s", s)
@@ -494,9 +497,9 @@ func (tr *TxRecord) TxUpdateTxPending(s string) int {
 
 	tx.RespCh = respCh
 	tx.TxRecord = tr
-	txStore.txnMapM.Lock()
+	txStore.mu.Lock()
 	txStore.txnMap[tr.TxId] = tx
-	txStore.txnMapM.Unlock()
+	txStore.mu.Unlock()
 	r := raftType{RecordType: "TxPending", Action: s}
 	txStore.ProposeTxRecord(tx, r)
 	log.Printf("Done propose of TRPending, status:%s", s)
@@ -515,9 +518,9 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	   	}
 	   	//	tr.mu.RUnLock()
 	*/
-	ret := tr.TxUpdateTxPending("ADD")
+	/* ret := tr.TxUpdateTxPending("ADD")
 	log.Printf("TxRAFT: Update Record res:  %v", ret)
-
+	*/
 	tr.shardRequest()
 	readC := make(chan bool)
 
@@ -547,23 +550,31 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 			return false
 		}
 
-		res := tr.TxUpdateTxRecord("COMMIT")
-		log.Printf("Update record: %d", res)
-
-		res = tr.TxUpdateTxPending("DEL")
-		log.Printf("Update record: %d", res)
-
-		//Assign commit operation to Commit Channel
-		txStore.commitC <- *tr
-
 	}
 
 	if tr.ShardedReadReq != nil {
 		state := <-readC
 		log.Printf("TxId:%v Read is successfull", tr.TxId)
-		return state
+		if state == false {
+			log.Printf("Read is Unsuccessful")
+			res := tr.TxUpdateTxRecord("ABORT")
+			log.Printf("RAFT:%v  Abort updated: ret state:%v", tr.TxId, res)
+			res = tr.TxUpdateTxPending("DEL")
+			log.Printf("RAFT:%v Deleted Raft TxPending ret state:%v", tr.TxId, res)
+			txStore.abortC <- *tr
+			return state
+		}
 
 	}
+	res := tr.TxUpdateTxRecord("COMMIT")
+	log.Printf("Update record: %d", res)
+
+	res = tr.TxUpdateTxPending("DEL")
+	log.Printf("Update record: %d", res)
+
+	//Assign commit operation to Commit Channel
+	txStore.commitC <- *tr
+
 	close(readC)
 	return true
 	// XXX: Offload it to worker thread
@@ -722,43 +733,45 @@ func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op strin
 	var err error
 	server := getShardLeader(rq.TxContext.ShardId)
 	//req := tr.newSendPacket(shard)
+	txStore.mu.Lock()
 	if _, ok := KvClient[server]; ok == false {
 		TxKvCreateClientCtx(server)
 		log.Printf("Missed client for server: %s, op:%s", server, op)
 	}
+	KvGrpc := KvClient[server]
+	txStore.mu.Unlock()
 	switch op {
 	case "read":
 		log.Printf("Tx Read operation")
-		rp, err = KvClient[server].Cli.KvTxRead(ctx, rq)
+		rp, err = KvGrpc.Cli.KvTxRead(ctx, rq)
 
 	case "prepare":
 		log.Printf("Tx Prepare")
-		rp, err = KvClient[server].Cli.KvTxPrepare(ctx, rq)
+		rp, err = KvGrpc.Cli.KvTxPrepare(ctx, rq)
 
 	case "commit":
 		log.Printf("Tx Commit ")
-		rp, err = KvClient[server].Cli.KvTxCommit(ctx, rq)
+		rp, err = KvGrpc.Cli.KvTxCommit(ctx, rq)
 
 	case "rollback": //abort
 		log.Printf("Tx rollback ")
-		rp, err = KvClient[server].Cli.KvTxRollback(ctx, rq)
+		rp, err = KvGrpc.Cli.KvTxRollback(ctx, rq)
 	}
 	//XXX: analyze the error later
 	if err != nil {
-		log.Errorf("op:%v, err:%v", op, err)
+		log.Fatalf("op:%v, err:%v", op, err)
 		//XXX:may be remove on perf study
 		doneC <- Status{TxId: rq.TxContext.TxId, status: false, op: op, shard: rq.TxContext.ShardId}
 	}
 
 	if rp.Status == pbk.Status_Failure {
-		tr.shardTxResult[server] = "FAIL"
 		doneC <- Status{TxId: rq.TxContext.TxId, status: false, op: op, shard: rq.TxContext.ShardId}
-		log.Errorf("op:%s failed", op)
+		log.Printf("op:%s failed and rsp: %+v", op, rp)
 
 	} else {
-		tr.shardTxResult[server] = "PASS"
 		if op == "read" {
 			//copt the result on success
+			log.Printf("Read is successfull")
 			copyReadResults(rq, rp)
 
 		}
@@ -782,12 +795,12 @@ func (tr *TxRecord) TxRead(readC chan bool) {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Errorf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Fatalf("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
 
-	log.Debugf("TxRead result: %v", res)
+	log.Printf("TxRead result: %v", res)
 	readC <- res
 
 	close(doneC)
@@ -801,7 +814,7 @@ func (tr *TxRecord) TxPrepare() bool {
 	l := len(tr.ShardedWriteReq)
 	doneC := make(chan Status, l)
 	for _, rq := range tr.ShardedWriteReq {
-		log.Debugf("TxPrepare req: %+v", rq)
+		log.Printf("TxPrepare req: %+v", rq)
 		go tr.SendGrpcRequest(rq, doneC, "prepare")
 
 	}
@@ -810,12 +823,12 @@ func (tr *TxRecord) TxPrepare() bool {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Errorf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Fatalf("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
 
-	log.Debugf("TxResult result: %v", res)
+	log.Printf("TxResult result: %v", res)
 	close(doneC)
 	return res
 }
@@ -827,7 +840,7 @@ func (tr *TxRecord) TxCommit() bool {
 	doneC := make(chan Status, l)
 
 	for _, rq := range tr.ShardedWriteReq {
-		log.Debugf("TxCommit req: %+v", rq)
+		log.Printf("TxCommit req: %+v", rq)
 		go tr.SendGrpcRequest(rq, doneC, "commit")
 
 	}
@@ -835,13 +848,13 @@ func (tr *TxRecord) TxCommit() bool {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Errorf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Fatalf("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
 
 	close(doneC)
-	log.Debugf("TxCommit result: %v", res)
+	log.Printf("TxCommit result: %v", res)
 	return res
 }
 
@@ -852,7 +865,7 @@ func (tr *TxRecord) TxRollback() bool {
 	doneC := make(chan Status, l)
 
 	for _, rq := range tr.ShardedWriteReq {
-		log.Debugf("TxRollBack req: %+v", rq)
+		log.Printf("TxRollBack req: %+v", rq)
 		go tr.SendGrpcRequest(rq, doneC, "rollback")
 
 	}
@@ -860,11 +873,11 @@ func (tr *TxRecord) TxRollback() bool {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Errorf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Fatalf("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
-	log.Debugf("TxRollback result: %v", res)
+	log.Printf("TxRollback result: %v", res)
 	close(doneC)
 	return res
 }

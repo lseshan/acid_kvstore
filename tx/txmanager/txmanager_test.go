@@ -51,7 +51,89 @@ func TestTxSendBatchRequest(t *testing.T) {
 */
 var port = flag.String("port", "23480", "r1:23480, r2:24480, r3:25480")
 
+//var num2port map[string]string
+
 func WriteTxn(path string, key []string, val []string, status chan string) {
+	var buffer bytes.Buffer
+	buffer.WriteString(path)
+	ul := buffer.String()
+
+	resp, err := netClient.Get(ul)
+	if err != nil {
+		log.Printf("Error Occrred %s", err)
+		status <- "FAILURE"
+		return
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	var tx txmanager.TxJson
+	json.Unmarshal(body, &tx)
+
+	if tx.Status != "SUCCESS" {
+		log.Printf("Test FAILED %s", tx.Status)
+		log.Fatalf("Test Failed")
+		return
+	}
+	txid := tx.TxId
+	log.Printf("TxId:%s", txid)
+
+	for i := range key {
+		log.Printf("Post: key : %s val: %s", key[i], val[i])
+		_, _ = http.PostForm(ul, url.Values{"txid": {txid}, "op": {"PUT"}, "key": {key[i]}, "val": {val[i]}})
+
+	}
+
+	buffer.WriteString("commit/")
+	buffer.WriteString(txid)
+	buffer.WriteString("/")
+	ul = buffer.String()
+	resp, err = http.Get(ul)
+	if err != nil {
+		log.Fatalf("Error Occurred, %v", err)
+	}
+	defer resp.Body.Close()
+	var res txmanager.TxJson
+	//json.Unmarshal(body, &tx)
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	/*
+		body, err = ioutil.ReadAll(resp.Body)
+		log.Printf("Http Result %+v", body)
+	*/
+	if res.Status != "SUCCESS" {
+		log.Printf("Test FAILED %+v", res)
+		log.Fatalf("Test Failed")
+		status <- "FAILURE"
+		return
+	} else {
+		log.Printf("Test is Successful %v", res)
+		log.Printf("Test is Successful TxID: %s", res.TxId)
+		if res.ReadRsp != nil {
+			log.Printf("Printing Read Results")
+
+			for _, v := range res.ReadRsp {
+				log.Printf("Received Key:Val: %+v", v)
+
+			}
+
+		}
+
+	}
+	/*
+		resp1, err := netClient.Get(ul)
+		if err != nil {
+			log.Printf("Error Occurred %s", err)
+			status <- "FAILURE"
+			return
+		}
+		defer resp1.Body.Close()
+	*/
+	status <- "SUCCESS"
+
+}
+
+func ReadTxn(path string, key []string, val []string, status chan string) {
 	var buffer bytes.Buffer
 	buffer.WriteString(path)
 	ul := buffer.String()
@@ -76,7 +158,7 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 	for i := range key {
 		log.Printf("Post: key : %s val: %s", key[i], val[i])
-		_, _ = http.PostForm(ul, url.Values{"txid": {txid}, "op": {"PUT"}, "key": {key[i]}, "val": {val[i]}})
+		_, _ = http.PostForm(ul, url.Values{"txid": {txid}, "op": {"GET"}, "key": {key[i]}, "val": {val[i]}})
 
 	}
 
@@ -84,13 +166,46 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 	buffer.WriteString(txid)
 	buffer.WriteString("/")
 	ul = buffer.String()
-	resp1, err := netClient.Get(ul)
+	resp, err = http.Get(ul)
 	if err != nil {
-		log.Printf("Error Occurred %s", err)
+		log.Fatalf("Error Occurred, %v", err)
+	}
+
+	/*
+		resp1, err := netClient.Get(ul)
+		if err != nil {
+			log.Printf("Error Occurred %s", err)
+			status <- "FAILURE"
+			return
+		}
+		defer resp1.Body.Close()
+	*/
+	var res txmanager.TxJson
+	//json.Unmarshal(body, &tx)
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	/*
+		body, err = ioutil.ReadAll(resp.Body)
+		log.Printf("Http Result %+v", body)
+	*/
+	if res.Status != "SUCCESS" {
+		log.Printf("Test FAILED %+v", res)
+		log.Fatalf("Test Failed")
 		status <- "FAILURE"
 		return
+	} else {
+		log.Printf("Test is Successful %v", res)
+		log.Printf("Test is Successful TxID: %s", res.TxId)
+		if res.ReadRsp != nil {
+			log.Printf("Printing Read Results")
+			for _, v := range res.ReadRsp {
+				log.Printf("Received Key:Val: %+v", v)
+
+			}
+		}
+
 	}
-	defer resp1.Body.Close()
+
 	status <- "SUCCESS"
 
 }
@@ -194,12 +309,187 @@ func TestSimpleWriteTxn(t *testing.T) {
 	buffer.WriteString(txid)
 	buffer.WriteString("/")
 	ul = buffer.String()
-	resp1, err := http.Get(ul)
+	resp, err = http.Get(ul)
+	if err != nil {
+		log.Fatalf("Error Occurred, %v", err)
+	}
+	defer resp.Body.Close()
+	var res txmanager.TxJson
+	//json.Unmarshal(body, &tx)
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	/*
+		body, err = ioutil.ReadAll(resp.Body)
+		log.Printf("Http Result %+v", body)
+	*/
+	if res.Status != "SUCCESS" {
+		log.Printf("Test FAILED %+v", res)
+		log.Fatalf("Test Failed")
+		return
+	} else {
+		log.Printf("Test is Successful %v", res)
+		log.Printf("Test is Successful TxID: %s", res.TxId)
+		if res.ReadRsp != nil {
+			log.Printf("Printing Read Results")
+
+			for _, v := range res.ReadRsp {
+				log.Printf("Received Key:Val: %+v", v)
+
+			}
+
+		}
+
+	}
+
+	log.Printf("Done")
+}
+
+func TestSimpleReadWriteTxn(t *testing.T) {
+	//	httpport := flag.String("httpport", "9121", "r1:23480, r2:24480, r3:25480")
+	//	flag.Parse()
+	var buffer bytes.Buffer
+	buffer.WriteString("http://127.0.0.1:")
+	buffer.WriteString(*port)
+	buffer.WriteString("/api/tx/")
+
+	ul := buffer.String()
+
+	resp, err := http.Get(ul)
 	if err != nil {
 		log.Fatalf("Error Occurred")
 	}
-	defer resp1.Body.Close()
-	log.Printf("What?")
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	var tx txmanager.TxJson
+	json.Unmarshal(body, &tx)
+
+	if tx.Status != "SUCCESS" {
+		log.Printf("Test FAILED %s", tx.Status)
+		log.Fatalf("Test Failed")
+		return
+	}
+	txid := tx.TxId
+	log.Printf("TxId:%s", txid)
+
+	_, _ = http.PostForm(ul,
+		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"RJ"}})
+	_, _ = http.PostForm(ul,
+		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"Lakshmi"}})
+	_, _ = http.PostForm(ul,
+		url.Values{"txid": {txid}, "op": {"PUT"}, "key": {"Vijaendra"}, "val": {"VMWARE"}})
+
+	buffer.WriteString("commit/")
+	buffer.WriteString(txid)
+	buffer.WriteString("/")
+	ul = buffer.String()
+	resp, err = http.Get(ul)
+	if err != nil {
+		log.Fatalf("Error Occurred, %v", err)
+	}
+	defer resp.Body.Close()
+	var res txmanager.TxJson
+	//json.Unmarshal(body, &tx)
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	/*
+		body, err = ioutil.ReadAll(resp.Body)
+		log.Printf("Http Result %+v", body)
+	*/
+	if res.Status != "SUCCESS" {
+		log.Printf("Test FAILED %+v", res)
+		log.Fatalf("Test Failed")
+		return
+	} else {
+		log.Printf("Test is Successful %v", res)
+		log.Printf("Test is Successful TxID: %s", res.TxId)
+		if res.ReadRsp != nil {
+			log.Printf("Printing Read Results")
+
+			for _, v := range res.ReadRsp {
+				log.Printf("Received Key:Val: %+v", v)
+
+			}
+
+		}
+
+	}
+
+	log.Printf("Done")
+}
+
+func TestSimpleReadTxn(t *testing.T) {
+	//	httpport := flag.String("httpport", "9121", "r1:23480, r2:24480, r3:25480")
+	//	flag.Parse()
+	var buffer bytes.Buffer
+	buffer.WriteString("http://127.0.0.1:")
+	buffer.WriteString(*port)
+	buffer.WriteString("/api/tx/")
+
+	ul := buffer.String()
+
+	resp, err := http.Get(ul)
+	if err != nil {
+		log.Fatalf("Error Occurred")
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	var tx txmanager.TxJson
+	json.Unmarshal(body, &tx)
+
+	if tx.Status != "SUCCESS" {
+		log.Printf("Test FAILED %s", tx.Status)
+		log.Fatalf("Test Failed")
+		return
+	}
+	txid := tx.TxId
+	log.Printf("TxId:%s", txid)
+
+	_, _ = http.PostForm(ul,
+		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"RJ"}})
+	_, _ = http.PostForm(ul,
+		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"Lakshmi"}})
+	_, _ = http.PostForm(ul,
+		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"Vijaendra"}})
+
+	buffer.WriteString("commit/")
+	buffer.WriteString(txid)
+	buffer.WriteString("/")
+	ul = buffer.String()
+	resp, err = http.Get(ul)
+	if err != nil {
+		log.Fatalf("Error Occurred, %v", err)
+	}
+	defer resp.Body.Close()
+	var res txmanager.TxJson
+	//json.Unmarshal(body, &tx)
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	/*
+		body, err = ioutil.ReadAll(resp.Body)
+		log.Printf("Http Result %+v", body)
+	*/
+	if res.Status != "SUCCESS" {
+		log.Printf("Test FAILED %+v", res)
+		log.Fatalf("Test Failed")
+		return
+	} else {
+		log.Printf("Test is Successful %v", res)
+		log.Printf("Test is Successful TxID: %s", res.TxId)
+		if res.ReadRsp != nil {
+			log.Printf("Printing Read Results")
+
+			for _, v := range res.ReadRsp {
+				log.Printf("Received Key:Val: %+v", v)
+
+			}
+
+		}
+
+	}
+
+	log.Printf("Done")
 }
 
 const (
