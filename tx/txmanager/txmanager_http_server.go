@@ -73,9 +73,9 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 	tr, ok := ts.TxPending[txid]
 	ts.TxPendingM.Unlock()
 	*/
-	ts.mu.Lock()
+	ts.txPendingLock.Lock()
 	tr, ok := ts.TxPending[txid]
-	ts.mu.Unlock()
+	ts.txPendingLock.Unlock()
 
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
@@ -194,9 +194,9 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("http: TxId: %d, key: %s, key: %s, op:%s", txid, key, val, op)
 	//ts.TxPendingM.Lock()
-	ts.mu.Lock()
+	ts.txPendingLock.Lock()
 	tr, ok := ts.TxPending[txid]
-	ts.mu.Unlock()
+	ts.txPendingLock.Unlock()
 	//ts.TxPendingM.Unlock()
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", tx.txid)
