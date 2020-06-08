@@ -751,6 +751,7 @@ func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op strin
 		log.Printf("op:%v, err:%v", op, err)
 		//XXX:may be remove on perf study
 		doneC <- Status{TxId: rq.TxContext.TxId, status: false, op: op, shard: rq.TxContext.ShardId}
+		return
 	}
 
 	if rp.Status == pbk.Status_Failure {
