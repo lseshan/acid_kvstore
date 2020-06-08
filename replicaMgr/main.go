@@ -42,7 +42,7 @@ func main() {
 		}
 	}()
 
-	replicaMgr.Start()
+	go replicaMgr.Start()
 
 	//start http server
 	go replicaMgr.ServeHttpReplicamgrApi(*httport)

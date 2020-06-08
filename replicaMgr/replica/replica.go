@@ -93,10 +93,10 @@ func (repl *ReplicaMgr) Start() {
 		localServer.ReplicaId = uint32(i + 1)
 		localServer.Peers = repl.serverlist
 		repl.Servers[servername] = localServer
-		repl.StartServerConnection(context.Background(), repl.Servers[servername])
+		go repl.StartServerConnection(context.Background(), repl.Servers[servername])
 	}
 	//time.Sleep(10 * time.Second)
-	for _, servername := range repl.serverlist {
+	/*for _, servername := range repl.serverlist {
 		repl.SendReplicaInformation(repl.Servers[servername])
 		for j := 0; j < repl.Shards; j++ {
 			repl.SendShardJoinInformation(repl.Servers[servername], int32(j+1))
@@ -104,7 +104,7 @@ func (repl *ReplicaMgr) Start() {
 		//replicamgr.SendShardJoinInformation(replicamgr.Servers[servername], 2)
 		//replicamgr.SendShardJoinInformation(replicamgr.Servers[servername], 3)
 
-	}
+	}*/
 	//For each server send Shard Join
 }
 
@@ -122,8 +122,9 @@ func (repl *ReplicaMgr) SendShardJoinInformation(Server Server, id int32) {
 
 	out.ShardId = id
 	out.Config = Server.ShardConfig[id]
-	_, _ = Server.Client.KvReplicaJoin(context.Background(), &out)
-
+	if Server.Client != nil {
+		_, _ = Server.Client.KvReplicaJoin(context.Background(), &out)
+	}
 }
 
 func (repl *ReplicaMgr) StartServerConnection(ctx context.Context, Server Server) {
@@ -138,6 +139,10 @@ func (repl *ReplicaMgr) StartServerConnection(ctx context.Context, Server Server
 	localServer.Client = cli
 	repl.Servers[Server.ServerKey] = localServer
 	log.Printf("server connected")
+	repl.SendReplicaInformation(Server)
+	for j := 0; j < repl.Shards; j++ {
+		repl.SendShardJoinInformation(Server, int32(j+1))
+	}
 }
 
 // Routine to Send information to Replica
