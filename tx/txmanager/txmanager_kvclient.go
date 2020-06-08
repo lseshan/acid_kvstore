@@ -1,9 +1,10 @@
 package txmanager
 
 import (
-	"log"
+	//	"log"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
+	log "github.com/pingcap-incubator/tinykv/log"
 	"google.golang.org/grpc"
 )
 
@@ -40,7 +41,7 @@ func NewTxKvManager(s []string, compl chan int) {
 		KvClient[server] = t
 	}
 	compl <- 1
-	log.Printf("grpc client for shardservers are setup")
+	log.Infof("grpc client for shardservers are setup")
 }
 */
 
@@ -69,7 +70,7 @@ func (t *TxKvManager) TxKvCloseConn(s string) {
 func (t *TxKvManager) TxKvUpdateCtxForServer(s string) {
 	// XXX: Got to find better way
 	if len(s) > 0 {
-		log.Printf("Creating grpc conn for Server:%s", s)
+		log.Infof("Creating grpc conn for Server:%s", s)
 		conn, err := grpc.Dial(s, grpc.WithInsecure(), grpc.WithBlock())
 		if err != nil {
 			log.Fatalf("ERROR: grpc connection failed")
@@ -82,10 +83,10 @@ func (t *TxKvManager) TxKvUpdateCtxForServer(s string) {
 */
 func TxKvCreateClientCtx(s string) {
 	// XXX: Got to find better way
-	log.Printf("GRPC connection server:%v", s)
+	log.Infof("GRPC connection server:%v", s)
 
 	if _, ok := KvClient[s]; ok == true {
-		log.Printf("Ctx is alreay present: Resulting in noperation")
+		log.Infof("Ctx is alreay present: Resulting in noperation")
 	}
 	t := new(TxKvManager)
 	t.shardServer = s
@@ -98,7 +99,7 @@ func TxKvCreateClientCtx(s string) {
 	t.Cli = pb.NewKvstoreClient(conn)
 	t.Conn = conn
 	KvClient[s] = t
-	log.Printf("GRPC connection configure: %+v", t)
+	log.Infof("GRPC connection configure: %+v", t)
 
 }
 

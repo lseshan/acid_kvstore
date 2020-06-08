@@ -2,7 +2,9 @@ package txmanager
 
 import (
 	"context"
-	"log"
+	//"log"
+	//"log"
+	log "github.com/pingcap-incubator/tinykv/log"
 
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
 )
@@ -22,7 +24,7 @@ func (ts *TxStore) TxGetRecordState(_ context.Context, in *pbt.TxReq) (*pbt.TxRe
 		resp.Stage = "COMMIT"
 	}
 
-	log.Printf("TxGetRecordState: TxId %v status: %v", resp.TxId, resp.Stage)
+	log.Infof("TxGetRecordState: TxId %v status: %v", resp.TxId, resp.Stage)
 
 	return resp, nil
 }

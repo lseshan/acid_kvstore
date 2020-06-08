@@ -3,11 +3,14 @@ package txmanager
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+
+	//	"log"
 	"net/http"
 	"net/http/pprof"
 	"net/url"
 	"strconv"
+
+	log "github.com/pingcap-incubator/tinykv/log"
 
 	pbk "github.com/acid_kvstore/proto/package/kvstorepb"
 	"github.com/gorilla/mux"
@@ -32,8 +35,8 @@ func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 	if ts.RaftNode.IsLeader(s) == false {
 		res.Status = "NoLeader"
 		json.NewEncoder(w).Encode(res)
-		log.Printf("Sorry, I am not a leader")
-		log.Printf("Leader is: %v", s.Lead)
+		log.Infof("Sorry, I am not a leader")
+		log.Infof("Leader is: %v", s.Lead)
 		return
 	}
 
@@ -46,7 +49,7 @@ func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 	//XXX:
 	/* rt := tr.TxUpdateTxPending("ADD")
 	if rt == 0 {
-		log.Printf("Error: TxCleanPending failed")
+		log.Infof("Error: TxCleanPending failed")
 	}
 	*/
 	res.TxId = strconv.FormatUint(tr.TxId, 10)
@@ -55,7 +58,7 @@ func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 
 	//	ts.ProposeTxRecord(*tr)
 
-	log.Printf("Begin: Tx is %d", tr.TxId)
+	log.Infof("Begin: Tx is %d", tr.TxId)
 
 }
 
@@ -65,10 +68,10 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	txid, err := strconv.ParseUint(vars["txid"], 10, 64)
 	if err != nil {
-		log.Printf("Invalid TxId %v", txid)
+		log.Infof("Invalid TxId %v", txid)
 	}
 
-	log.Printf("TxId:%d ", txid)
+	log.Infof("TxId:%d ", txid)
 	/* ts.TxPendingM.Lock()
 	tr, ok := ts.TxPending[txid]
 	ts.TxPendingM.Unlock()
@@ -102,11 +105,11 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		json.NewEncoder(w).Encode(ret)
-		log.Printf("Commit Successfull: TxId:%d resp: %+v", txid, ret)
+		log.Infof("Commit Successfull: TxId:%d resp: %+v", txid, ret)
 	} else {
 		ret.Status = "FAILURE"
 		json.NewEncoder(w).Encode(ret)
-		log.Printf("TxId:%d resp: %+v is Failure", txid, ret)
+		log.Infof("TxId:%d resp: %+v is Failure", txid, ret)
 	}
 }
 
@@ -128,7 +131,7 @@ func (ts *TxStore) handleTxGet(w http.ResponseWriter, r *http.Request) {
 	tr.TxAddCommand(key, "None", "GET")
 	json.NewEncoder(w).Encode(tr.TxId)
 
-	log.Printf("Tx GET is %v", key)
+	log.Infof("Tx GET is %v", key)
 }
 
 func (ts *TxStore) handleTxPut(w http.ResponseWriter, r *http.Request) {
@@ -148,7 +151,7 @@ func (ts *TxStore) handleTxPut(w http.ResponseWriter, r *http.Request) {
 	val := vars["val"]
 
 	tr.TxAddCommand(key, val, "PUT")
-	log.Printf("Tx Put is key: %s, val: %s", key, val)
+	log.Infof("Tx Put is key: %s, val: %s", key, val)
 }
 
 func (ts *TxStore) handleTxDelete(w http.ResponseWriter, r *http.Request) {
@@ -168,26 +171,26 @@ func (ts *TxStore) handleTxDelete(w http.ResponseWriter, r *http.Request) {
 	val := vars["val"]
 
 	tr.TxAddCommand(key, val, "DELETE")
-	log.Printf("Tx Delete is key: %s, val: %s", key, val)
+	log.Infof("Tx Delete is key: %s, val: %s", key, val)
 }
 
 func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	var tx PostReq
-	log.Printf("Handle TxCommand")
+	log.Infof("Handle TxCommand")
 	body, _ := ioutil.ReadAll(r.Body)
 
-	log.Printf("%s", body)
+	log.Infof("%s", body)
 	s := string(body)
 	m, _ := url.ParseQuery(s)
 	//	json.Unmarshal(body, &tx)
 
-	log.Printf("%v", tx)
-	log.Printf("%+v", m)
+	log.Infof("%v", tx)
+	log.Infof("%+v", m)
 	txid, err := strconv.ParseUint(m["txid"][0], 10, 64)
 	if err != nil {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-	log.Printf("op:%+v", m["op"])
+	log.Infof("op:%+v", m["op"])
 	var key, val, op string
 	op = m["op"][0]
 	switch op {
@@ -198,10 +201,10 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 		key = m["key"][0]
 		val = m["val"][0]
 	case "DELETE":
-		log.Printf("DELETE Not supported")
+		log.Infof("DELETE Not supported")
 		return
 	}
-	log.Printf("http: TxId: %d, key: %s, key: %s, op:%s", txid, key, val, op)
+	log.Infof("http: TxId: %d, key: %s, key: %s, op:%s", txid, key, val, op)
 	//ts.TxPendingM.Lock()
 	//ts.txPendingLock.Lock()
 	//tr, ok := ts.TxPending[txid]
@@ -220,24 +223,24 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 
 	res := tr.TxAddCommand(key, val, op)
 
-	log.Printf("Tx Post is TxId:%d op:%s key: %s, val: %s, Result: %v",
+	log.Infof("Tx Post is TxId:%d op:%s key: %s, val: %s, Result: %v",
 		txid, op, key, val, res)
 }
 
 func (ts *TxStore) handleTxBatch(w http.ResponseWriter, r *http.Request) {
 	var tx PostReq
-	log.Printf("Handle TxCommand")
+	log.Infof("Handle TxCommand")
 	body, _ := ioutil.ReadAll(r.Body)
 
-	log.Printf("%s", body)
+	log.Infof("%s", body)
 	s := string(body)
 	m, _ := url.ParseQuery(s)
 	//	json.Unmarshal(body, &tx)
 
-	log.Printf("%v", tx)
-	log.Printf("%+v", m)
+	log.Infof("%v", tx)
+	log.Infof("%+v", m)
 	tr := NewTxRecord()
-	log.Printf("op:%+v", m["op"])
+	log.Infof("op:%+v", m["op"])
 	var key, val string
 	for i, op := range m["op"] {
 		switch op {
@@ -248,12 +251,12 @@ func (ts *TxStore) handleTxBatch(w http.ResponseWriter, r *http.Request) {
 			key = m["key"][i]
 			val = m["val"][i]
 		case "DELETE":
-			log.Printf("DELETE Not supported")
+			log.Infof("DELETE Not supported")
 			return
 		}
 
 		res := tr.TxAddCommand(key, val, op)
-		log.Printf("Value received, key: %s, val: %s, op:%s addSuccess: %v", key, val, op, res)
+		log.Infof("Value received, key: %s, val: %s, op:%s addSuccess: %v", key, val, op, res)
 	}
 
 	res := tr.TxSendBatchRequest()
@@ -269,11 +272,11 @@ func (ts *TxStore) handleTxBatch(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		json.NewEncoder(w).Encode(ret)
-		log.Printf("Commit Successfull: TxId:%d resp: %+v", tr.TxId, ret)
+		log.Infof("Commit Successfull: TxId:%d resp: %+v", tr.TxId, ret)
 	} else {
 		ret.Status = "FAILURE"
 		json.NewEncoder(w).Encode(ret)
-		log.Printf("TxId:%d resp: %+v is Failure", tr.TxId, ret)
+		log.Infof("TxId:%d resp: %+v is Failure", tr.TxId, ret)
 	}
 
 	//ts.TxPendingM.Lock()

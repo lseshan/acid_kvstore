@@ -11,12 +11,17 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/pingcap-incubator/tinykv v0.0.0-20200608054928-6f95cf0df4b0
 	github.com/prometheus/client_golang v1.6.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
-	github.com/stretchr/objx v0.1.1 // indirect
-	go.etcd.io/etcd v0.5.0-alpha.5.0.20181228115726-23731bf9ba55
+	github.com/ugorji/go v1.1.1 // indirect
+	go.etcd.io/etcd v0.5.0-alpha.5.0.20191023171146-3cf2f69b5738
 	go.uber.org/zap v1.15.0
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.22.0
+	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
+	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
+// github.com/pingcap-incubator/tinykv
+
 )

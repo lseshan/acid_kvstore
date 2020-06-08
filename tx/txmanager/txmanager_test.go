@@ -4,12 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
-	"log"
+
+	//"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"testing"
 	"time"
+
+	log "github.com/pingcap-incubator/tinykv/log"
 
 	"github.com/divan/num2words"
 
@@ -24,18 +27,18 @@ var tr *txmanager.TxRecord
 func TestTxAddCommand(t *testing.T) {
 
 	rs := tr.TxAddCommand("TOM", "WhoisThis", "PUT")
-	log.Printf("result of TxAdd:%t", rs)
+	log.Infof("result of TxAdd:%t", rs)
 
 	rs = tr.TxAddCommand("Marlo", "This is Me", "PUT")
-	log.Printf("result of TxAdd:%t", rs)
+	log.Infof("result of TxAdd:%t", rs)
 }
 
 func TestTxSendBatchRequest(t *testing.T) {
 	for _, cm := range tr.CommandList {
-		log.Printf("Op:%s", cm.Op)
+		log.Infof("Op:%s", cm.Op)
 	}
 	rs := tr.TxSendBatchRequest()
-	log.Printf("result of TxAdd:%t", rs)
+	log.Infof("result of TxAdd:%t", rs)
 
 }
 */
@@ -43,7 +46,7 @@ func TestTxSendBatchRequest(t *testing.T) {
 /*func init() {
 	httpport := flag.String("httpport", "23480", "r1:23480, r2:24480, r3:25480")
 	flag.Parse()
-	log.Printf("%+v", httpport)
+	log.Infof("%+v", httpport)
 	port = *httpport
 
 }
@@ -56,7 +59,7 @@ func getTxManagerIp() (string, error) {
 
 	resp, err := netClient.Get(replicaURL)
 	if err != nil {
-		log.Printf("Error Occrred %s", err)
+		log.Infof("Error Occrred %s", err)
 		return "", err
 	}
 	defer resp.Body.Close()
@@ -64,7 +67,7 @@ func getTxManagerIp() (string, error) {
 	//	m := make(map[string]string)
 	var m string
 	json.NewDecoder(resp.Body).Decode(&m)
-	log.Printf("Received Body : %+v Txmanager Tx: %+v", resp.Body, m)
+	log.Infof("Received Body : %+v Txmanager Tx: %+v", resp.Body, m)
 	return m, nil
 }
 
@@ -75,7 +78,7 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 	resp, err := netClient.Get(ul)
 	if err != nil {
-		log.Printf("GET: Error Occrred %s", err)
+		log.Infof("GET: Error Occrred %s", err)
 		status <- "FAILURE"
 		return
 	}
@@ -86,16 +89,16 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 	json.Unmarshal(body, &tx)
 
 	if tx.Status != "SUCCESS" {
-		log.Printf("Test FAILED at GET %s", tx.Status)
+		log.Infof("Test FAILED at GET %s", tx.Status)
 		log.Fatalf("Test Failed")
 		status <- "FAILURE"
 		return
 	}
 	txid := tx.TxId
-	log.Printf("TxId:%s", txid)
+	log.Infof("TxId:%s", txid)
 
 	for i := range key {
-		log.Printf("Post: key : %s val: %s", key[i], val[i])
+		log.Infof("Post: key : %s val: %s", key[i], val[i])
 		_, _ = http.PostForm(ul, url.Values{"txid": {txid}, "op": {"PUT"}, "key": {key[i]}, "val": {val[i]}})
 
 	}
@@ -117,21 +120,21 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 	/*
 		body, err = ioutil.ReadAll(resp.Body)
-		log.Printf("Http Result %+v", body)
+		log.Infof("Http Result %+v", body)
 	*/
 	if res.Status != "SUCCESS" {
-		log.Printf("Test FAILED %+v", res)
+		log.Infof("Test FAILED %+v", res)
 		log.Fatalf("Test Failed")
 		status <- "FAILURE"
 		return
 	} else {
-		log.Printf("Test is Successful %v", res)
-		log.Printf("Test is Successful TxID: %s", res.TxId)
+		log.Infof("Test is Successful %v", res)
+		log.Infof("Test is Successful TxID: %s", res.TxId)
 		if res.ReadRsp != nil {
-			log.Printf("Printing Read Results")
+			log.Infof("Printing Read Results")
 
 			for _, v := range res.ReadRsp {
-				log.Printf("Received Key:Val: %+v", v)
+				log.Infof("Received Key:Val: %+v", v)
 
 			}
 
@@ -141,7 +144,7 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 	/*
 		resp1, err := netClient.Get(ul)
 		if err != nil {
-			log.Printf("Error Occurred %s", err)
+			log.Infof("Error Occurred %s", err)
 			status <- "FAILURE"
 			return
 		}
@@ -158,7 +161,7 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 
 	resp, err := netClient.Get(ul)
 	if err != nil {
-		log.Printf("Error Occrred %s", err)
+		log.Infof("Error Occrred %s", err)
 	}
 	defer resp.Body.Close()
 
@@ -167,15 +170,15 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 	json.Unmarshal(body, &tx)
 
 	if tx.Status != "SUCCESS" {
-		log.Printf("Test FAILED %s", tx.Status)
+		log.Infof("Test FAILED %s", tx.Status)
 		log.Fatalf("Test Failed")
 		return
 	}
 	txid := tx.TxId
-	log.Printf("TxId:%s", txid)
+	log.Infof("TxId:%s", txid)
 
 	for i := range key {
-		log.Printf("Post: key : %s val: %s", key[i], val[i])
+		log.Infof("Post: key : %s val: %s", key[i], val[i])
 		_, _ = http.PostForm(ul, url.Values{"txid": {txid}, "op": {"GET"}, "key": {key[i]}, "val": {val[i]}})
 
 	}
@@ -193,17 +196,17 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 	json.NewDecoder(resp.Body).Decode(&res)
 
 	if res.Status != "SUCCESS" {
-		log.Printf("Test FAILED %+v", res)
+		log.Infof("Test FAILED %+v", res)
 		log.Fatalf("Test Failed")
 		status <- "FAILURE"
 		return
 	} else {
-		log.Printf("Test is Successful %v", res)
-		log.Printf("Test is Successful TxID: %s", res.TxId)
+		log.Infof("Test is Successful %v", res)
+		log.Infof("Test is Successful TxID: %s", res.TxId)
 		if res.ReadRsp != nil {
-			log.Printf("Printing Read Results")
+			log.Infof("Printing Read Results")
 			for _, v := range res.ReadRsp {
-				log.Printf("Received Key:Val: %+v", v)
+				log.Infof("Received Key:Val: %+v", v)
 
 			}
 		}
@@ -218,7 +221,7 @@ func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 	status := make(chan string, 1000)
 	start := time.Now()
 	path := getPath()
-	log.Printf(path)
+	log.Infof(path)
 	for i := 1000; i < 2000; i++ {
 		time.Sleep(time.Millisecond)
 		var key []string
@@ -233,7 +236,7 @@ func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 	}
 	for i := 1000; i < 2000; i++ {
 		result := <-status
-		log.Printf("received %s", result)
+		log.Infof("received %s", result)
 		if result == "SUCCESS" {
 			sucTxn += 1
 		} else if result == "FAILURE" {
@@ -241,9 +244,9 @@ func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Printf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Printf("Succesful txns: %d", sucTxn)
-	log.Printf("Failure txns: %d", failTxn)
+	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Infof("Succesful txns: %d", sucTxn)
+	log.Infof("Failure txns: %d", failTxn)
 
 }
 
@@ -254,7 +257,7 @@ func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 	status := make(chan string, 1000)
 	start := time.Now()
 	path := getPath()
-	log.Printf(path)
+	log.Infof(path)
 	for i := 1000; i < 2000; i++ {
 		time.Sleep(time.Millisecond)
 		var key []string
@@ -269,7 +272,7 @@ func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 	}
 	for i := 1000; i < 2000; i++ {
 		result := <-status
-		log.Printf("received %s", result)
+		log.Infof("received %s", result)
 		if result == "SUCCESS" {
 			sucTxn += 1
 		} else if result == "FAILURE" {
@@ -277,9 +280,9 @@ func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Printf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Printf("Succesful txns: %d", sucTxn)
-	log.Printf("Failure txns: %d", failTxn)
+	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Infof("Succesful txns: %d", sucTxn)
+	log.Infof("Failure txns: %d", failTxn)
 
 }
 
@@ -297,7 +300,7 @@ func TestMultipleConcurrentReadTxnDifferentScale(t *testing.T) {
 	}
 	for i := 1000; i < 2000; i++ {
 		result := <-status
-		log.Printf("received %s", result)
+		log.Infof("received %s", result)
 		if result == "SUCCESS" {
 			sucTxn += 1
 		} else if result == "FAILURE" {
@@ -305,9 +308,9 @@ func TestMultipleConcurrentReadTxnDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Printf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Printf("Succesful txns: %d", sucTxn)
-	log.Printf("Failure txns: %d", failTxn)
+	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Infof("Succesful txns: %d", sucTxn)
+	log.Infof("Failure txns: %d", failTxn)
 
 }
 
@@ -325,7 +328,7 @@ func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 	}
 	for i := 1000; i < 2000; i++ {
 		result := <-status
-		log.Printf("received %s", result)
+		log.Infof("received %s", result)
 		if result == "SUCCESS" {
 			sucTxn += 1
 		} else if result == "FAILURE" {
@@ -333,9 +336,9 @@ func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Printf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Printf("Succesful txns: %d", sucTxn)
-	log.Printf("Failure txns: %d", failTxn)
+	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Infof("Succesful txns: %d", sucTxn)
+	log.Infof("Failure txns: %d", failTxn)
 
 }
 
@@ -344,7 +347,7 @@ func getPath() string {
 	for i := 0; i < 6; i++ {
 		s, err := getTxManagerIp()
 		if err != nil {
-			log.Printf("TxManager/ReplicaMgr is not preset")
+			log.Infof("TxManager/ReplicaMgr is not preset")
 			time.Sleep(time.Second)
 		} else {
 			buffer.WriteString(s)
@@ -376,10 +379,10 @@ func TestMultipleConcurrentWriteTxnDifferentKey(t *testing.T) {
 	}()
 	for i := 0; i < 3; i++ {
 		result := <-status
-		log.Printf("received %s", result)
+		log.Infof("received %s", result)
 	}
 	end := time.Since(start)
-	log.Printf("TxnPerSecond %.2f ", end.Seconds()/float64(3))
+	log.Infof("TxnPerSecond %.2f ", end.Seconds()/float64(3))
 
 }
 
@@ -390,9 +393,9 @@ func TestSimpleReadMultiOpTxn(t *testing.T) {
 	val := 1
 	ReadTxn(path, []string{strconv.Itoa(val), strconv.Itoa(val * 1000)}, []string{num2words.Convert(val), num2words.Convert(val * 1000)}, status)
 	result := <-status
-	log.Printf("%s", result)
+	log.Infof("%s", result)
 
-	log.Printf("Done")
+	log.Infof("Done")
 }
 
 func TestSimpleWriteMultiOpTxn(t *testing.T) {
@@ -402,9 +405,9 @@ func TestSimpleWriteMultiOpTxn(t *testing.T) {
 	val := 1
 	WriteTxn(path, []string{strconv.Itoa(val), strconv.Itoa(val * 1000)}, []string{num2words.Convert(val), num2words.Convert(val * 1000)}, status)
 	result := <-status
-	log.Printf("%s", result)
+	log.Infof("%s", result)
 
-	log.Printf("Done")
+	log.Infof("Done")
 }
 
 func TestSimpleWriteTxn(t *testing.T) {
@@ -421,12 +424,12 @@ func TestSimpleWriteTxn(t *testing.T) {
 	json.Unmarshal(body, &tx)
 
 	if tx.Status != "SUCCESS" {
-		log.Printf("Test FAILED %s", tx.Status)
+		log.Infof("Test FAILED %s", tx.Status)
 		log.Fatalf("Test Failed")
 		return
 	}
 	txid := tx.TxId
-	log.Printf("TxId:%s", txid)
+	log.Infof("TxId:%s", txid)
 
 	_, _ = http.PostForm(ul,
 		url.Values{"txid": {txid}, "op": {"PUT"}, "key": {"RJ"}, "val": {"Vmware"}})
@@ -450,24 +453,24 @@ func TestSimpleWriteTxn(t *testing.T) {
 	json.NewDecoder(resp.Body).Decode(&res)
 
 	if res.Status != "SUCCESS" {
-		log.Printf("Test FAILED %+v", res)
+		log.Infof("Test FAILED %+v", res)
 		log.Fatalf("Test Failed")
 		return
 	} else {
-		log.Printf("Test is Successful %v", res)
-		log.Printf("Test is Successful TxID: %s", res.TxId)
+		log.Infof("Test is Successful %v", res)
+		log.Infof("Test is Successful TxID: %s", res.TxId)
 		if res.ReadRsp != nil {
-			log.Printf("Printing Read Results")
+			log.Infof("Printing Read Results")
 
 			for _, v := range res.ReadRsp {
-				log.Printf("Received Key:Val: %+v", v)
+				log.Infof("Received Key:Val: %+v", v)
 
 			}
 
 		}
 	}
 
-	log.Printf("Done")
+	log.Infof("Done")
 }
 
 func TestSimpleReadWriteTxn(t *testing.T) {
@@ -486,12 +489,12 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 	json.Unmarshal(body, &tx)
 
 	if tx.Status != "SUCCESS" {
-		log.Printf("Test FAILED %s", tx.Status)
+		log.Infof("Test FAILED %s", tx.Status)
 		log.Fatalf("Test Failed")
 		return
 	}
 	txid := tx.TxId
-	log.Printf("TxId:%s", txid)
+	log.Infof("TxId:%s", txid)
 
 	_, _ = http.PostForm(ul,
 		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"RJ"}})
@@ -517,20 +520,20 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 
 	/*
 		body, err = ioutil.ReadAll(resp.Body)
-		log.Printf("Http Result %+v", body)
+		log.Infof("Http Result %+v", body)
 	*/
 	if res.Status != "SUCCESS" {
-		log.Printf("Test FAILED %+v", res)
+		log.Infof("Test FAILED %+v", res)
 		log.Fatalf("Test Failed")
 		return
 	} else {
-		log.Printf("Test is Successful %v", res)
-		log.Printf("Test is Successful TxID: %s", res.TxId)
+		log.Infof("Read Test is Successful %v", res)
+		log.Infof("Read test is Successful TxID: %s", res.TxId)
 		if res.ReadRsp != nil {
-			log.Printf("Printing Read Results")
+			log.Infof("Printing Read Results")
 
 			for _, v := range res.ReadRsp {
-				log.Printf("Received Key:Val: %+v", v)
+				log.Infof("Received Key:Val: %+v", v)
 
 			}
 
@@ -538,7 +541,7 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 
 	}
 
-	log.Printf("Done")
+	log.Infof("Done")
 }
 
 func TestSimpleReadTxn(t *testing.T) {
@@ -549,7 +552,7 @@ func TestSimpleReadTxn(t *testing.T) {
 
 	resp, err := http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred")
+		log.Warnf("Error Occurred: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -558,12 +561,12 @@ func TestSimpleReadTxn(t *testing.T) {
 	json.Unmarshal(body, &tx)
 
 	if tx.Status != "SUCCESS" {
-		log.Printf("Test FAILED %s", tx.Status)
+		log.Infof("Test FAILED %s", tx.Status)
 		log.Fatalf("Test Failed")
 		return
 	}
 	txid := tx.TxId
-	log.Printf("TxId:%s", txid)
+	log.Infof("TxId:%s", txid)
 
 	_, _ = http.PostForm(ul,
 		url.Values{"txid": {txid}, "op": {"GET"}, "key": {"RJ"}})
@@ -589,20 +592,20 @@ func TestSimpleReadTxn(t *testing.T) {
 
 	/*
 		body, err = ioutil.ReadAll(resp.Body)
-		log.Printf("Http Result %+v", body)
+		log.Infof("Http Result %+v", body)
 	*/
 	if res.Status != "SUCCESS" {
-		log.Printf("Test FAILED %+v", res)
+		log.Infof("Test FAILED %+v", res)
 		log.Fatalf("Test Failed")
 		return
 	} else {
-		log.Printf("Test is Successful %v", res)
-		log.Printf("Test is Successful TxID: %s", res.TxId)
+		log.Infof("Test is Successful %v", res)
+		log.Infof("Test is Successful TxID: %s", res.TxId)
 		if res.ReadRsp != nil {
-			log.Printf("Printing Read Results")
+			log.Infof("Printing Read Results")
 
 			for _, v := range res.ReadRsp {
-				log.Printf("Received Key:Val: %+v", v)
+				log.Infof("Received Key:Val: %+v", v)
 
 			}
 
@@ -610,7 +613,7 @@ func TestSimpleReadTxn(t *testing.T) {
 
 	}
 
-	log.Printf("Done")
+	log.Infof("Done")
 }
 
 const (
@@ -646,7 +649,7 @@ func TestMain(m *testing.M) {
 	commitC, errorC, snapshotterReady, raft := raft.NewRaftNode(id, strings.Split(cluster, ","), join, getSnapshot, proposeC, confChangeC)
 	compl := make(chan int)
 	go txmanager.NewTxKvManager(strings.Split(*kvport, ","), compl)
-	log.Printf("Waiting to get kvport client")
+	log.Infof("Waiting to get kvport client")
 	<-compl
 
 	//	tr = txmanager.NewTxRecord(cli)
@@ -664,4 +667,8 @@ func init() {
 		MaxIdleConnsPerHost: 20,
 	}
 	netClient = &http.Client{Transport: tr}
+	log.SetLevelByString("info")
+
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
+
 }

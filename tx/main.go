@@ -3,18 +3,16 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
-	"log"
+
+	//	"log"
 	"net"
-	"os"
-	"runtime"
 	"strconv"
 	"strings"
 
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
 	"github.com/acid_kvstore/tx/txmanager"
-	"github.com/sirupsen/logrus"
+	log "github.com/pingcap-incubator/tinykv/log"
 
 	//log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/raft/raftpb"
@@ -27,30 +25,34 @@ func formatFilePath(path string) string {
 }
 
 // XXX:Setup properly
-func setLogger() {
+func setLogger(level string) {
+	log.SetLevelByString(level)
 
-	logrus.SetReportCaller(true)
-	formatter := &logrus.TextFormatter{
-		TimestampFormat:        "02-01-2006 15:04:05", // the "time" field configuratiom
-		FullTimestamp:          true,
-		DisableLevelTruncation: true, // log level field configuration
-		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
-			// this function is required when you want to introduce your custom format.
-			// In my case I wanted file and line to look like this `file="engine.go:141`
-			// but f.File provides a full path along with the file name.
-			// So in `formatFilePath()` function I just trimmet everything before the file name
-			// and added a line number in the end
-			return "", fmt.Sprintf("%s:%d", formatFilePath(f.File), f.Line)
-		},
-	}
-	logrus.SetFormatter(formatter)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
 
-	//log.SetFormatter(&log.TextFormatter{})
-	log.SetOutput(os.Stdout)
-	// Only log the warning severity or above.
-	//log.SetLevel(log.InfoLevel)
-	// log.SetLevel(log.WarnLevel)
+	/*
+		logrus.SetReportCaller(true)
+		formatter := &logrus.TextFormatter{
+			TimestampFormat:        "02-01-2006 15:04:05", // the "time" field configuratiom
+			FullTimestamp:          true,
+			DisableLevelTruncation: true, // log level field configuration
+			CallerPrettyfier: func(f *runtime.Frame) (string, string) {
+				// this function is required when you want to introduce your custom format.
+				// In my case I wanted file and line to look like this `file="engine.go:141`
+				// but f.File provides a full path along with the file name.
+				// So in `formatFilePath()` function I just trimmet everything before the file name
+				// and added a line number in the end
+				return "", fmt.Sprintf("%s:%d", formatFilePath(f.File), f.Line)
+			},
+		}
+		logrus.SetFormatter(formatter)
 
+		//log.SetFormatter(&log.TextFormatter{})
+		log.SetOutput(os.Stdout)
+		// Only log the warning severity or above.
+		//log.SetLevel(log.InfoLevel)
+		// log.SetLevel(log.WarnLevel)
+	*/
 }
 
 const WorkerThreads = 10
@@ -58,6 +60,7 @@ const WorkerThreads = 10
 func main() {
 
 	cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
+	loglevel := flag.String("loglevel", "info", "info, warn, debug, error fatal")
 	id := flag.Int("id", 1, "node ID")
 	cliport := flag.Int("cliport", 9121, "http port")
 	join := flag.Bool("join", false, "join an existing cluster")
@@ -66,8 +69,9 @@ func main() {
 
 	replicamgrs := flag.String("replicamgrs", "127.0.0.1:9021", "comma separated replicamgrs")
 	flag.Parse()
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	//log.SetFlags(log.LstdFlags | log.Lshortfile)
 	//log.SetReportCaller(true)
+	setLogger(*loglevel)
 	proposeC := make(chan string)
 	defer close(proposeC)
 	confChangeC := make(chan raftpb.ConfChange)
@@ -90,7 +94,7 @@ func main() {
 	}
 
 	ip := strings.Split(*grpcport, ":")[0]
-	ts.LogCompactionTimer(ctx)
+	go ts.LogCompactionTimer(ctx)
 
 	ts.HttpEndpoint = "http://" + ip + ":" + strconv.Itoa(*cliport)
 	ts.RpcEndpoint = *grpcport
@@ -107,7 +111,7 @@ func main() {
 	go ts.UpdateLeader(ctx)
 	resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
 	if err != nil {
-		log.Printf("error in leader update: %v", err)
+		log.Infof("error in leader update: %v", err)
 	} else {
 		ts.ShardInfo = resp.ShardInfo
 	}
@@ -117,7 +121,7 @@ func main() {
 	}
 	// XXX: TxManager Server
 	go func() {
-		log.Printf("grpc port %s", *grpcport)
+		log.Infof("grpc port %s", *grpcport)
 		port := ":" + strings.Split(*grpcport, ":")[1]
 		lis, err := net.Listen("tcp", port)
 		if err != nil {
@@ -129,11 +133,11 @@ func main() {
 			log.Fatalf("failed to serve: %v", err)
 		}
 	}()
-	log.Printf("Starting setting up KvCLient")
+	log.Infof("Starting setting up KvCLient")
 	//compl := make(chan int)
 	//go txmanager.NewTxKvManager(strings.Split(*kvcluster, ","), compl)
 
-	//log.Printf("Waiting to get kvport client")
+	//log.Infof("Waiting to get kvport client")
 	//<-compl
 	//XXX: Server HTTP api
 	ts.ServeHttpTxApi(*cliport)

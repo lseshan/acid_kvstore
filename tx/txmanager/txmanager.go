@@ -5,9 +5,12 @@ import (
 	"context"
 	"encoding/gob"
 	"encoding/json"
-	"log"
+
+	//"log"
 	"sync"
 	"time"
+
+	log "github.com/pingcap-incubator/tinykv/log"
 
 	pbk "github.com/acid_kvstore/proto/package/kvstorepb"
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
@@ -114,9 +117,15 @@ type TxRecord struct {
 
 }
 
+func init() {
+	//warn, error, fatal
+	log.SetLevelByString("info")
+
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
+}
 func NewTxStoreWrapper(id int, cluster []string, join bool) *TxStore {
 
-	log.Printf("peers %v", cluster)
+	log.Infof("peers %v", cluster)
 
 	proposeC := make(chan string)
 	//defer close(proposeC)
@@ -135,7 +144,6 @@ func NewTxStoreWrapper(id int, cluster []string, join bool) *TxStore {
 	ts = NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, rc)
 	InitTxKvMapper()
 	time.Sleep(time.Second)
-	ts.raftStats = rc.GetStatus()
 	return ts
 }
 
@@ -150,9 +158,9 @@ func (ts *TxStore) TxCleanPendingList() {
 			if res == 0 {
 				log.Printf("Error: TxCleanPending failed")
 			}
-			log.Printf("RAFT: TxId Abort updated")
+			log.Infof("RAFT: TxId Abort updated")
 			res = tr.TxUpdateTxPending("DEL")
-			log.Printf("RAFT: TxId Deleted pending request %d", res)
+			log.Infof("RAFT: TxId Deleted pending request %d", res)
 			ts.abortC <- *tr
 		}
 
@@ -164,12 +172,11 @@ func doRaftConsensus(tr *TxRecord, s string, wg *sync.WaitGroup) {
 
 	defer wg.Done()
 	if tr.TxUpdateTxRecord(s) == 0 {
-		log.Printf("ERROR: %s op of TR:%+v is failed", s, tr)
+		log.Infof("ERROR: %s op of TR:%+v is failed", s, tr)
 	}
+	log.Infof("Changing the state of txid %+v to %s", tr.TxId, s)
 	if s == "ABORT" {
-
 		txStore.abortC <- *tr
-
 	}
 }
 
@@ -183,40 +190,60 @@ func (ts *TxStore) LogCompactionTimer(ctx context.Context) {
 	for {
 		select {
 		case <-timeout:
-			var wg sync.WaitGroup
-			log.Printf("Sending periodic shard info")
-			ts.mu.RLock()
-			for _, tr := range ts.TxRecordStore {
-				ts.mu.RUnlock()
-				/*if tr.TxPhase == "INIT" {
-					ts.mu.RLock()
-					continue
-				}
-				*/
-				elapsedTime := time.Since(tr.TxStartTime)
-				// Check if it alright
-				if elapsedTime.Seconds() > (float64)(TxTimeout*time.Second) {
-					if tr.TxPhase == "PENDING" || tr.TxPhase == "INIT" {
-						wg.Add(1)
-						go doRaftConsensus(tr, "ABORT", &wg)
-						//abort after success
-						//COMPACTING THE COMMIT TXRecord
-					} else if tr.TxPhase == "COMMIT" {
-						wg.Add(1)
-						go doRaftConsensus(tr, "DELETE", &wg)
-					}
-				}
+			ts.mu.Lock()
+			ts.raftStats = ts.RaftNode.GetStatus()
+			ts.mu.Unlock()
+			if ts.RaftNode.IsLeader(ts.raftStats) == true {
+
+				var wg sync.WaitGroup
+				log.Infof("Querying the pending state")
 				ts.mu.RLock()
+				for _, tr := range ts.TxRecordStore {
+					ts.mu.RUnlock()
+					/*if tr.TxPhase == "INIT" {
+						ts.mu.RLock()
+						continue
+					}
+					*/
+					if tr.TxPhase == "PENDING" || tr.TxPhase == "INIT" {
+						elapsedTime := time.Since(tr.TxStartTime)
+						// Check if it alright
+						if elapsedTime.Seconds() > (float64)(TxTimeout*time.Second) {
+
+							wg.Add(1)
+							go doRaftConsensus(tr, "ABORT", &wg)
+							//abort after success
+							//COMPACTING THE COMMIT TXRecord
+						}
+					}
+					/*	if tr.TxPhase != "ABORT" {
+							elapsedTime := time.Since(tr.TxStartTime)
+							// Check if it alright
+							if elapsedTime.Seconds() > (float64)(TxTimeout*time.Second) {
+
+								if tr.TxPhase == "PENDING" || tr.TxPhase == "INIT" {
+									wg.Add(1)
+									go doRaftConsensus(tr, "ABORT", &wg)
+									//abort after success
+									//COMPACTING THE COMMIT TXRecord
+								} else if tr.TxPhase == "COMMIT" {
+									wg.Add(1)
+									go doRaftConsensus(tr, "DELETE", &wg)
+								}
+							}
+						}
+					*/
+					ts.mu.RLock()
+				}
+				ts.mu.RUnlock()
+				wg.Wait()
 			}
-			ts.mu.RUnlock()
-			wg.Wait()
-			timeout = time.After(5 * time.Second)
+			timeout = time.After(TxTimeout * time.Second)
 		case <-ctx.Done():
-			log.Printf("closed log compaction and abort")
+			log.Infof("closed log compaction and abort")
 			return
 
 		}
-
 	}
 }
 
@@ -264,7 +291,7 @@ func (ts *TxStore) TxAbortWorker() {
 }
 
 func (ts *TxStore) UpdateLeader(ctx context.Context) {
-	log.Printf("UpdateTxLeader")
+	log.Infof("UpdateTxLeader")
 	for {
 		select {
 		case <-time.After(5 * time.Second):
@@ -276,13 +303,15 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 			TxInfo.HttpEndpoint = ts.HttpEndpoint
 			TxInfo.RpcEndpoint = ts.RpcEndpoint
 			out.TxInfo = &TxInfo
+			ts.mu.Lock()
 			ts.raftStats = ts.RaftNode.GetStatus()
+			ts.mu.Unlock()
 			if ts.RaftNode.IsLeader(ts.raftStats) {
 				_, err := ts.ReplLeaderClient.ReplicaTxLeaderHeartBeat(context.Background(), &out)
 				if err != nil {
-					log.Printf("error in leader update: %v", err)
+					log.Infof("error in leader update: %v", err)
 				} else {
-					log.Printf("sent leader update")
+					log.Infof("sent leader update")
 				}
 				/*if ts.raftStats.ID != prevleader {
 					prevleader = ts.raftStats.ID
@@ -293,7 +322,7 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 			}
 			resp, err := ts.ReplLeaderClient.ReplicaQuery(context.Background(), &replpb.ReplicaQueryReq{})
 			if err != nil {
-				log.Printf("error in leader update: %v", err)
+				log.Infof("error in leader update: %v", err)
 			} else {
 				ts.mu.Lock()
 				ts.ShardInfo = resp.ShardInfo
@@ -302,7 +331,7 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 			}
 
 		case <-ctx.Done():
-			log.Printf("Done with Update leader")
+			log.Infof("Done with Update leader")
 		}
 	}
 
@@ -356,10 +385,10 @@ func (ts *TxStore) ProposeTxRecord(tx Txn, t raftType) {
 	if err := gob.NewEncoder(&buf).Encode(raftMsg{Tx: tx, OpType: t}); err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("propose txn")
+	log.Infof("propose txn")
 
 	if tx.RespCh != nil {
-		log.Printf("RespC is not  nil %v", tx.RespCh)
+		log.Infof("RespC is not  nil %v", tx.RespCh)
 	}
 	ts.proposeC <- buf.String()
 }
@@ -389,21 +418,21 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			if err != nil {
 				log.Panic(err)
 			}
-			log.Printf("loading snapshot at term %d and index %d", snapshot.Metadata.Term, snapshot.Metadata.Index)
+			log.Infof("loading snapshot at term %d and index %d", snapshot.Metadata.Term, snapshot.Metadata.Index)
 			if err := ts.recoverFromSnapshot(snapshot.Data); err != nil {
 				log.Panic(err)
 			}
 			continue
 		}
 
-		log.Printf("I am here")
+		log.Infof("I am here")
 		var msg raftMsg
 		dec := gob.NewDecoder(bytes.NewBufferString(*data))
-		log.Printf("gob result: %+v", dec)
+		log.Infof("gob result: %+v", dec)
 		if err := dec.Decode(&msg); err != nil {
 			log.Printf("Tx: could not decode message (%v)", err)
 		}
-		log.Printf("Update Tx entry: %+v", msg.OpType)
+		log.Infof("Update Tx entry: %+v", msg.OpType)
 		//XXX: Not sure  we need this
 		//	ts.mu.Lock()
 		//	defer ts.mu.Unlock()
@@ -425,12 +454,14 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 					//XXX: go to update the error channel
 					//log.Printf("Error: ADD Houston we got a problem, Entry:%+v,", r)
 					log.Printf("Warning: This entry is created while BEGIN")
+					//log.Fatalf("Error: ADD Houston we got a problem, Entry:%+v,", r)
+					log.Infof("Warning: This entry is created while BEGIN")
 					break
 				}
 				ts.TxPending[tr.TxId] = tr
 				ts.txPendingLock.Unlock()
-				log.Printf("Added TxId to TxPending %v", tr.TxId)
-			//	log.Printf("Created new Tx entry %+v", tr)
+				log.Infof("Added TxId to TxPending %v", tr.TxId)
+			//	log.Infof("Created new Tx entry %+v", tr)
 			//Update the state of TR
 			case "DEL":
 				ts.txPendingLock.Lock()
@@ -442,7 +473,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				}
 				delete(ts.TxPending, tr.TxId)
 				ts.txPendingLock.Unlock()
-				log.Printf("Deleting from Pending list %v", tr.TxId)
+				log.Infof("Deleting from Pending list %v", tr.TxId)
 			}
 		*/
 		// XXX: Might keep track of the state than tr
@@ -457,75 +488,74 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
 					ts.mu.Unlock()
 					//XXX: Later changed to warning
-					log.Printf("Warning:INIT  TxStore entry is already present e:%+v,", r)
+					log.Infof("Warning:INIT  TxStore entry is already present e:%+v,", r)
 					break
 				}
 
 				// XXX: This would be redundant for leader , find a way to no-op for leader
 				ts.TxRecordStore[tr.TxId] = tr
 				tr.TxPhase = "INIT"
-				log.Printf("TxID:%v COMITED", tr.TxId)
+				log.Infof("TxID:%v INIT", tr.TxId)
 
 				ts.mu.Unlock()
 
-			case "PENDIG":
-				ts.mu.Lock()
-				if _, ok := ts.TxRecordStore[tr.TxId]; ok == false {
-					ts.mu.Unlock()
+			case "PENDING":
+				ts.mu.RLock()
+				tr, ok := ts.TxRecordStore[tr.TxId]
+				if ok == false {
 					//XXX: Later changed to warning
-					log.Printf("PENDING TxStore/Commit entry is not present")
+					log.Infof("Warning TxStore  entry is not present e:")
+					ts.mu.RUnlock()
 					break
 				}
 
-				// XXX: This would be redundant for leader , find a way to no-op for leader
-				tr = ts.TxRecordStore[tr.TxId]
-				log.Printf("TxID:%v CurrentState", tr.TxPhase)
 				tr.TxPhase = "PENDING"
-				log.Printf("TxID:%v PENDING", tr.TxId)
+				log.Infof("TxID:%v PENDING", tr.TxId)
+				ts.mu.RUnlock()
+			/*
+				case "COMMIT":
+					ts.mu.RLock()
+					tr, ok := ts.TxRecordStore[tr.TxId]
+					if ok == false {
+						//XXX: Later changed to warning
+						log.Infof("Warning TxStore  entry is not present e:")
+						ts.mu.RUnlock()
+						break
+					}
 
-				ts.mu.Unlock()
+					tr.TxPhase = "COMMIT"
+					log.Infof("TxID:%v COMMIT", tr.TxId)
+					ts.mu.RUnlock()
+					log.Infof("TxID:%v COMITED", tr.TxId)
+				//	log.Infof("Created new Tx entry %+v", tr)
+				//Update the state of TR
+			*/
+			case "ABORT":
+				ts.mu.RLock()
+				tr, ok := ts.TxRecordStore[tr.TxId]
+				if ok == false {
+					//XXX: Later changed to warning
+					log.Infof("Warning TxStore  entry is not present e:")
+					ts.mu.Unlock()
+					break
+				}
+
+				tr.TxPhase = "ABORT"
+				log.Infof("TxID:%v ABORTED", tr.TxId)
+				ts.mu.RUnlock()
 
 			case "COMMIT":
-				ts.mu.Lock()
-				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
-					ts.mu.Unlock()
-					//XXX: Later changed to warning
-					log.Printf("Warning TxStore/Commit entry is already present e:%+v,", r)
-					break
-				}
-
-				// XXX: This would be redundant for leader , find a way to no-op for leader
-				ts.TxRecordStore[tr.TxId] = tr
-				tr.TxPhase = "COMMIT"
-				log.Printf("TxID:%v COMITED", tr.TxId)
-
-				ts.mu.Unlock()
-			//	log.Printf("Created new Tx entry %+v", tr)
-			//Update the state of TR
-			case "ABORT":
-				ts.mu.Lock()
-				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
-					//XXX: Later changed to warning
-					log.Printf("Warning TxStore/Commit entry is already present e:%+v,", r)
-					ts.mu.Unlock()
-					break
-				}
-
-				ts.TxRecordStore[tr.TxId] = tr
-				tr.TxPhase = "ABORT"
-				log.Printf("TxID:%v ABORTED", tr.TxId)
-				ts.mu.Unlock()
+				fallthrough
 			case "DELETE":
 				ts.mu.Lock()
-				if r, ok := ts.TxRecordStore[tr.TxId]; ok == true {
+				if _, ok := ts.TxRecordStore[tr.TxId]; ok == false {
 					//XXX: Later changed to warning
-					log.Printf("Warning TxStore/Commit entry is already present e:%+v,", r)
+					log.Warnf("Warning TxStore/Commit shouldnt be here")
 					break
 				}
 				delete(ts.TxRecordStore, tr.TxId)
-				log.Printf("TxID:%v DELETED: TimeStarte:%v", tr.TxId, tr.TxStartTime)
+				log.Infof("TxID:%v DELETED/COMMIT: TimeStarte:%v", tr.TxId, tr.TxStartTime)
 				ts.mu.Unlock()
-
 			}
 		}
 
@@ -535,7 +565,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			delete(ts.txnMap, tr.TxId)
 		}
 		txStore.txnMapLock.Unlock()
-		log.Printf("Raft update done: %+v", msg)
+		log.Infof("Raft update done: %+v", msg)
 
 	}
 }
@@ -543,7 +573,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 func NewTxRecord() *TxRecord {
 	tr := &TxRecord{
 		TxId:            txStore.getNewTxId(),
-		TxPhase:         "PENDING",
+		TxPhase:         "INIT",
 		CommandList:     make([]*pbk.Command, 0),
 		shardedCommands: make(map[uint64][]*pbk.Command),
 	}
@@ -560,7 +590,7 @@ func NewTxRecord() *TxRecord {
 
 func (tr *TxRecord) TxAddCommand(Key, Val, Op string) bool {
 
-	if tr.TxPhase != "PENDING" {
+	if tr.TxPhase != "INIT" {
 		return false
 	}
 
@@ -591,9 +621,9 @@ func (tr *TxRecord) TxUpdateTxRecord(s string) int {
 	txStore.txnMapLock.Unlock()
 	r := raftType{RecordType: "TxRecordStore", Action: s}
 	txStore.ProposeTxRecord(tx, r)
-	log.Printf("Done propose of TxStatus, status:%s", s)
+	log.Infof("Done propose of TxStatus, status:%s", s)
 	val := <-respCh
-	log.Printf("Val %v", val)
+	log.Infof("Val %v", val)
 	return val
 }
 
@@ -615,9 +645,9 @@ func (tr *TxRecord) TxUpdateTxPending(s string) int {
 	//txStore.mu.Unlock()
 	r := raftType{RecordType: "TxPending", Action: s}
 	txStore.ProposeTxRecord(tx, r)
-	log.Printf("Done propose of TRPending, status:%s", s)
+	log.Infof("Done propose of TRPending, status:%s", s)
 	val := <-respCh
-	log.Printf("Val %v", val)
+	log.Infof("Val %v", val)
 	return val
 }
 */
@@ -632,13 +662,13 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	   	//	tr.mu.RUnLock()
 	*/
 	/* ret := tr.TxUpdateTxPending("ADD")
-	log.Printf("TxRAFT: Update Record res:  %v", ret)
+	log.Infof("TxRAFT: Update Record res:  %v", ret)
 	*/
 
 	tr.TxStartTime = time.Now()
 	res := tr.TxUpdateTxRecord("PENDING")
 	if res == 0 {
-		log.Printf("ERROR: PENDING state doesnt seem to be set")
+		log.Infof("ERROR: PENDING state doesnt seem to be set")
 
 	}
 	tr.shardRequest()
@@ -654,12 +684,12 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 			//dbg failure of the writeIntent
 			//invoke the rollback
 			res := tr.TxUpdateTxRecord("ABORT")
-			log.Printf("RAFT:%v  Abort updated: ret state:%v", tr.TxId, res)
+			log.Infof("RAFT:%v  Abort updated: ret state:%v", tr.TxId, res)
 			//res = tr.TxUpdateTxPending("DEL")
-			//log.Printf("RAFT:%v Deleted Raft TxPending ret state:%v", tr.TxId, res)
+			//log.Infof("RAFT:%v Deleted Raft TxPending ret state:%v", tr.TxId, res)
 			// XXX: start offloading rollback
 			/*	if ok := tr.TxRollback(); ok == true {
-					log.Printf("Rollback failed: %v", ok)
+					log.Infof("Rollback failed: %v", ok)
 				}
 			*/
 			//XXX: Lets not wait for the read to complete as no need
@@ -674,23 +704,23 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 
 	if tr.ShardedReadReq != nil {
 		state := <-readC
-		log.Printf("TxId:%v Read is successfull", tr.TxId)
+		log.Infof("TxId:%v Read is successfull", tr.TxId)
 		if state == false {
-			log.Printf("Read is Unsuccessful")
+			log.Infof("Read is Unsuccessful")
 			res := tr.TxUpdateTxRecord("ABORT")
-			log.Printf("RAFT:%v  Abort updated: ret state:%v", tr.TxId, res)
+			log.Infof("RAFT:%v  Abort updated: ret state:%v", tr.TxId, res)
 			//res = tr.TxUpdateTxPending("DEL")
-			//log.Printf("RAFT:%v Deleted Raft TxPending ret state:%v", tr.TxId, res)
+			//log.Infof("RAFT:%v Deleted Raft TxPending ret state:%v", tr.TxId, res)
 			txStore.abortC <- *tr
 			return state
 		}
 
 	}
 	res = tr.TxUpdateTxRecord("COMMIT")
-	log.Printf("Update record: %d", res)
+	log.Infof("Update record: %d", res)
 
 	//	res = tr.TxUpdateTxPending("DEL")
-	//log.Printf("Update record: %d", res)
+	//log.Infof("Update record: %d", res)
 
 	//Assign commit operation to Commit Channel
 	txStore.commitC <- *tr
@@ -698,24 +728,22 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	close(readC)
 	return true
 	// XXX: Offload it to worker thread
-	// http://nesv.github.io/golang/2014/02/25/worker-queues-in-go.html
 	/*	if r := tr.TxCommit(); r == false {
 		//retry the operation
 		// gross error
 		//	tr.TxPhase = "ABORT"
 		log.Printf("Shouldnt be happening failure in COMMIT")
 		/*	if ok := tr.TxRollaback(rq); ok == true {
-				log.Printf("Rollback failed: %v", ok)
+				log.Infof("Rollback failed: %v", ok)
 			}
 
 			res := tr.TxUpdateTxRecord("ABORT")
-			log.Printf("Update record: %d", res)
+			log.Infof("Update record: %d", res)
 	*/
 	/*		return false
 
 	}
 	*/
-	log.Printf(" We are good")
 
 	//tr.TxPhase = "COMMITED"
 	return true
@@ -746,7 +774,7 @@ func getShardLeader(s uint64) string {
 			defer cancel()
 			resp, err := txStore.ReplLeaderClient.ReplicaQuery(ctx, &replpb.ReplicaQueryReq{})
 			if err != nil {
-				log.Printf("error in leader update: %v", err)
+				log.Infof("error in leader update: %v", err)
 			} else {
 				txStore.mu.Lock()
 				txStore.ShardInfo = resp.ShardInfo
@@ -754,7 +782,7 @@ func getShardLeader(s uint64) string {
 			}
 
 		} else {
-			log.Printf("Returning the shard:%v leader details %v", s, val.LeaderKey)
+			log.Infof("Returning the shard:%v leader details %v", s, val.LeaderKey)
 			return val.LeaderKey
 			//retrun txStore.ShardInfo.ShardMap[s].getLeaderKey()
 		}
@@ -767,11 +795,11 @@ func (tr *TxRecord) shardRequest() {
 	readShards := make(map[uint64][]*pbk.Command)
 	writeShards := make(map[uint64][]*pbk.Command)
 	/// XXX: var cache map[uint64]string
-	log.Printf("CommandList:%+v", tr.CommandList)
+	log.Infof("CommandList:%+v", tr.CommandList)
 	for _, cmd := range tr.CommandList {
 		//XXX: To DO: Take lock on  txStore. Preferably a read lock
 		nshards := txStore.ReplInfo.Nshards
-		log.Printf("Number of shards : %v", nshards)
+		log.Infof("Number of shards : %v", nshards)
 		shard := utils.Keytoshard(cmd.Key, int(nshards))
 		if cmd.Op == "GET" {
 			readShards[shard] = append(readShards[shard], cmd)
@@ -813,7 +841,7 @@ func (tr *TxRecord) createSendPacket(shard uint64) *pbk.KvTxReq {
 	in.TxContext = cx
 	in.TxContext.TxId = tr.TxId
 	in.TxContext.ShardId = shard
-	log.Printf("Packet Sent: %+v", in)
+	log.Infof("Packet Sent: %+v", in)
 	return in
 }
 
@@ -856,25 +884,25 @@ func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op strin
 	txStore.mu.Lock()
 	if _, ok := KvClient[server]; ok == false {
 		TxKvCreateClientCtx(server)
-		log.Printf("Missed client for server: %s, op:%s", server, op)
+		log.Infof("Missed client for server: %s, op:%s", server, op)
 	}
 	KvGrpc := KvClient[server]
 	txStore.mu.Unlock()
 	switch op {
 	case "read":
-		log.Printf("Tx Read operation")
+		log.Infof("Tx Read operation")
 		rp, err = KvGrpc.Cli.KvTxRead(ctx, rq)
 
 	case "prepare":
-		log.Printf("Tx Prepare")
+		log.Infof("Tx Prepare")
 		rp, err = KvGrpc.Cli.KvTxPrepare(ctx, rq)
 
 	case "commit":
-		log.Printf("Tx Commit ")
+		log.Infof("Tx Commit ")
 		rp, err = KvGrpc.Cli.KvTxCommit(ctx, rq)
 
 	case "rollback": //abort
-		log.Printf("Tx rollback ")
+		log.Infof("Tx rollback ")
 		rp, err = KvGrpc.Cli.KvTxRollback(ctx, rq)
 	}
 	//XXX: analyze the error later
@@ -887,17 +915,17 @@ func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op strin
 
 	if rp.Status == pbk.Status_Failure {
 		doneC <- Status{TxId: rq.TxContext.TxId, status: false, op: op, shard: rq.TxContext.ShardId}
-		log.Printf("op:%s failed and rsp: %+v", op, rp)
+		log.Infof("op:%s failed and rsp: %+v", op, rp)
 
 	} else {
 		if op == "read" {
 			//copt the result on success
-			log.Printf("Read is successfull")
+			log.Infof("Read is successfull")
 			copyReadResults(rq, rp)
 
 		}
 		doneC <- Status{TxId: rq.TxContext.TxId, status: true, op: op, shard: rq.TxContext.ShardId}
-		log.Printf("op:%s passed", op)
+		log.Infof("op:%s passed", op)
 
 	}
 }
@@ -921,7 +949,7 @@ func (tr *TxRecord) TxRead(readC chan bool) {
 		}
 	}
 
-	log.Printf("TxRead result: %v", res)
+	log.Infof("TxRead result: %v", res)
 	readC <- res
 
 	close(doneC)
@@ -935,7 +963,7 @@ func (tr *TxRecord) TxPrepare() bool {
 	l := len(tr.ShardedWriteReq)
 	doneC := make(chan Status, l)
 	for _, rq := range tr.ShardedWriteReq {
-		log.Printf("TxPrepare req: %+v", rq)
+		log.Infof("TxPrepare req: %+v", rq)
 		go tr.SendGrpcRequest(rq, doneC, "prepare")
 
 	}
@@ -949,7 +977,7 @@ func (tr *TxRecord) TxPrepare() bool {
 		}
 	}
 
-	log.Printf("TxResult result: %v", res)
+	log.Infof("TxResult result: %v", res)
 	close(doneC)
 	return res
 }
@@ -961,7 +989,7 @@ func (tr *TxRecord) TxCommit() bool {
 	doneC := make(chan Status, l)
 
 	for _, rq := range tr.ShardedWriteReq {
-		log.Printf("TxCommit req: %+v", rq)
+		log.Infof("TxCommit req: %+v", rq)
 		go tr.SendGrpcRequest(rq, doneC, "commit")
 
 	}
@@ -975,7 +1003,7 @@ func (tr *TxRecord) TxCommit() bool {
 	}
 
 	close(doneC)
-	log.Printf("TxCommit result: %v", res)
+	log.Infof("TxCommit result: %v", res)
 	return res
 }
 
@@ -986,7 +1014,7 @@ func (tr *TxRecord) TxRollback() bool {
 	doneC := make(chan Status, l)
 
 	for _, rq := range tr.ShardedWriteReq {
-		log.Printf("TxRollBack req: %+v", rq)
+		log.Infof("TxRollBack req: %+v", rq)
 		go tr.SendGrpcRequest(rq, doneC, "rollback")
 
 	}
@@ -998,20 +1026,20 @@ func (tr *TxRecord) TxRollback() bool {
 			res = false
 		}
 	}
-	log.Printf("TxRollback result: %v", res)
+	log.Infof("TxRollback result: %v", res)
 	close(doneC)
 	return res
 }
 
 func (ts *TxStore) StartReplicaServerConnection(ctx context.Context, server string) {
-	log.Printf("connecting to replmgr: %s", server)
+	log.Infof("connecting to replmgr: %s", server)
 	conn, err := grpc.Dial(server, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Printf("did not connect:%v", err)
 	}
 	cli := replpb.NewReplicamgrClient(conn)
 	ts.ReplMgrs[server] = cli
-	log.Printf("connection done")
+	log.Infof("connection done")
 
 }
 

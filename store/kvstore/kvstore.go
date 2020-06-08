@@ -249,13 +249,11 @@ func (s *kvstore) Prep(txn Txn) {
 
 		// XXX:Can think of readwrite locks
 		s.mu.Lock()
-		if _, ok := s.KvStore[oper.Key]; !ok {
+		v, is := s.KvStore[oper.Key]
+		if !is {
 			log.Printf("v is nil")
 			v = &value{}
-			log.Printf("v is : %+v", v)
 			s.KvStore[oper.Key] = v
-		} else {
-			v = s.KvStore[oper.Key]
 		}
 		s.mu.Unlock()
 		log.Printf("The current Val: %+v for the key:%v", v, oper.Key)
@@ -287,10 +285,19 @@ func (s *kvstore) Commit(txn Txn) {
 	s.txnPhase = "Commit"
 	for _, oper := range txn.Oper {
 		//Should we take a lock
-		value := s.KvStore[oper.Key]
-		value.val = value.writeIntent
-		value.writeIntent = ""
-		s.KvStore[oper.Key] = value
+		s.mu.RLock()
+		value, ok := s.KvStore[oper.Key]
+		s.mu.RUnlock()
+		if ok == false {
+			log.Printf("The Operation might be completed by other txn")
+			return
+		}
+		value.mu.Lock()
+		if value.txnId == txn.TxId {
+			value.val = value.writeIntent
+			value.writeIntent = ""
+		}
+		value.mu.Unlock()
 	}
 	oper := txn.Oper[0]
 	log.Printf("key : %v val : %v", oper.Key, s.KvStore[oper.Key].val)
@@ -307,8 +314,18 @@ func (s *kvstore) Abort(txn Txn) {
 	s.txnPhase = "Abort"
 	for _, oper := range txn.Oper {
 		//Should we take a lokc
-		value := s.KvStore[oper.Key]
-		value.writeIntent = ""
+		s.mu.RLock()
+		value, ok := s.KvStore[oper.Key]
+		s.mu.RUnlock()
+		if ok == false {
+			return
+		}
+		value.mu.Lock()
+		if value.txnId == txn.TxId {
+			value.val = value.writeIntent
+			value.writeIntent = ""
+		}
+		value.mu.Unlock()
 	}
 	s.writeIntent = []operation{}
 }

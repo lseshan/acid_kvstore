@@ -2,6 +2,9 @@
 #./run.sh <port>
 if [ -z "$1" ]
 then
+       go test -run TestSimpleReadTxn   
+       go test -run TestSimpleReadWriteTxn  
+       go test -run TestSimpleReadTxn  
      go test -run TestSimpleWriteTxn
  else 
     if [ $1 = "1" ] 
