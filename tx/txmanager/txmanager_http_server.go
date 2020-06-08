@@ -44,11 +44,11 @@ func (ts *TxStore) handleTxBegin(w http.ResponseWriter, r *http.Request) {
 	//defer ts.TxPendingM.Unlock()
 	//ts.TxPending[tr.TxId] = tr
 	//XXX:
-	rt := tr.TxUpdateTxPending("ADD")
+	/* rt := tr.TxUpdateTxPending("ADD")
 	if rt == 0 {
 		log.Printf("Error: TxCleanPending failed")
 	}
-
+	*/
 	res.TxId = strconv.FormatUint(tr.TxId, 10)
 	res.Status = "SUCCESS"
 	json.NewEncoder(w).Encode(res)
@@ -73,14 +73,22 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 	tr, ok := ts.TxPending[txid]
 	ts.TxPendingM.Unlock()
 	*/
-	ts.txPendingLock.Lock()
+	/*ts.txPendingLock.Lock()
 	tr, ok := ts.TxPending[txid]
 	ts.txPendingLock.Unlock()
-
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 		return
 	}
+	*/
+	ts.mu.RLock()
+	tr, ok := ts.TxRecordStore[txid]
+	if ok == false {
+		log.Fatalf("Invalid TxId %v", txid)
+		return
+	}
+	ts.mu.RUnlock()
+
 	res := tr.TxSendBatchRequest()
 
 	var ret TxJson
@@ -108,13 +116,14 @@ func (ts *TxStore) handleTxGet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-	ts.mu.Lock()
+
+	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
+	ts.mu.RUnlock()
 
-	ts.mu.Unlock()
 	key := vars["key"]
 	tr.TxAddCommand(key, "None", "GET")
 	json.NewEncoder(w).Encode(tr.TxId)
@@ -128,12 +137,12 @@ func (ts *TxStore) handleTxPut(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-	ts.mu.Lock()
+	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-	ts.mu.Unlock()
+	ts.mu.RUnlock()
 
 	key := vars["key"]
 	val := vars["val"]
@@ -149,13 +158,12 @@ func (ts *TxStore) handleTxDelete(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
 
-	ts.mu.Lock()
+	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-
-	ts.mu.Unlock()
+	ts.mu.RUnlock()
 	key := vars["key"]
 	val := vars["val"]
 
@@ -174,11 +182,12 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	//	json.Unmarshal(body, &tx)
 
 	log.Printf("%v", tx)
+	log.Printf("%+v", m)
 	txid, err := strconv.ParseUint(m["txid"][0], 10, 64)
 	if err != nil {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-
+	log.Printf("op:%+v", m["op"])
 	var key, val, op string
 	op = m["op"][0]
 	switch op {
@@ -194,19 +203,89 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("http: TxId: %d, key: %s, key: %s, op:%s", txid, key, val, op)
 	//ts.TxPendingM.Lock()
-	ts.txPendingLock.Lock()
-	tr, ok := ts.TxPending[txid]
-	ts.txPendingLock.Unlock()
+	//ts.txPendingLock.Lock()
+	//tr, ok := ts.TxPending[txid]
+	//ts.txPendingLock.Unlock()
 	//ts.TxPendingM.Unlock()
+	//if ok == false {
+	//log.Fatalf("Invalid TxId %v", tx.txid)
+	//}
+	ts.mu.RLock()
+	tr, ok := ts.TxRecordStore[txid]
 	if ok == false {
-		log.Fatalf("Invalid TxId %v", tx.txid)
+		log.Fatalf("Invalid TxId %v", txid)
+		return
 	}
+	ts.mu.RUnlock()
 
 	res := tr.TxAddCommand(key, val, op)
 
 	log.Printf("Tx Post is TxId:%d op:%s key: %s, val: %s, Result: %v",
 		txid, op, key, val, res)
 }
+
+func (ts *TxStore) handleTxBatch(w http.ResponseWriter, r *http.Request) {
+	var tx PostReq
+	log.Printf("Handle TxCommand")
+	body, _ := ioutil.ReadAll(r.Body)
+
+	log.Printf("%s", body)
+	s := string(body)
+	m, _ := url.ParseQuery(s)
+	//	json.Unmarshal(body, &tx)
+
+	log.Printf("%v", tx)
+	log.Printf("%+v", m)
+	tr := NewTxRecord()
+	log.Printf("op:%+v", m["op"])
+	var key, val string
+	for i, op := range m["op"] {
+		switch op {
+		case "GET":
+			key = m["key"][i]
+			val = ""
+		case "PUT":
+			key = m["key"][i]
+			val = m["val"][i]
+		case "DELETE":
+			log.Printf("DELETE Not supported")
+			return
+		}
+
+		res := tr.TxAddCommand(key, val, op)
+		log.Printf("Value received, key: %s, val: %s, op:%s addSuccess: %v", key, val, op, res)
+	}
+
+	res := tr.TxSendBatchRequest()
+
+	var ret TxJson
+	ret.TxId = strconv.FormatUint(tr.TxId, 10)
+	if res == true {
+		ret.Status = "SUCCESS"
+		if tr.ShardedReadReq != nil {
+			for _, val := range tr.ShardedReadReq {
+				ret.ReadRsp = append(ret.ReadRsp, val.CommandList...)
+
+			}
+		}
+		json.NewEncoder(w).Encode(ret)
+		log.Printf("Commit Successfull: TxId:%d resp: %+v", tr.TxId, ret)
+	} else {
+		ret.Status = "FAILURE"
+		json.NewEncoder(w).Encode(ret)
+		log.Printf("TxId:%d resp: %+v is Failure", tr.TxId, ret)
+	}
+
+	//ts.TxPendingM.Lock()
+	//ts.txPendingLock.Lock()
+	//tr, ok := ts.TxPending[txid]
+	//ts.txPendingLock.Unlock()
+	//ts.TxPendingM.Unlock()
+	//if ok == false {
+	//log.Fatalf("Invalid TxId %v", tx.txid)
+	//}
+}
+
 func (ts *TxStore) handleTxQuery(w http.ResponseWriter, r *http.Request) {
 	m := make(map[string]interface{})
 	m["shardinfo"] = ts.ShardInfo
@@ -225,6 +304,7 @@ func (ts *TxStore) ServeHttpTxApi(port int) {
 	api.Methods("PUT").Subrouter().HandleFunc("/tx/{txid}/{key}/{val}", ts.handleTxPut)
 	api.Methods("DELETE").Subrouter().HandleFunc("/tx/{txid}/{key}", ts.handleTxDelete)
 	api.Methods("POST").Subrouter().HandleFunc("/tx/", ts.handleTxCommand)
+	api.Methods("POST").Subrouter().HandleFunc("/tx/batch", ts.handleTxBatch)
 
 	//Methods to control Raft
 

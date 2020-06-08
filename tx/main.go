@@ -80,15 +80,17 @@ func main() {
 	//	commitC, errorC, snapshotterReady, raft := raft.NewRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
 	// 	ts = txmanager.NewTxStore(<-snapshotterReady, proposeC, commitC, errorC, raft)
 	ts = txmanager.NewTxStoreWrapper(*id, strings.Split(*cluster, ","), *join)
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
 
 	// start worker threads
 	for k := 0; k < WorkerThreads; k++ {
 		go ts.TxCommitWorker()
 		go ts.TxAbortWorker()
 	}
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
+
 	ip := strings.Split(*grpcport, ":")[0]
+	ts.LogCompactionTimer(ctx)
 
 	ts.HttpEndpoint = "http://" + ip + ":" + strconv.Itoa(*cliport)
 	ts.RpcEndpoint = *grpcport
