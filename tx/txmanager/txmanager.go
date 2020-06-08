@@ -156,7 +156,7 @@ func (ts *TxStore) TxCleanPendingList() {
 			///XXX: send to channel to service the Cleanup
 			res := tr.TxUpdateTxRecord("ABORT")
 			if res == 0 {
-				log.Printf("Error: TxCleanPending failed")
+				log.Infof("Error: TxCleanPending failed")
 			}
 			log.Infof("RAFT: TxId Abort updated")
 			res = tr.TxUpdateTxPending("DEL")
@@ -430,7 +430,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 		dec := gob.NewDecoder(bytes.NewBufferString(*data))
 		log.Infof("gob result: %+v", dec)
 		if err := dec.Decode(&msg); err != nil {
-			log.Printf("Tx: could not decode message (%v)", err)
+			log.Infof("Tx: could not decode message (%v)", err)
 		}
 		log.Infof("Update Tx entry: %+v", msg.OpType)
 		//XXX: Not sure  we need this
@@ -452,8 +452,8 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				if _, ok := ts.TxPending[tr.TxId]; ok == true {
 					ts.txPendingLock.Unlock()
 					//XXX: go to update the error channel
-					//log.Printf("Error: ADD Houston we got a problem, Entry:%+v,", r)
-					log.Printf("Warning: This entry is created while BEGIN")
+					//log.Infof("Error: ADD Houston we got a problem, Entry:%+v,", r)
+					log.Infof("Warning: This entry is created while BEGIN")
 					//log.Fatalf("Error: ADD Houston we got a problem, Entry:%+v,", r)
 					log.Infof("Warning: This entry is created while BEGIN")
 					break
@@ -468,7 +468,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				if _, ok := ts.TxPending[tr.TxId]; ok == false {
 					ts.txPendingLock.Unlock()
 					//XXX: go to update the error channel
-					log.Printf("Warning: TxPending missing here, TxId:%v", tr.TxId)
+					log.Infof("Warning: TxPending missing here, TxId:%v", tr.TxId)
 					break
 				}
 				delete(ts.TxPending, tr.TxId)
@@ -732,7 +732,7 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 		//retry the operation
 		// gross error
 		//	tr.TxPhase = "ABORT"
-		log.Printf("Shouldnt be happening failure in COMMIT")
+		log.Infof("Shouldnt be happening failure in COMMIT")
 		/*	if ok := tr.TxRollaback(rq); ok == true {
 				log.Infof("Rollback failed: %v", ok)
 			}
@@ -768,8 +768,8 @@ func getShardLeader(s uint64) string {
 	for i := 0; i < 2; i++ {
 		val, ok := txStore.ShardInfo.ShardMap[s]
 		if ok == false {
-			log.Printf("Missing shard server details: IsQueried:%d, shard: %v", i, s)
-			log.Printf("Missing details about shard S")
+			log.Infof("Missing shard server details: IsQueried:%d, shard: %v", i, s)
+			log.Infof("Missing details about shard S")
 			ctx, cancel := getTxGrpcContext()
 			defer cancel()
 			resp, err := txStore.ReplLeaderClient.ReplicaQuery(ctx, &replpb.ReplicaQueryReq{})
@@ -866,7 +866,7 @@ func copyReadResults(req *pbk.KvTxReq, resp *pbk.KvTxReply) {
 		if d[i].Key == s[i].Key {
 			d[i].Val = s[i].Val
 		} else {
-			log.Printf("Error: missing read results for key: %v, req:%v resp:%v", d[i].Key, req, resp)
+			log.Infof("Error: missing read results for key: %v, req:%v resp:%v", d[i].Key, req, resp)
 		}
 	}
 
@@ -907,7 +907,7 @@ func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op strin
 	}
 	//XXX: analyze the error later
 	if err != nil {
-		log.Printf("op:%v, err:%v", op, err)
+		log.Infof("op:%v, err:%v", op, err)
 		//XXX:may be remove on perf study
 		doneC <- Status{TxId: rq.TxContext.TxId, status: false, op: op, shard: rq.TxContext.ShardId}
 		return
@@ -944,7 +944,7 @@ func (tr *TxRecord) TxRead(readC chan bool) {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Printf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Infof("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
@@ -972,7 +972,7 @@ func (tr *TxRecord) TxPrepare() bool {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Printf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Infof("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
@@ -997,7 +997,7 @@ func (tr *TxRecord) TxCommit() bool {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Printf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Infof("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
@@ -1022,7 +1022,7 @@ func (tr *TxRecord) TxRollback() bool {
 	for i := 0; i < l; i++ {
 		val := <-doneC
 		if val.status == false {
-			log.Printf("Tx:%s failed for Tx:%+v", val.op, val)
+			log.Infof("Tx:%s failed for Tx:%+v", val.op, val)
 			res = false
 		}
 	}
@@ -1035,7 +1035,7 @@ func (ts *TxStore) StartReplicaServerConnection(ctx context.Context, server stri
 	log.Infof("connecting to replmgr: %s", server)
 	conn, err := grpc.Dial(server, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
-		log.Printf("did not connect:%v", err)
+		log.Infof("did not connect:%v", err)
 	}
 	cli := replpb.NewReplicamgrClient(conn)
 	ts.ReplMgrs[server] = cli
