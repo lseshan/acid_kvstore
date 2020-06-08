@@ -34,5 +34,5 @@ store:
 	rm -rf store/raftexample*
 	$(GO_BUILD) -o store/store store/main.go
 replicamgr:
-	rm -rf replicamgr/raftexample*
+	rm -rf replicaMgr/raftexample*
 	$(GO_BUILD) -o replicaMgr/replicamgr replicaMgr/main.go
