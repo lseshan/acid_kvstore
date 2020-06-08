@@ -402,6 +402,7 @@ func (ts *TxStore) recoverFromSnapshot(snapshot []byte) error {
 	defer ts.mu.Unlock()
 	//XXX
 	ts.TxRecordStore = TxRecords
+	txStore = ts
 	return nil
 }
 
@@ -559,12 +560,12 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			}
 		}
 
-		txStore.txnMapLock.Lock()
+		ts.txnMapLock.Lock()
 		if ltxn, ok := ts.txnMap[tr.TxId]; ok {
 			ltxn.RespCh <- 1
 			delete(ts.txnMap, tr.TxId)
 		}
-		txStore.txnMapLock.Unlock()
+		ts.txnMapLock.Unlock()
 		log.Infof("Raft update done: %+v", msg)
 
 	}

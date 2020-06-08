@@ -162,6 +162,8 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 	resp, err := netClient.Get(ul)
 	if err != nil {
 		log.Infof("Error Occrred %s", err)
+		status <- "FAILURE"
+		return
 	}
 	defer resp.Body.Close()
 
@@ -171,7 +173,7 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 
 	if tx.Status != "SUCCESS" {
 		log.Infof("Test FAILED %s", tx.Status)
-		log.Fatalf("Test Failed")
+		status <- "FAILURE"
 		return
 	}
 	txid := tx.TxId
@@ -189,7 +191,8 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 	ul = buffer.String()
 	resp, err = http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred, %v", err)
+		log.Infof("Error Occurred, %v", err)
+		status <- "FAILURE"
 	}
 
 	var res txmanager.TxJson
