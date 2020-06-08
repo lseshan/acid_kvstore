@@ -415,14 +415,16 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, erro
 		v := s.KvStore[key]
 
 		s.mu.RUnlock()
-		v.mu.Lock()
-		if len(v.writeIntent) > 0 {
-			s.KvResolveTx(v)
+		if v != nil {
+			v.mu.Lock()
+			if len(v.writeIntent) > 0 {
+				s.KvResolveTx(v)
+			}
+			v.mu.Unlock()
+			kv.Val = v.val
 		}
-		kv.Val = v.val
-		v.mu.Unlock()
+		//If v is nil, dont fill kv.Val
 		kv.Key = key
-		log.Infof("Read value :%v", kv.Val)
 	case "PUT":
 		fallthrough
 	case "POST":

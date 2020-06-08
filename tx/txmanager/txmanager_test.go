@@ -90,7 +90,6 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 	if tx.Status != "SUCCESS" {
 		log.Infof("Test FAILED at GET %s", tx.Status)
-		log.Fatalf("Test Failed")
 		status <- "FAILURE"
 		return
 	}
@@ -109,7 +108,7 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 	ul = buffer.String()
 	resp, err = http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred while Commit, %v", err)
+		log.Infof("Error Occurred while Commit, %v", err)
 		status <- "FAILURE"
 		return
 	}
@@ -124,7 +123,6 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 	*/
 	if res.Status != "SUCCESS" {
 		log.Infof("Test FAILED %+v", res)
-		log.Fatalf("Test Failed")
 		status <- "FAILURE"
 		return
 	} else {
@@ -193,6 +191,7 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 	if err != nil {
 		log.Infof("Error Occurred, %v", err)
 		status <- "FAILURE"
+		return
 	}
 
 	var res txmanager.TxJson
@@ -200,7 +199,6 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 
 	if res.Status != "SUCCESS" {
 		log.Infof("Test FAILED %+v", res)
-		log.Fatalf("Test Failed")
 		status <- "FAILURE"
 		return
 	} else {
@@ -428,7 +426,6 @@ func TestSimpleWriteTxn(t *testing.T) {
 
 	if tx.Status != "SUCCESS" {
 		log.Infof("Test FAILED %s", tx.Status)
-		log.Fatalf("Test Failed")
 		return
 	}
 	txid := tx.TxId
@@ -449,7 +446,7 @@ func TestSimpleWriteTxn(t *testing.T) {
 	ul = buffer.String()
 	resp, err = http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred, %v", err)
+		log.Infof("Error Occurred, %v", err)
 	}
 	defer resp.Body.Close()
 	var res txmanager.TxJson
@@ -457,7 +454,6 @@ func TestSimpleWriteTxn(t *testing.T) {
 
 	if res.Status != "SUCCESS" {
 		log.Infof("Test FAILED %+v", res)
-		log.Fatalf("Test Failed")
 		return
 	} else {
 		log.Infof("Test is Successful %v", res)
@@ -493,7 +489,6 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 
 	if tx.Status != "SUCCESS" {
 		log.Infof("Test FAILED %s", tx.Status)
-		log.Fatalf("Test Failed")
 		return
 	}
 	txid := tx.TxId
@@ -514,7 +509,8 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 	ul = buffer.String()
 	resp, err = http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred, %v", err)
+		log.Infof("Error Occurred, %v", err)
+		return
 	}
 	defer resp.Body.Close()
 	var res txmanager.TxJson
@@ -527,7 +523,6 @@ func TestSimpleReadWriteTxn(t *testing.T) {
 	*/
 	if res.Status != "SUCCESS" {
 		log.Infof("Test FAILED %+v", res)
-		log.Fatalf("Test Failed")
 		return
 	} else {
 		log.Infof("Read Test is Successful %v", res)
@@ -565,7 +560,6 @@ func TestSimpleReadTxn(t *testing.T) {
 
 	if tx.Status != "SUCCESS" {
 		log.Infof("Test FAILED %s", tx.Status)
-		log.Fatalf("Test Failed")
 		return
 	}
 	txid := tx.TxId
@@ -586,7 +580,8 @@ func TestSimpleReadTxn(t *testing.T) {
 	ul = buffer.String()
 	resp, err = http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred, %v", err)
+		log.Infof("Error Occurred, %v", err)
+		return
 	}
 	defer resp.Body.Close()
 	var res txmanager.TxJson
@@ -599,7 +594,6 @@ func TestSimpleReadTxn(t *testing.T) {
 	*/
 	if res.Status != "SUCCESS" {
 		log.Infof("Test FAILED %+v", res)
-		log.Fatalf("Test Failed")
 		return
 	} else {
 		log.Infof("Test is Successful %v", res)
