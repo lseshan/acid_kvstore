@@ -14,6 +14,17 @@ TxStore:
 
 How to run GoTest Cases:
 ======================
+TestMultipleConcurrentReadTxnMultiOpDifferentScale
+TestMultipleConcurrentWriteTxnMultiOpDifferentScale
+TestMultipleConcurrentReadTxnDifferentScale
+TestMultipleConcurrentWriteTxnDifferentScale
+TestMultipleConcurrentWriteTxnDifferentKey
+TestSimpleReadMultiOpTxn
+TestSimpleWriteMultiOpTxn
+TestSimpleWriteTxn
+TestSimpleReadWriteTxn
+TestSimpleReadTxn
+
 go test -run  TestMultipleConcurrentWriteTxnDifferentKeyScale -v
 go test -run TestMultipleConcurrentReadTxnDifferentScale -v
 go test -list . 

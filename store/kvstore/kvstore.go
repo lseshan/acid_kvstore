@@ -83,6 +83,7 @@ type kvstore struct {
 	writeIntent []operation // Write intent for the entire store/ shard
 	txnId       int
 	Node        *raft.RaftNode
+	txnMapLock  sync.RWMutex
 	txnMap      map[uint64]Txn
 }
 
@@ -329,7 +330,10 @@ func (s *kvstore) ProposeKV(k string, v string) {
 
 func (s *kvstore) ProposeTxn(txn Txn) {
 	var buf bytes.Buffer
+
+	s.txnMapLock.Lock()
 	s.txnMap[txn.TxId] = txn
+	s.txnMapLock.Unlock()
 	if err := gob.NewEncoder(&buf).Encode(raftMsg{MsgType: "txn", Rawkv: operation{}, Txn: txn}); err != nil {
 		log.Fatal(err)
 	}
