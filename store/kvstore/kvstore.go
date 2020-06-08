@@ -252,7 +252,7 @@ func (s *kvstore) Prep(txn Txn) {
 		v, is := s.KvStore[oper.Key]
 		if !is {
 			log.Printf("v is nil")
-			v = &value{}
+			v = new(value)
 			s.KvStore[oper.Key] = v
 		}
 		s.mu.Unlock()
@@ -264,21 +264,22 @@ func (s *kvstore) Prep(txn Txn) {
 		}
 		if ok == "PENDING" {
 			res = 0 //abort
+			log.Printf("PREPARE ABORTED TxID:%v", txn.TxId)
 			v.mu.Unlock()
 			break
 		}
 		res = 1
 		v.writeIntent = oper.Val
 		v.txnId = txn.TxId
-		s.KvStore[oper.Key] = v
 		v.mu.Unlock()
 	}
-
+	log.Printf("PREPARED TxID:%v", txn.TxId)
+	s.txnMapLock.Lock()
 	if stxn, found := s.txnMap[txn.TxId]; found {
-		log.Printf("Sending commit response")
 		stxn.RespCh <- res
+		delete(s.txnMap, txn.TxId)
 	}
-	delete(s.txnMap, txn.TxId)
+	s.txnMapLock.Unlock()
 }
 
 func (s *kvstore) Commit(txn Txn) {
@@ -296,18 +297,20 @@ func (s *kvstore) Commit(txn Txn) {
 		if value.txnId == txn.TxId {
 			value.val = value.writeIntent
 			value.writeIntent = ""
+		} else {
+			log.Printf("COMMIT:Looks like Resolve Tx handled this %v", txn.TxId)
 		}
 		value.mu.Unlock()
 	}
-	oper := txn.Oper[0]
-	log.Printf("key : %v val : %v", oper.Key, s.KvStore[oper.Key].val)
 	s.writeIntent = []operation{}
-	log.Printf("Sending response")
+	log.Printf("COMMITED TxID:%v", txn.TxId)
+
+	s.txnMapLock.Lock()
 	if stxn, found := s.txnMap[txn.TxId]; found {
 		stxn.RespCh <- 1
+		delete(s.txnMap, txn.TxId)
 	}
-	delete(s.txnMap, txn.TxId)
-	//Snapshot
+	s.txnMapLock.Unlock() //Snapshot
 }
 
 func (s *kvstore) Abort(txn Txn) {
@@ -318,16 +321,28 @@ func (s *kvstore) Abort(txn Txn) {
 		value, ok := s.KvStore[oper.Key]
 		s.mu.RUnlock()
 		if ok == false {
+			log.Printf("ABORT: Looks like Tx dint make it to this shard %v", txn.TxId)
 			return
 		}
 		value.mu.Lock()
 		if value.txnId == txn.TxId {
 			value.val = value.writeIntent
 			value.writeIntent = ""
+		} else {
+
+			log.Printf("ABORT: Looks like Resolve Tx handled this %v", txn.TxId)
 		}
 		value.mu.Unlock()
 	}
+	log.Printf("Aborted TxID:%v", txn.TxId)
 	s.writeIntent = []operation{}
+	s.txnMapLock.Lock()
+	if stxn, found := s.txnMap[txn.TxId]; found {
+		stxn.RespCh <- 1
+		delete(s.txnMap, txn.TxId)
+	}
+	s.txnMapLock.Unlock()
+
 }
 
 func (s *kvstore) Lookup(key string) (string, bool) {
@@ -364,16 +379,16 @@ func (s *kvstore) ProposeTxn(txn Txn) {
 func (s *kvstore) KvHandleTxRead(key string, txId uint64) (KV, error) {
 	var kv KV
 	log.Printf("Got Tx Read for read:%s", key)
-	s.mu.Lock()
-	if _, ok := s.KvStore[key]; ok == false {
+	s.mu.RLock()
+	v, ok := s.KvStore[key]
+	if ok == false {
+		s.mu.RUnlock()
 		kv.Key = key
 		kv.Val = ""
 		log.Printf("Key:%s is not present", key)
-		s.mu.Unlock()
 		return kv, nil
 	}
-	v := s.KvStore[key]
-	s.mu.Unlock()
+	s.mu.RUnlock()
 	v.mu.Lock()
 	//XXX: Raw operation TxId ==0
 	if len(v.writeIntent) > 0 {
@@ -395,8 +410,10 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, erro
 	switch op {
 	case "GET":
 		log.Printf("Got get for key %s val %s", key, val)
+		s.mu.RLock()
 		v := s.KvStore[key]
 
+		s.mu.RUnlock()
 		v.mu.Lock()
 		if len(v.writeIntent) > 0 {
 			s.KvResolveTx(v)
@@ -428,9 +445,9 @@ func (s *kvstore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				log.Panic(err)
 			}
 			log.Printf("loading snapshot at term %d and index %d", snapshot.Metadata.Term, snapshot.Metadata.Index)
-			/*if err := s.recoverFromSnapshot(snapshot.Data); err != nil {
+			if err := s.recoverFromSnapshot(snapshot.Data); err != nil {
 				log.Panic(err)
-			}*/
+			}
 			continue
 		}
 
@@ -475,17 +492,16 @@ func (s *kvstore) GetSnapshot() ([]byte, error) {
 	return json.Marshal(s.KvStore)
 }
 
-/*
 func (s *kvstore) recoverFromSnapshot(snapshot []byte) error {
-	var store map[string]string
+	var store map[string]*value
 	if err := json.Unmarshal(snapshot, &store); err != nil {
 		return err
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.kvStore = store
+	s.KvStore = store
 	return nil
-}*/
+}
 func init() {
 	//txnMap = make(map[uint64]Txn)
 }
