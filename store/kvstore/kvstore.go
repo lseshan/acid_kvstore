@@ -342,7 +342,6 @@ func (s *kvstore) Abort(txn Txn) {
 		delete(s.txnMap, txn.TxId)
 	}
 	s.txnMapLock.Unlock()
-
 }
 
 func (s *kvstore) Lookup(key string) (string, bool) {
@@ -397,9 +396,9 @@ func (s *kvstore) KvHandleTxRead(key string, txId uint64) (KV, error) {
 
 		}
 	}
-	kv.Key = key
 	kv.Val = v.val
 	v.mu.Unlock()
+	kv.Key = key
 	log.Printf("%v", kv)
 
 	return kv, nil
@@ -418,10 +417,10 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, erro
 		if len(v.writeIntent) > 0 {
 			s.KvResolveTx(v)
 		}
-		kv.Key = key
-		kv.Val = s.KvStore[key].val
+		kv.Val = v.val
 		v.mu.Unlock()
-		log.Printf("%v", s.KvStore[key])
+		kv.Key = key
+		log.Printf("Read value :%v", kv.Val)
 	case "PUT":
 		fallthrough
 	case "POST":

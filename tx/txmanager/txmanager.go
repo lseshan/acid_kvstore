@@ -552,6 +552,7 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 				if _, ok := ts.TxRecordStore[tr.TxId]; ok == false {
 					//XXX: Later changed to warning
 					log.Warnf("Warning TxStore/Commit shouldnt be here")
+					ts.mu.Unlock()
 					break
 				}
 				delete(ts.TxRecordStore, tr.TxId)
