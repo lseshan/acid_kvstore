@@ -2,14 +2,15 @@ package kvstore
 
 import (
 	"context"
-	"log"
+	//"log"
 	"time"
 
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
+	log "github.com/pingcap-incubator/tinykv/log"
 )
 
 func (repl *Replica) UpdateLeader(ctx context.Context) {
-	log.Printf("Update leader")
+	log.Infof("Update leader")
 
 	for {
 		select {
@@ -32,13 +33,13 @@ func (repl *Replica) UpdateLeader(ctx context.Context) {
 			out.ReplicaInfo = &replica
 			_, err := repl.Replclient.ReplicaHeartbeat(context.Background(), &out)
 			if err != nil {
-				log.Printf("error in leader update: %v", err)
+				log.Infof("error in leader update: %v", err)
 			} else {
-				log.Printf("sent leader update")
+				log.Infof("sent leader update")
 			}
 
 		case <-ctx.Done():
-			log.Printf("Done with Update leader")
+			log.Infof("Done with Update leader")
 		}
 
 	}

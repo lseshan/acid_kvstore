@@ -17,36 +17,45 @@ package main
 import (
 	"context"
 	"flag"
-	"log"
+
+	//"log"
 	"net"
 	"strings"
 	"time"
 
 	pb "github.com/acid_kvstore/proto/package/kvstorepb"
 	"github.com/acid_kvstore/store/kvstore"
+	log "github.com/pingcap-incubator/tinykv/log"
 	"google.golang.org/grpc"
 )
 
 func checkLeader(ctx context.Context, kvs *kvstore.Kvstore) {
-	log.Printf("check Leaderstarted")
+	log.Infof("check Leaderstarted")
 	for {
 		select {
 		case <-time.After(500 * time.Millisecond):
 			s := kvs.Node.GetStatus()
 			if kvs.Node.IsLeader(s) {
-				log.Printf("Is leader")
+				log.Infof("Is leader")
 			} else {
-				log.Printf("Is not Leader")
+				log.Infof("Is not Leader")
 			}
 		case <-ctx.Done():
-			log.Printf("Done with CheckLeader")
+			log.Infof("Done with CheckLeader")
 		}
 	}
+}
+
+func setLogger(level string) {
+	log.SetLevelByString(level)
+
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
 }
 
 func main() {
 	//txcluster := flag.String("txcluster", "http://127.0.0.1:9021", "comma separated TxManager cluster peers")
 	httport := flag.Int("httpport", 1024, "http server port")
+	loglevel := flag.String("loglevel", "info", "info, warn, debug, error fatal")
 	/* cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
 	id := flag.Int("id", 1, "node ID")
 	kvport := flag.Int("port", 9121, "key-value server port")
@@ -54,7 +63,8 @@ func main() {
 	*/
 	grpcport := flag.String("grpcport", "127.0.0.1:9122", "grpc server port")
 	flag.Parse()
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	setLogger(*loglevel)
+	//log.SetFlags(log.LstdFlags | log.Lshortfile)
 	ctx := context.Background()
 
 	ctx, cancel := context.WithCancel(ctx)
@@ -68,13 +78,13 @@ func main() {
 
 	/* RPC handling */
 	go func() {
-		log.Printf("grpx port %s", *grpcport)
+		log.Infof("grpx port %s", *grpcport)
 		port := ":" + strings.Split(*grpcport, ":")[1]
 		lis, err := net.Listen("tcp", port)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
-		log.Printf("Started listent")
+		log.Infof("Started listent")
 		s := grpc.NewServer()
 		pb.RegisterKvstoreServer(s, &replica)
 		if err := s.Serve(lis); err != nil {

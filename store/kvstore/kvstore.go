@@ -19,7 +19,8 @@ import (
 	"context"
 	"encoding/gob"
 	"encoding/json"
-	"log"
+
+	//	"log"
 	"sync"
 	"time"
 
@@ -27,6 +28,7 @@ import (
 	replpb "github.com/acid_kvstore/proto/package/replicamgrpb"
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
 	"github.com/acid_kvstore/raft"
+	log "github.com/pingcap-incubator/tinykv/log"
 	"go.etcd.io/etcd/etcdserver/api/snap"
 	"go.etcd.io/etcd/raft/raftpb"
 	"google.golang.org/grpc"
@@ -114,7 +116,7 @@ type raftMsg struct {
 }
 
 func (repl *Replica) StartReplMgrGrpcClient() {
-	log.Printf("Dialling %v", repl.Config.ReplLeader)
+	log.Infof("Dialling %v", repl.Config.ReplLeader)
 	conn, _ := grpc.Dial(repl.Config.ReplLeader, grpc.WithInsecure(), grpc.WithBlock())
 	client := replpb.NewReplicamgrClient(conn)
 	repl.Replclient = client
@@ -122,10 +124,10 @@ func (repl *Replica) StartReplMgrGrpcClient() {
 }
 
 func (repl *Replica) NewKVStoreWrapper(gid uint64, id int, cluster []string, join bool) {
-	log.Printf("peers %v shard id %v", cluster, gid)
+	log.Infof("peers %v shard id %v", cluster, gid)
 
 	if _, ok := repl.Stores[gid]; ok {
-		log.Printf("Shard : %d already present", gid)
+		log.Infof("Shard : %d already present", gid)
 		//TODO: To handle config changes
 		return
 	}
@@ -158,7 +160,7 @@ func NewKVStore(snapshotter *snap.Snapshotter, proposeC chan<- string, commitC <
 }
 
 func (s *kvstore) Put(kv operation) {
-	log.Printf("Put value")
+	log.Infof("Put value")
 	var v value
 	v.val = kv.Val
 	s.KvStore[kv.Key] = &v
@@ -202,7 +204,7 @@ func getContext() (context.Context, context.CancelFunc) {
 
 // should be called with locks
 func (s *kvstore) KvResolveTx(v *value) string {
-	log.Printf("KvResolveTx: Resolving the Txn:%+v", v)
+	log.Infof("KvResolveTx: Resolving the Txn:%+v", v)
 	ctx, cancel := getContext()
 	defer cancel()
 
@@ -233,8 +235,8 @@ func (s *kvstore) KvResolveTx(v *value) string {
 }
 
 func (s *kvstore) Prep(txn Txn) {
-	log.Printf("Got Prep")
 
+	log.Infof("Got Prep")
 	var res int
 	res = 1
 	//Check for locks
@@ -251,12 +253,12 @@ func (s *kvstore) Prep(txn Txn) {
 		s.mu.Lock()
 		v, is := s.KvStore[oper.Key]
 		if !is {
-			log.Printf("v is nil")
+			log.Infof("v is nil")
 			v = new(value)
 			s.KvStore[oper.Key] = v
 		}
 		s.mu.Unlock()
-		log.Printf("The current Val: %+v for the key:%v", v, oper.Key)
+		log.Infof("The current Val: %+v for the key:%v", v, oper.Key)
 		v.mu.Lock()
 		ok := "STAGE"
 		if len(v.writeIntent) > 0 {
@@ -264,7 +266,7 @@ func (s *kvstore) Prep(txn Txn) {
 		}
 		if ok == "PENDING" {
 			res = 0 //abort
-			log.Printf("PREPARE ABORTED TxID:%v", txn.TxId)
+			log.Infof("PREPARE ABORTED TxID:%v", txn.TxId)
 			v.mu.Unlock()
 			break
 		}
@@ -273,7 +275,7 @@ func (s *kvstore) Prep(txn Txn) {
 		v.txnId = txn.TxId
 		v.mu.Unlock()
 	}
-	log.Printf("PREPARED TxID:%v", txn.TxId)
+	log.Infof("PREPARED TxID:%v", txn.TxId)
 	s.txnMapLock.Lock()
 	if stxn, found := s.txnMap[txn.TxId]; found {
 		stxn.RespCh <- res
@@ -290,7 +292,7 @@ func (s *kvstore) Commit(txn Txn) {
 		value, ok := s.KvStore[oper.Key]
 		s.mu.RUnlock()
 		if ok == false {
-			log.Printf("The Operation might be completed by other txn")
+			log.Infof("The Operation might be completed by other txn")
 			return
 		}
 		value.mu.Lock()
@@ -298,12 +300,12 @@ func (s *kvstore) Commit(txn Txn) {
 			value.val = value.writeIntent
 			value.writeIntent = ""
 		} else {
-			log.Printf("COMMIT:Looks like Resolve Tx handled this %v", txn.TxId)
+			log.Infof("COMMIT:Looks like Resolve Tx handled this %v", txn.TxId)
 		}
 		value.mu.Unlock()
 	}
 	s.writeIntent = []operation{}
-	log.Printf("COMMITED TxID:%v", txn.TxId)
+	log.Infof("COMMITED TxID:%v", txn.TxId)
 
 	s.txnMapLock.Lock()
 	if stxn, found := s.txnMap[txn.TxId]; found {
@@ -321,7 +323,7 @@ func (s *kvstore) Abort(txn Txn) {
 		value, ok := s.KvStore[oper.Key]
 		s.mu.RUnlock()
 		if ok == false {
-			log.Printf("ABORT: Looks like Tx dint make it to this shard %v", txn.TxId)
+			log.Infof("ABORT: Looks like Tx dint make it to this shard %v", txn.TxId)
 			return
 		}
 		value.mu.Lock()
@@ -330,11 +332,11 @@ func (s *kvstore) Abort(txn Txn) {
 			value.writeIntent = ""
 		} else {
 
-			log.Printf("ABORT: Looks like Resolve Tx handled this %v", txn.TxId)
+			log.Infof("ABORT: Looks like Resolve Tx handled this %v", txn.TxId)
 		}
 		value.mu.Unlock()
 	}
-	log.Printf("Aborted TxID:%v", txn.TxId)
+	log.Infof("Aborted TxID:%v", txn.TxId)
 	s.writeIntent = []operation{}
 	s.txnMapLock.Lock()
 	if stxn, found := s.txnMap[txn.TxId]; found {
@@ -368,23 +370,23 @@ func (s *kvstore) ProposeTxn(txn Txn) {
 	if err := gob.NewEncoder(&buf).Encode(raftMsg{MsgType: "txn", Rawkv: operation{}, Txn: txn}); err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("propose txn")
+	log.Infof("propose txn")
 	if txn.RespCh != nil {
-		log.Printf("RespC is not  nil %v", txn.RespCh)
+		log.Infof("RespC is not  nil %v", txn.RespCh)
 	}
 	s.proposeC <- buf.String()
 }
 
 func (s *kvstore) KvHandleTxRead(key string, txId uint64) (KV, error) {
 	var kv KV
-	log.Printf("Got Tx Read for read:%s", key)
+	log.Infof("Got Tx Read for read:%s", key)
 	s.mu.RLock()
 	v, ok := s.KvStore[key]
 	if ok == false {
 		s.mu.RUnlock()
 		kv.Key = key
 		kv.Val = ""
-		log.Printf("Key:%s is not present", key)
+		log.Infof("Key:%s is not present", key)
 		return kv, nil
 	}
 	s.mu.RUnlock()
@@ -399,7 +401,7 @@ func (s *kvstore) KvHandleTxRead(key string, txId uint64) (KV, error) {
 	kv.Val = v.val
 	v.mu.Unlock()
 	kv.Key = key
-	log.Printf("%v", kv)
+	log.Infof("%v", kv)
 
 	return kv, nil
 }
@@ -408,7 +410,7 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, erro
 	var kv KV
 	switch op {
 	case "GET":
-		log.Printf("Got get for key %s val %s", key, val)
+		log.Infof("Got get for key %s val %s", key, val)
 		s.mu.RLock()
 		v := s.KvStore[key]
 
@@ -420,7 +422,7 @@ func (s *kvstore) HandleKVOperation(key string, val string, op string) (KV, erro
 		kv.Val = v.val
 		v.mu.Unlock()
 		kv.Key = key
-		log.Printf("Read value :%v", kv.Val)
+		log.Infof("Read value :%v", kv.Val)
 	case "PUT":
 		fallthrough
 	case "POST":
@@ -443,7 +445,7 @@ func (s *kvstore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			if err != nil {
 				log.Panic(err)
 			}
-			log.Printf("loading snapshot at term %d and index %d", snapshot.Metadata.Term, snapshot.Metadata.Index)
+			log.Infof("loading snapshot at term %d and index %d", snapshot.Metadata.Term, snapshot.Metadata.Index)
 			if err := s.recoverFromSnapshot(snapshot.Data); err != nil {
 				log.Panic(err)
 			}
@@ -452,14 +454,14 @@ func (s *kvstore) readCommits(commitC <-chan *string, errorC <-chan error) {
 
 		var msg raftMsg
 		dec := gob.NewDecoder(bytes.NewBufferString(*data))
-		log.Printf("%v", dec)
+		log.Infof("%v", dec)
 		if err := dec.Decode(&msg); err != nil {
 			log.Fatalf("kvstore: could not decode message (%v)", err)
 		}
 		//	s.mu.Lock()
 		switch msg.MsgType {
 		case "txn":
-			log.Printf("Got txn from raft")
+			log.Infof("Got txn from raft")
 			switch msg.Txn.Cmd {
 			case "Lock":
 				s.Lock(msg.Txn)

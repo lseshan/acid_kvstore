@@ -1,9 +1,10 @@
 package kvstore
 
 import (
-	"log"
+	//"log"
 
 	pbt "github.com/acid_kvstore/proto/package/txmanagerpb"
+	log "github.com/pingcap-incubator/tinykv/log"
 	"google.golang.org/grpc"
 )
 

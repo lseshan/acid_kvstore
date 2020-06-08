@@ -4,7 +4,7 @@
 #node2:./store  --grpcport 127.0.0.1:22380 --httpport 10025 --txcluster http://127.0.0.1:20051
 #node3:./store  --grpcport 127.0.0.1:22381 --httpport 10026 --txcluster http://127.0.0.1:20051
 
-node1:./store --grpcport  127.0.0.1:22379 --httpport 10024 2>&1 | tee node1.log
-node2:./store  --grpcport 127.0.0.1:22380 --httpport 10025 2>&1 | tee node2.log
-node3:./store  --grpcport 127.0.0.1:22381 --httpport 10026 2>&1 | tee node3.log
+node1:./store --grpcport  127.0.0.1:22379 --httpport 10024 --loglevel info 2>&1 | tee node1.log
+node2:./store  --grpcport 127.0.0.1:22380 --httpport 10025 --loglevel info 2>&1 | tee node2.log
+node3:./store  --grpcport 127.0.0.1:22381 --httpport 10026 2>&1 --loglevel info 2>&1 tee node3.log
 

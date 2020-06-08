@@ -3,10 +3,13 @@ package kvstore
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+
+	//"log"
 	"net/http"
 	"net/http/pprof"
 	"strconv"
+
+	log "github.com/pingcap-incubator/tinykv/log"
 
 	"github.com/acid_kvstore/utils"
 	"github.com/gorilla/mux"
@@ -36,27 +39,27 @@ func (repl *Replica) handleKVPut(w http.ResponseWriter, r *http.Request) {
 	//kvs := repl.Stores[0]
 	vars := mux.Vars(r)
 	key := vars["id"]
-	log.Printf("Put is %s", key)
+	log.Infof("Put is %s", key)
 }
 
 func (kvs *Kvstore) handleKVPut(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
-	log.Printf("Put is %s", key)
+	log.Infof("Put is %s", key)
 }
 
 func (repl *Replica) handleKVDelete(w http.ResponseWriter, r *http.Request) {
 	kvs := repl.Stores[0]
 	vars := mux.Vars(r)
 	key := vars["id"]
-	log.Printf("Delete Key is %s", key)
+	log.Infof("Delete Key is %s", key)
 	kvs.HandleKVOperation(key, "", "DEL")
 }
 
 func (kvs *Kvstore) handleKVDelete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
-	log.Printf("Delete Key is %s", key)
+	log.Infof("Delete Key is %s", key)
 	kvs.HandleKVOperation(key, "", "DEL")
 }
 
@@ -64,21 +67,21 @@ func (repl *Replica) handleKVCreate(w http.ResponseWriter, r *http.Request) {
 	kvs := repl.Stores[0]
 	var kv KV
 	body, _ := ioutil.ReadAll(r.Body)
-	log.Printf("%s", body)
+	log.Infof("%s", body)
 	json.Unmarshal(body, &kv)
 	kvs.HandleKVOperation(kv.Key, kv.Val, "POST")
 
-	log.Printf("Create Key is %s %s", kv.Key, kv.Val)
+	log.Infof("Create Key is %s %s", kv.Key, kv.Val)
 }
 
 func (kvs *Kvstore) handleKVCreate(w http.ResponseWriter, r *http.Request) {
 	var kv KV
 	body, _ := ioutil.ReadAll(r.Body)
-	log.Printf("%s", body)
+	log.Infof("%s", body)
 	json.Unmarshal(body, &kv)
 	kvs.HandleKVOperation(kv.Key, kv.Val, "POST")
 
-	log.Printf("Create Key is %s %s", kv.Key, kv.Val)
+	log.Infof("Create Key is %s %s", kv.Key, kv.Val)
 }
 
 func (repl *Replica) handleReplicaConfigGet(w http.ResponseWriter, r *http.Request) {
