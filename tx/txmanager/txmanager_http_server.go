@@ -86,11 +86,11 @@ func (ts *TxStore) handleTxCommit(w http.ResponseWriter, r *http.Request) {
 	*/
 	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
+	ts.mu.RUnlock()
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 		return
 	}
-	ts.mu.RUnlock()
 
 	res := tr.TxSendBatchRequest()
 
@@ -122,10 +122,11 @@ func (ts *TxStore) handleTxGet(w http.ResponseWriter, r *http.Request) {
 
 	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
+	ts.mu.RUnlock()
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
+		return
 	}
-	ts.mu.RUnlock()
 
 	key := vars["key"]
 	tr.TxAddCommand(key, "None", "GET")
@@ -142,10 +143,10 @@ func (ts *TxStore) handleTxPut(w http.ResponseWriter, r *http.Request) {
 	}
 	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
+	ts.mu.RUnlock()
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 	}
-	ts.mu.RUnlock()
 
 	key := vars["key"]
 	val := vars["val"]
@@ -163,10 +164,11 @@ func (ts *TxStore) handleTxDelete(w http.ResponseWriter, r *http.Request) {
 
 	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
+	ts.mu.RUnlock()
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
+		return
 	}
-	ts.mu.RUnlock()
 	key := vars["key"]
 	val := vars["val"]
 
@@ -215,11 +217,11 @@ func (ts *TxStore) handleTxCommand(w http.ResponseWriter, r *http.Request) {
 	//}
 	ts.mu.RLock()
 	tr, ok := ts.TxRecordStore[txid]
+	ts.mu.RUnlock()
 	if ok == false {
 		log.Fatalf("Invalid TxId %v", txid)
 		return
 	}
-	ts.mu.RUnlock()
 
 	res := tr.TxAddCommand(key, val, op)
 

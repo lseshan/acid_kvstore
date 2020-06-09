@@ -35,7 +35,7 @@ func init() {
 */
 //XXX: modify to increase the rate of abort abd commit
 const WorkerBufferLen = 10
-const TxTimeout = 5
+const TxTimeout = 10
 
 //XXX: changing back to exported TxStore
 var txStore *TxStore
@@ -503,16 +503,15 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			case "PENDING":
 				ts.mu.RLock()
 				tr, ok := ts.TxRecordStore[tr.TxId]
+				ts.mu.RUnlock()
 				if ok == false {
 					//XXX: Later changed to warning
 					log.Infof("Warning TxStore  entry is not present e:")
-					ts.mu.RUnlock()
 					break
 				}
 
 				tr.TxPhase = "PENDING"
 				log.Infof("TxID:%v PENDING", tr.TxId)
-				ts.mu.RUnlock()
 			/*
 				case "COMMIT":
 					ts.mu.RLock()
@@ -534,16 +533,14 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 			case "ABORT":
 				ts.mu.RLock()
 				tr, ok := ts.TxRecordStore[tr.TxId]
+				ts.mu.RUnlock()
 				if ok == false {
 					//XXX: Later changed to warning
 					log.Infof("Warning TxStore  entry is not present e:")
-					ts.mu.Unlock()
 					break
 				}
-
 				tr.TxPhase = "ABORT"
 				log.Infof("TxID:%v ABORTED", tr.TxId)
-				ts.mu.RUnlock()
 
 			case "COMMIT":
 				fallthrough
@@ -564,8 +561,8 @@ func (ts *TxStore) readCommits(commitC <-chan *string, errorC <-chan error) {
 		ts.txnMapLock.Lock()
 		if ltxn, ok := ts.txnMap[tr.TxId]; ok {
 			ltxn.RespCh <- 1
-			delete(ts.txnMap, tr.TxId)
 		}
+		delete(ts.txnMap, tr.TxId)
 		ts.txnMapLock.Unlock()
 		log.Infof("Raft update done: %+v", msg)
 
@@ -708,9 +705,9 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 		state := <-readC
 		log.Infof("TxId:%v Read is successfull", tr.TxId)
 		if state == false {
-			log.Infof("Read is Unsuccessful")
+			log.Infof("ERROR: Read is Unsuccessful")
 			res := tr.TxUpdateTxRecord("ABORT")
-			log.Infof("RAFT:%v  Abort updated: ret state:%v", tr.TxId, res)
+			log.Infof("ABORT: RAFT:%v  Abort updated: ret state:%v", tr.TxId, res)
 			//res = tr.TxUpdateTxPending("DEL")
 			//log.Infof("RAFT:%v Deleted Raft TxPending ret state:%v", tr.TxId, res)
 			txStore.abortC <- *tr
@@ -747,8 +744,6 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 	}
 	*/
 
-	//tr.TxPhase = "COMMITED"
-	return true
 }
 
 //func newSednPacket(tr *TxRecord) [string]*pbk.KvTxReq
