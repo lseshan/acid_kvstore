@@ -1,6 +1,6 @@
 # Use goreman to run `go get github.com/mattn/goreman`
 #node1:./tx --id 1 --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479 --cliport 23480 --grpcport 127.0.0.1:20051 2>&1 | tee output.log
-node1:./tx --id 1 --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 23480 --grpcport 127.0.0.1:20051 --loglevel info 2>&1 | tee raft1.log
-node2:./tx --id 2  --replicamgrs 127.0.0.1:21224  --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 24480 --grpcport 127.0.0.1:20052 --loglevel info 2>&1 | tee raft2.log
-node3:./tx --id 3   --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 25480 --grpcport 127.0.0.1:20053 --loglevel info 2>&1 | tee raft3.log 
+node1:./tx --id 1 --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 23480 --grpcport 127.0.0.1:20051 --loglevel warn 2>&1 | tee raft1.log
+node2:./tx --id 2  --replicamgrs 127.0.0.1:21224  --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 24480 --grpcport 127.0.0.1:20052 --loglevel warn 2>&1 | tee raft2.log
+node3:./tx --id 3   --replicamgrs 127.0.0.1:21224 --cluster http://127.0.0.1:23479,http://127.0.0.1:24479,http://127.0.0.1:25479 --cliport 25480 --grpcport 127.0.0.1:20053 --loglevel warn 2>&1 | tee raft3.log 
 

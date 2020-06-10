@@ -357,9 +357,9 @@ func TestBatchMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Infof("Succesful txns: %d", sucTxn)
-	log.Infof("Failure txns: %d", failTxn)
+	log.Warnf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
 
 }
 
@@ -392,9 +392,9 @@ func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Infof("Succesful txns: %d", sucTxn)
-	log.Infof("Failure txns: %d", failTxn)
+	log.Warnf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
 
 }
 
@@ -426,9 +426,9 @@ func TestBatchMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Infof("Succesful txns: %d", sucTxn)
-	log.Infof("Failure txns: %d", failTxn)
+	log.Warnf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
 
 }
 
@@ -462,9 +462,9 @@ func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Infof("Succesful txns: %d", sucTxn)
-	log.Infof("Failure txns: %d", failTxn)
+	log.Warnf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
 
 }
 
@@ -490,9 +490,9 @@ func TestMultipleConcurrentReadTxnDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Infof("Succesful txns: %d", sucTxn)
-	log.Infof("Failure txns: %d", failTxn)
+	log.Warnf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
 
 }
 
@@ -518,9 +518,9 @@ func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
-	log.Infof("Succesful txns: %d", sucTxn)
-	log.Infof("Failure txns: %d", failTxn)
+	log.Warnf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
 
 }
 
@@ -585,7 +585,7 @@ func TestMultipleConcurrentWriteTxnDifferentKey(t *testing.T) {
 		log.Infof("received %s", result)
 	}
 	end := time.Since(start)
-	log.Infof("TxnPerSecond %.2f ", end.Seconds()/float64(3))
+	log.Warnf("TxnPerSecond %.2f ", end.Seconds()/float64(3))
 
 }
 
@@ -877,7 +877,8 @@ func init() {
 		MaxIdleConnsPerHost: 20,
 	}
 	netClient = &http.Client{Transport: tr}
-	log.SetLevelByString("info")
+	//log.SetLevelByString("info")
+	log.SetLevelByString("warn")
 
 	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
 
