@@ -71,6 +71,80 @@ func getTxManagerIp() (string, error) {
 	return m, nil
 }
 
+func WriteBatchTxn(key []string, val []string, status chan string) {
+	//var buffer bytes.Buffer
+	//buffer.WriteString(path)
+	//ul := buffer.String()
+	/*
+			resp, err := netClient.Get(ul)
+			if err != nil {
+				log.Infof("GET: Error Occrred %s", err)
+				status <- "FAILURE"
+				return
+			}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		var tx txmanager.TxJson
+		json.Unmarshal(body, &tx)
+
+		if tx.Status != "SUCCESS" {
+			log.Infof("Test FAILED at GET %s", tx.Status)
+			status <- "FAILURE"
+			return
+		}
+	*/
+	path := getBatchPath()
+	var action []string
+	for _, _ = range key {
+		action = append(action, "PUT")
+	}
+	log.Infof("Post: key : %v val: %v", key, val)
+	resp, err := http.PostForm(path, url.Values{"op": action, "key": key, "val": val})
+	if err != nil {
+		log.Infof("GET: Error Occrred %s", err)
+		status <- "FAILURE"
+		return
+	}
+
+	var res txmanager.TxJson
+	//json.Unmarshal(body, &tx)
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	/*
+		body, err = ioutil.ReadAll(resp.Body)
+		log.Infof("Http Result %+v", body)
+	*/
+	if res.Status != "SUCCESS" {
+		log.Infof("Test FAILED %+v", res)
+		status <- "FAILURE"
+		return
+	} else {
+		log.Infof("Test is Successful %v", res)
+		log.Infof("Test is Successful TxID: %s", res.TxId)
+		if res.ReadRsp != nil {
+			log.Infof("Printing Read Results")
+
+			for _, v := range res.ReadRsp {
+				log.Infof("Received Key:Val: %+v", v)
+
+			}
+
+		}
+
+	}
+	/*
+		resp1, err := netClient.Get(ul)
+		if err != nil {
+			log.Infof("Error Occurred %s", err)
+			status <- "FAILURE"
+			return
+		}
+		defer resp1.Body.Close()
+	*/
+	status <- "SUCCESS"
+
+}
+
 func WriteTxn(path string, key []string, val []string, status chan string) {
 	var buffer bytes.Buffer
 	buffer.WriteString(path)
@@ -152,6 +226,44 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 }
 
+func ReadBatchTxn(path string, key []string, val []string, status chan string) {
+	var buffer bytes.Buffer
+	buffer.WriteString(path)
+	ul := buffer.String()
+	var action []string
+	for _, _ = range key {
+		action = append(action, "GET")
+	}
+	log.Infof("Post: key : %v val: %v", key, val)
+	resp, err := http.PostForm(ul, url.Values{"op": action, "key": key})
+	if err != nil {
+		log.Infof("Error Occrred %s", err)
+		status <- "FAILURE"
+		return
+	}
+
+	var res txmanager.TxJson
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	if res.Status != "SUCCESS" {
+		log.Infof("Test FAILED %+v", res)
+		status <- "FAILURE"
+		return
+	} else {
+		log.Infof("Test is Successful %v", res)
+		log.Infof("Test is Successful TxID: %s", res.TxId)
+		if res.ReadRsp != nil {
+			log.Infof("Printing Read Results")
+			for _, v := range res.ReadRsp {
+				log.Infof("Received Key:Val: %+v", v)
+
+			}
+		}
+
+	}
+	status <- "SUCCESS"
+}
+
 func ReadTxn(path string, key []string, val []string, status chan string) {
 	var buffer bytes.Buffer
 	buffer.WriteString(path)
@@ -216,6 +328,41 @@ func ReadTxn(path string, key []string, val []string, status chan string) {
 	status <- "SUCCESS"
 }
 
+func TestBatchMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
+	var sucTxn, failTxn int
+	value := 3
+	status := make(chan string, 1000)
+	start := time.Now()
+	path := getBatchPath()
+	log.Infof(path)
+	for i := 1000; i < 2000; i++ {
+		time.Sleep(time.Millisecond)
+		var key []string
+		var val []string
+		for j := 0; j < value; j++ {
+			key = append(key, strconv.Itoa(i+j*1000))
+			val = append(val, num2words.Convert(i+j*1000))
+		}
+		go func(value int) {
+			ReadBatchTxn(path, key, val, status) //[]string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
+		}(i)
+	}
+	for i := 1000; i < 2000; i++ {
+		result := <-status
+		log.Infof("received %s", result)
+		if result == "SUCCESS" {
+			sucTxn += 1
+		} else if result == "FAILURE" {
+			failTxn += 1
+		}
+	}
+	end := time.Since(start)
+	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Infof("Succesful txns: %d", sucTxn)
+	log.Infof("Failure txns: %d", failTxn)
+
+}
+
 func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 	var sucTxn, failTxn int
 	value := 3
@@ -233,6 +380,40 @@ func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 		}
 		go func(value int) {
 			ReadTxn(path, key, val, status) //[]string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
+		}(i)
+	}
+	for i := 1000; i < 2000; i++ {
+		result := <-status
+		log.Infof("received %s", result)
+		if result == "SUCCESS" {
+			sucTxn += 1
+		} else if result == "FAILURE" {
+			failTxn += 1
+		}
+	}
+	end := time.Since(start)
+	log.Infof("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Infof("Succesful txns: %d", sucTxn)
+	log.Infof("Failure txns: %d", failTxn)
+
+}
+
+func TestBatchMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
+
+	var sucTxn, failTxn int
+	value := 3
+	status := make(chan string, 1000)
+	start := time.Now()
+	for i := 1000; i < 2000; i++ {
+		time.Sleep(time.Millisecond)
+		var key []string
+		var val []string
+		for j := 0; j < value; j++ {
+			key = append(key, strconv.Itoa(i+j*1000))
+			val = append(val, num2words.Convert(i+j*1000))
+		}
+		go func(value int) {
+			WriteBatchTxn(key, val, status) //[]string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
 		}(i)
 	}
 	for i := 1000; i < 2000; i++ {
@@ -343,6 +524,27 @@ func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 
 }
 
+func getBatchPath() string {
+	var buffer bytes.Buffer
+	for i := 0; i < 6; i++ {
+		s, err := getTxManagerIp()
+		if err != nil {
+			log.Infof("TxManager/ReplicaMgr is not preset")
+			time.Sleep(time.Second)
+		} else {
+			buffer.WriteString(s)
+			break
+		}
+		if i == 5 {
+			log.Fatalf("Something has gone wrong")
+
+		}
+	}
+	buffer.WriteString("/api/tx/batch/")
+	return buffer.String()
+
+}
+
 func getPath() string {
 	var buffer bytes.Buffer
 	for i := 0; i < 6; i++ {
@@ -393,6 +595,17 @@ func TestSimpleReadMultiOpTxn(t *testing.T) {
 
 	val := 1
 	ReadTxn(path, []string{strconv.Itoa(val), strconv.Itoa(val * 1000)}, []string{num2words.Convert(val), num2words.Convert(val * 1000)}, status)
+	result := <-status
+	log.Infof("%s", result)
+
+	log.Infof("Done")
+}
+
+func TestSimpleBatchWriteMultiOpTxn(t *testing.T) {
+	status := make(chan string, 1)
+
+	val := 1
+	WriteBatchTxn([]string{strconv.Itoa(val), strconv.Itoa(val * 1000)}, []string{num2words.Convert(val), num2words.Convert(val * 1000)}, status)
 	result := <-status
 	log.Infof("%s", result)
 

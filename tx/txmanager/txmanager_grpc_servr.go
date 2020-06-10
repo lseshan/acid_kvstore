@@ -12,12 +12,11 @@ import (
 // XXX: If entry not present, send pending
 
 func (ts *TxStore) TxGetRecordState(_ context.Context, in *pbt.TxReq) (*pbt.TxReply, error) {
-	ts.mu.RLock()
-	defer ts.mu.RUnlock()
-
 	resp := new(pbt.TxReply)
 	resp.TxId = in.TxContext.TxId
+	ts.mu.RLock()
 	t, ok := ts.TxRecordStore[in.TxContext.TxId]
+	ts.mu.RUnlock()
 	if ok == true {
 		resp.Stage = t.TxPhase
 	} else {

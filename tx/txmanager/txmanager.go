@@ -265,7 +265,8 @@ func (ts *TxStore) TxCompactCommits() {
 func (ts *TxStore) TxCommitWorker() {
 
 	for tr := range ts.commitC {
-		for {
+		var i int
+		for i = 0; i < 5; i++ {
 			//success then break
 			if tr.TxCommit() == true {
 				break
@@ -273,13 +274,17 @@ func (ts *TxStore) TxCommitWorker() {
 			//XXX: Update the leader ctx
 			//return only successful
 		}
+		if i == 5 {
+			log.Warnf("ERROR, TxCommit sending is failing")
+		}
 	}
 
 }
 
 func (ts *TxStore) TxAbortWorker() {
 	for tr := range ts.abortC {
-		for {
+		var i int
+		for i = 0; i < 5; i++ {
 			//success then break
 			if tr.TxRollback() == true {
 				break
@@ -287,6 +292,10 @@ func (ts *TxStore) TxAbortWorker() {
 			//XXX: Update the leader ctx
 			//return only successful
 		}
+		if i == 5 {
+			log.Warnf("ERROR, TxAbort is failing")
+		}
+
 	}
 }
 
@@ -329,7 +338,6 @@ func (ts *TxStore) UpdateLeader(ctx context.Context) {
 				ts.ReplInfo = resp.ReplicaInfo
 				ts.mu.Unlock()
 			}
-
 		case <-ctx.Done():
 			log.Infof("Done with Update leader")
 		}
@@ -757,13 +765,35 @@ func (tr *TxRecord) TxSendBatchRequest() bool {
 
 //For each leader (3)
 //Send KvTxReq
+/*
+func getDummyShardLeader(s uint64) string {
 
-func getShardLeader(s uint64) string {
+	ctx, cancel := getTxGrpcContext()
+	defer cancel()
+	resp, err := txStore.ReplLeaderClient.ReplicaQuery(ctx, &replpb.ReplicaQueryReq{})
+	if err != nil {
+		log.Infof("error in leader update: %v", err)
+	}
 	txStore.mu.Lock()
-	defer txStore.mu.Unlock()
-
+	txStore.ShardInfo = resp.ShardInfo
+	txStore.mu.Unlock()
+	val, ok := txStore.ShardInfo.ShardMap[s]
+	if ok == false {
+		log.Infof("Missing shard server details: shard: %v", s)
+		log.Fatalf("Missing details about shard S")
+		return ""
+	} else {
+		log.Infof("Returning the shard:%v leader details %v", s, val.LeaderKey)
+		return val.LeaderKey
+		//retrun txStore.ShardInfo.ShardMap[s].getLeaderKey()
+	}
+}
+*/
+func getShardLeader(s uint64) string {
 	for i := 0; i < 2; i++ {
+		txStore.mu.RLock()
 		val, ok := txStore.ShardInfo.ShardMap[s]
+		txStore.mu.RUnlock()
 		if ok == false {
 			log.Infof("Missing shard server details: IsQueried:%d, shard: %v", i, s)
 			log.Infof("Missing details about shard S")
@@ -795,7 +825,9 @@ func (tr *TxRecord) shardRequest() {
 	log.Infof("CommandList:%+v", tr.CommandList)
 	for _, cmd := range tr.CommandList {
 		//XXX: To DO: Take lock on  txStore. Preferably a read lock
+		txStore.mu.RLock()
 		nshards := txStore.ReplInfo.Nshards
+		txStore.mu.RUnlock()
 		log.Infof("Number of shards : %v", nshards)
 		shard := utils.Keytoshard(cmd.Key, int(nshards))
 		if cmd.Op == "GET" {
@@ -871,12 +903,12 @@ func copyReadResults(req *pbk.KvTxReq, resp *pbk.KvTxReply) {
 
 func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op string) {
 
-	ctx, cancel := getTxGrpcContext()
-	defer cancel()
-
 	var rp *pbk.KvTxReply
 	var err error
+	var hop int
+start:
 	server := getShardLeader(rq.TxContext.ShardId)
+	//server := getDummyShardLeader(rq.TxContext.ShardId)
 	//req := tr.newSendPacket(shard)
 	txStore.mu.Lock()
 	if _, ok := KvClient[server]; ok == false {
@@ -885,6 +917,10 @@ func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op strin
 	}
 	KvGrpc := KvClient[server]
 	txStore.mu.Unlock()
+
+	ctx, cancel := getTxGrpcContext()
+	defer cancel()
+
 	switch op {
 	case "read":
 		log.Infof("Tx Read operation")
@@ -906,6 +942,14 @@ func (tr *TxRecord) SendGrpcRequest(rq *pbk.KvTxReq, doneC chan Status, op strin
 	if err != nil {
 		log.Infof("op:%v, err:%v", op, err)
 		//XXX:may be remove on perf study
+		if hop == 0 {
+			log.Warnf("Looks like shardLeader changed for server:%s", server)
+			hop = 1
+			txStore.mu.Lock()
+			delete(KvClient, server)
+			txStore.mu.Unlock()
+			goto start
+		}
 		doneC <- Status{TxId: rq.TxContext.TxId, status: false, op: op, shard: rq.TxContext.ShardId}
 		return
 	}
@@ -965,6 +1009,7 @@ func (tr *TxRecord) TxPrepare() bool {
 
 	}
 
+	log.Infof("TxPrepare waiting to complete")
 	res := true
 	for i := 0; i < l; i++ {
 		val := <-doneC

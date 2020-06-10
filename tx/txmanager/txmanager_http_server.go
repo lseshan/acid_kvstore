@@ -309,7 +309,7 @@ func (ts *TxStore) ServeHttpTxApi(port int) {
 	api.Methods("PUT").Subrouter().HandleFunc("/tx/{txid}/{key}/{val}", ts.handleTxPut)
 	api.Methods("DELETE").Subrouter().HandleFunc("/tx/{txid}/{key}", ts.handleTxDelete)
 	api.Methods("POST").Subrouter().HandleFunc("/tx/", ts.handleTxCommand)
-	api.Methods("POST").Subrouter().HandleFunc("/tx/batch", ts.handleTxBatch)
+	api.Methods("POST").Subrouter().HandleFunc("/tx/batch/", ts.handleTxBatch)
 
 	//Methods to control Raft
 
