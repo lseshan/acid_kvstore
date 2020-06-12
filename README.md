@@ -1,4 +1,7 @@
 #ACID KV Store
+
+#ARCHITECTURE
+![image](design/Archietcture.png)
 ##ReplicMgr
 ./replicamgr --id 1 --cluster http://127.0.0.1:12379 --servers 127.0.0.1:22379,127.0.0.1:22380,127.0.0.1:22381 --grpcport 127.0.0.1:21224 --httport 1026 --shards 3
 
