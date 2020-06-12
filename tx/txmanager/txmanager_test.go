@@ -11,15 +11,21 @@ import (
 	"strconv"
 	"testing"
 	"time"
+	"flag"
 
 	log "github.com/pingcap-incubator/tinykv/log"
 
 	"github.com/divan/num2words"
 
 	"github.com/acid_kvstore/tx/txmanager"
+    "gonum.org/v1/plot"
+	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/plotutil"
+	"gonum.org/v1/plot/vg"
 )
 
 var netClient = &http.Client{}
+var oper = flag.Int("oper", 3, "Number of ops")
 
 /*
 var tr *txmanager.TxRecord
@@ -52,7 +58,7 @@ func TestTxSendBatchRequest(t *testing.T) {
 }
 */
 
-const replicaURL = "http://127.0.0.1:1026/api/txmanager"
+const replicaURL = "http://13.57.212.138:16500/api/txmanager"
 
 //var num2port map[string]string
 func getTxManagerIp() (string, error) {
@@ -101,7 +107,7 @@ func WriteBatchTxn(key []string, val []string, status chan string) {
 	log.Infof("Post: key : %v val: %v", key, val)
 	resp, err := http.PostForm(path, url.Values{"op": action, "key": key, "val": val})
 	if err != nil {
-		log.Infof("GET: Error Occrred %s", err)
+		log.Warnf("GET: Error Occrred %s", err)
 		status <- "FAILURE"
 		return
 	}
@@ -152,7 +158,7 @@ func WriteTxn(path string, key []string, val []string, status chan string) {
 
 	resp, err := netClient.Get(ul)
 	if err != nil {
-		log.Infof("GET: Error Occrred %s", err)
+		log.Warnf("GET: Error Occrred %s", err)
 		status <- "FAILURE"
 		return
 	}
@@ -357,7 +363,7 @@ func TestBatchMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 		}
 	}
 	end := time.Since(start)
-	log.Warnf("TxnPerSecond %.2f ", float64(sucTxn)/end.Seconds())
+	log.Warnf("TxnPerSecond %d ", int64(sucTxn)/end.Milliseconds())
 	log.Warnf("Succesful txns: %d", sucTxn)
 	log.Warnf("Failure txns: %d", failTxn)
 
@@ -365,7 +371,8 @@ func TestBatchMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 
 func TestMultipleConcurrentReadTxnMultiOpDifferentScale(t *testing.T) {
 	var sucTxn, failTxn int
-	value := 3
+	value := *oper
+	log.Warnf("operations %d", *oper)
 	status := make(chan string, 1000)
 	start := time.Now()
 	path := getPath()
@@ -432,10 +439,136 @@ func TestBatchMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 
 }
 
+
+func TestReadLatency(t *testing.T) {
+
+	var sucTxn, failTxn int
+	value := *oper
+	log.Warnf("operation %d", value)
+	status := make(chan string, 1000)
+	path := getPath()
+	log.Infof(path)
+	resultMap := make(map[int]int64)
+	
+	for i := 1000; i < 1500; i++ {
+		time.Sleep(time.Millisecond)
+		var key []string
+		var val []string
+		for j := 0; j < value; j++ {
+			key = append(key, strconv.Itoa(i+j*1000))
+			val = append(val, num2words.Convert(i+j*1000))
+		}
+		start := time.Now()
+		ReadTxn(path, key, val, status) //[]string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
+		result := <-status
+		end := time.Since(start)
+		if result == "SUCCESS" {
+			sucTxn += 1
+		} else {
+			failTxn += 1
+		}
+		resultMap[i] = end.Milliseconds()
+		log.Warnf("Done txns %d", i)
+	}
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
+
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	p.Title.Text = "Latency"
+	p.X.Label.Text = "Txnid"
+	p.Y.Label.Text = "Time(ms)"
+
+
+	pts := make(plotter.XYs, 1000)
+	for i := 1000; i < 1500; i++ {
+		if resultMap[i] < 1000 {
+			pts[i-1000].X = float64(i-1000)
+			pts[i-1000].Y = float64(resultMap[i])
+			log.Warnf(" i %d  latency %d", i, resultMap[i])
+		}
+	}
+	plotutil.AddScatters(p, "latency", pts)
+
+	// Save the plot to a PNG file.
+	if err := p.Save(6*vg.Inch, 6*vg.Inch, "points.png"); err != nil {
+		panic(err)
+	}
+
+
+}
+
+func TestWriteLatency(t *testing.T) {
+
+	var sucTxn, failTxn int
+	value := *oper
+	log.Warnf("operation %d", value)
+	status := make(chan string, 2000)
+	path := getPath()
+	log.Infof(path)
+	resultMap := make(map[int]int64)
+	
+	for i := 1000; i < 2500; i++ {
+		time.Sleep(time.Millisecond)
+		var key []string
+		var val []string
+		for j := 0; j < value; j++ {
+			key = append(key, strconv.Itoa(i+j*1000))
+			val = append(val, num2words.Convert(i+j*1000))
+		}
+		start := time.Now()
+		path = getPath()
+		WriteTxn(path, key, val, status) //[]string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
+                log.Warnf("%s",path)
+		result := <-status
+		end := time.Since(start)
+		if result == "SUCCESS" {
+			sucTxn += 1
+		} else {
+			failTxn += 1
+		}
+		resultMap[i] = end.Milliseconds()
+		log.Warnf("Done txns %d", i)
+	}
+	log.Warnf("Succesful txns: %d", sucTxn)
+	log.Warnf("Failure txns: %d", failTxn)
+
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	p.Title.Text = "Latency"
+	p.X.Label.Text = "Txnid"
+	p.Y.Label.Text = "Time(ms)"
+
+
+	pts := make(plotter.XYs, 2500)
+	for i := 1000; i < 2500; i++ {
+		if resultMap[i] < 1000 {
+			pts[i-1000].X = float64(i-1000)
+			pts[i-1000].Y = float64(resultMap[i])
+			log.Warnf(" i %d  latency %d", i, resultMap[i])
+		}
+	}
+	plotutil.AddScatters(p, "latency", pts)
+
+	// Save the plot to a PNG file.
+	if err := p.Save(6*vg.Inch, 6*vg.Inch, "points.png"); err != nil {
+		panic(err)
+	}
+
+
+}
+
 func TestMultipleConcurrentWriteTxnMultiOpDifferentScale(t *testing.T) {
 
 	var sucTxn, failTxn int
-	value := 3
+	value := *oper
+	log.Warnf("operation %d", value)
 	status := make(chan string, 1000)
 	start := time.Now()
 	path := getPath()
@@ -474,13 +607,13 @@ func TestMultipleConcurrentReadTxnDifferentScale(t *testing.T) {
 	status := make(chan string, 1000)
 	start := time.Now()
 	path := getPath()
-	for i := 1000; i < 2000; i++ {
+	for i := 1000; i < 1500; i++ {
 		time.Sleep(time.Millisecond)
 		go func(val int) {
 			ReadTxn(path, []string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
 		}(i)
 	}
-	for i := 1000; i < 2000; i++ {
+	for i := 1000; i < 1500; i++ {
 		result := <-status
 		log.Infof("received %s", result)
 		if result == "SUCCESS" {
@@ -502,13 +635,13 @@ func TestMultipleConcurrentWriteTxnDifferentScale(t *testing.T) {
 	status := make(chan string, 1000)
 	start := time.Now()
 	path := getPath()
-	for i := 1000; i < 2000; i++ {
+	for i := 1000; i < 1500; i++ {
 		time.Sleep(time.Millisecond)
 		go func(val int) {
 			WriteTxn(path, []string{strconv.Itoa(val)}, []string{num2words.Convert(val)}, status)
 		}(i)
 	}
-	for i := 1000; i < 2000; i++ {
+	for i := 1000; i < 1500; i++ {
 		result := <-status
 		log.Infof("received %s", result)
 		if result == "SUCCESS" {
@@ -629,7 +762,7 @@ func TestSimpleWriteTxn(t *testing.T) {
 
 	resp, err := http.Get(ul)
 	if err != nil {
-		log.Fatalf("Error Occurred")
+		log.Fatalf("Error Occurred %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -760,6 +893,7 @@ func TestSimpleReadTxn(t *testing.T) {
 	//	flag.Parse()
 
 	ul := getPath()
+	log.Warnf("%s", ul)
 
 	resp, err := http.Get(ul)
 	if err != nil {
@@ -772,7 +906,7 @@ func TestSimpleReadTxn(t *testing.T) {
 	json.Unmarshal(body, &tx)
 
 	if tx.Status != "SUCCESS" {
-		log.Infof("Test FAILED %s", tx.Status)
+		log.Warnf("Test FAILED %s", tx.Status)
 		return
 	}
 	txid := tx.TxId
@@ -793,7 +927,7 @@ func TestSimpleReadTxn(t *testing.T) {
 	ul = buffer.String()
 	resp, err = http.Get(ul)
 	if err != nil {
-		log.Infof("Error Occurred, %v", err)
+		log.Warnf("Error Occurred, %v", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -806,7 +940,7 @@ func TestSimpleReadTxn(t *testing.T) {
 		log.Infof("Http Result %+v", body)
 	*/
 	if res.Status != "SUCCESS" {
-		log.Infof("Test FAILED %+v", res)
+		log.Warnf("Test FAILED %+v", res)
 		return
 	} else {
 		log.Infof("Test is Successful %v", res)
@@ -815,7 +949,7 @@ func TestSimpleReadTxn(t *testing.T) {
 			log.Infof("Printing Read Results")
 
 			for _, v := range res.ReadRsp {
-				log.Infof("Received Key:Val: %+v", v)
+				log.Warnf("Received Key:Val: %+v", v)
 
 			}
 
@@ -876,8 +1010,7 @@ func init() {
 		MaxIdleConns:        20,
 		MaxIdleConnsPerHost: 20,
 	}
-	netClient = &http.Client{Transport: tr}
-	//log.SetLevelByString("info")
+	netClient = &http.Client{Transport: tr, Timeout: 100 * time.Millisecond,}
 	log.SetLevelByString("warn")
 
 	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)

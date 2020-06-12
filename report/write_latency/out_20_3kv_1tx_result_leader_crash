@@ -1,0 +1,2005 @@
+2020/06/10 23:52:38.284159 txmanager_test.go:442: [0;33m[warning] operation 20[0m
+2020/06/10 23:52:38.308622 txmanager_test.go:466: [0;33m[warning] Done txns 1000[0m
+2020/06/10 23:52:38.329196 txmanager_test.go:466: [0;33m[warning] Done txns 1001[0m
+2020/06/10 23:52:38.348833 txmanager_test.go:466: [0;33m[warning] Done txns 1002[0m
+2020/06/10 23:52:38.368781 txmanager_test.go:466: [0;33m[warning] Done txns 1003[0m
+2020/06/10 23:52:38.389160 txmanager_test.go:466: [0;33m[warning] Done txns 1004[0m
+2020/06/10 23:52:38.411842 txmanager_test.go:466: [0;33m[warning] Done txns 1005[0m
+2020/06/10 23:52:38.431729 txmanager_test.go:466: [0;33m[warning] Done txns 1006[0m
+2020/06/10 23:52:38.451292 txmanager_test.go:466: [0;33m[warning] Done txns 1007[0m
+2020/06/10 23:52:38.470394 txmanager_test.go:466: [0;33m[warning] Done txns 1008[0m
+2020/06/10 23:52:38.490025 txmanager_test.go:466: [0;33m[warning] Done txns 1009[0m
+2020/06/10 23:52:38.509116 txmanager_test.go:466: [0;33m[warning] Done txns 1010[0m
+2020/06/10 23:52:38.529336 txmanager_test.go:466: [0;33m[warning] Done txns 1011[0m
+2020/06/10 23:52:38.549072 txmanager_test.go:466: [0;33m[warning] Done txns 1012[0m
+2020/06/10 23:52:38.569429 txmanager_test.go:466: [0;33m[warning] Done txns 1013[0m
+2020/06/10 23:52:38.588266 txmanager_test.go:466: [0;33m[warning] Done txns 1014[0m
+2020/06/10 23:52:38.608327 txmanager_test.go:466: [0;33m[warning] Done txns 1015[0m
+2020/06/10 23:52:38.630039 txmanager_test.go:466: [0;33m[warning] Done txns 1016[0m
+2020/06/10 23:52:38.650096 txmanager_test.go:466: [0;33m[warning] Done txns 1017[0m
+2020/06/10 23:52:38.669511 txmanager_test.go:466: [0;33m[warning] Done txns 1018[0m
+2020/06/10 23:52:38.689594 txmanager_test.go:466: [0;33m[warning] Done txns 1019[0m
+2020/06/10 23:52:38.708902 txmanager_test.go:466: [0;33m[warning] Done txns 1020[0m
+2020/06/10 23:52:38.729942 txmanager_test.go:466: [0;33m[warning] Done txns 1021[0m
+2020/06/10 23:52:38.748459 txmanager_test.go:466: [0;33m[warning] Done txns 1022[0m
+2020/06/10 23:52:38.767858 txmanager_test.go:466: [0;33m[warning] Done txns 1023[0m
+2020/06/10 23:52:38.787457 txmanager_test.go:466: [0;33m[warning] Done txns 1024[0m
+2020/06/10 23:52:38.807432 txmanager_test.go:466: [0;33m[warning] Done txns 1025[0m
+2020/06/10 23:52:38.826283 txmanager_test.go:466: [0;33m[warning] Done txns 1026[0m
+2020/06/10 23:52:38.845823 txmanager_test.go:466: [0;33m[warning] Done txns 1027[0m
+2020/06/10 23:52:38.867135 txmanager_test.go:466: [0;33m[warning] Done txns 1028[0m
+2020/06/10 23:52:38.887328 txmanager_test.go:466: [0;33m[warning] Done txns 1029[0m
+2020/06/10 23:52:38.905910 txmanager_test.go:466: [0;33m[warning] Done txns 1030[0m
+2020/06/10 23:52:38.924564 txmanager_test.go:466: [0;33m[warning] Done txns 1031[0m
+2020/06/10 23:52:38.944022 txmanager_test.go:466: [0;33m[warning] Done txns 1032[0m
+2020/06/10 23:52:38.964549 txmanager_test.go:466: [0;33m[warning] Done txns 1033[0m
+2020/06/10 23:52:38.985384 txmanager_test.go:466: [0;33m[warning] Done txns 1034[0m
+2020/06/10 23:52:39.005318 txmanager_test.go:466: [0;33m[warning] Done txns 1035[0m
+2020/06/10 23:52:39.026884 txmanager_test.go:466: [0;33m[warning] Done txns 1036[0m
+2020/06/10 23:52:39.046225 txmanager_test.go:466: [0;33m[warning] Done txns 1037[0m
+2020/06/10 23:52:39.065430 txmanager_test.go:466: [0;33m[warning] Done txns 1038[0m
+2020/06/10 23:52:39.085762 txmanager_test.go:466: [0;33m[warning] Done txns 1039[0m
+2020/06/10 23:52:39.105201 txmanager_test.go:466: [0;33m[warning] Done txns 1040[0m
+2020/06/10 23:52:39.126920 txmanager_test.go:466: [0;33m[warning] Done txns 1041[0m
+2020/06/10 23:52:39.146210 txmanager_test.go:466: [0;33m[warning] Done txns 1042[0m
+2020/06/10 23:52:39.165343 txmanager_test.go:466: [0;33m[warning] Done txns 1043[0m
+2020/06/10 23:52:39.185196 txmanager_test.go:466: [0;33m[warning] Done txns 1044[0m
+2020/06/10 23:52:39.205345 txmanager_test.go:466: [0;33m[warning] Done txns 1045[0m
+2020/06/10 23:52:39.224990 txmanager_test.go:466: [0;33m[warning] Done txns 1046[0m
+2020/06/10 23:52:39.243681 txmanager_test.go:466: [0;33m[warning] Done txns 1047[0m
+2020/06/10 23:52:39.262118 txmanager_test.go:466: [0;33m[warning] Done txns 1048[0m
+2020/06/10 23:52:39.282625 txmanager_test.go:466: [0;33m[warning] Done txns 1049[0m
+2020/06/10 23:52:39.303708 txmanager_test.go:466: [0;33m[warning] Done txns 1050[0m
+2020/06/10 23:52:39.323181 txmanager_test.go:466: [0;33m[warning] Done txns 1051[0m
+2020/06/10 23:52:39.342851 txmanager_test.go:466: [0;33m[warning] Done txns 1052[0m
+2020/06/10 23:52:39.363319 txmanager_test.go:466: [0;33m[warning] Done txns 1053[0m
+2020/06/10 23:52:39.383199 txmanager_test.go:466: [0;33m[warning] Done txns 1054[0m
+2020/06/10 23:52:39.403725 txmanager_test.go:466: [0;33m[warning] Done txns 1055[0m
+2020/06/10 23:52:39.422315 txmanager_test.go:466: [0;33m[warning] Done txns 1056[0m
+2020/06/10 23:52:39.443308 txmanager_test.go:466: [0;33m[warning] Done txns 1057[0m
+2020/06/10 23:52:39.463379 txmanager_test.go:466: [0;33m[warning] Done txns 1058[0m
+2020/06/10 23:52:39.482845 txmanager_test.go:466: [0;33m[warning] Done txns 1059[0m
+2020/06/10 23:52:39.502008 txmanager_test.go:466: [0;33m[warning] Done txns 1060[0m
+2020/06/10 23:52:39.523395 txmanager_test.go:466: [0;33m[warning] Done txns 1061[0m
+2020/06/10 23:52:39.542481 txmanager_test.go:466: [0;33m[warning] Done txns 1062[0m
+2020/06/10 23:52:39.561753 txmanager_test.go:466: [0;33m[warning] Done txns 1063[0m
+2020/06/10 23:52:39.580753 txmanager_test.go:466: [0;33m[warning] Done txns 1064[0m
+2020/06/10 23:52:39.599792 txmanager_test.go:466: [0;33m[warning] Done txns 1065[0m
+2020/06/10 23:52:39.620792 txmanager_test.go:466: [0;33m[warning] Done txns 1066[0m
+2020/06/10 23:52:39.640038 txmanager_test.go:466: [0;33m[warning] Done txns 1067[0m
+2020/06/10 23:52:39.658811 txmanager_test.go:466: [0;33m[warning] Done txns 1068[0m
+2020/06/10 23:52:39.679188 txmanager_test.go:466: [0;33m[warning] Done txns 1069[0m
+2020/06/10 23:52:39.700612 txmanager_test.go:466: [0;33m[warning] Done txns 1070[0m
+2020/06/10 23:52:39.721788 txmanager_test.go:466: [0;33m[warning] Done txns 1071[0m
+2020/06/10 23:52:39.741308 txmanager_test.go:466: [0;33m[warning] Done txns 1072[0m
+2020/06/10 23:52:39.761594 txmanager_test.go:466: [0;33m[warning] Done txns 1073[0m
+2020/06/10 23:52:39.781471 txmanager_test.go:466: [0;33m[warning] Done txns 1074[0m
+2020/06/10 23:52:39.801034 txmanager_test.go:466: [0;33m[warning] Done txns 1075[0m
+2020/06/10 23:52:39.820384 txmanager_test.go:466: [0;33m[warning] Done txns 1076[0m
+2020/06/10 23:52:39.840896 txmanager_test.go:466: [0;33m[warning] Done txns 1077[0m
+2020/06/10 23:52:39.860022 txmanager_test.go:466: [0;33m[warning] Done txns 1078[0m
+2020/06/10 23:52:39.879278 txmanager_test.go:466: [0;33m[warning] Done txns 1079[0m
+2020/06/10 23:52:39.897957 txmanager_test.go:466: [0;33m[warning] Done txns 1080[0m
+2020/06/10 23:52:39.920646 txmanager_test.go:466: [0;33m[warning] Done txns 1081[0m
+2020/06/10 23:52:39.939282 txmanager_test.go:466: [0;33m[warning] Done txns 1082[0m
+2020/06/10 23:52:39.958328 txmanager_test.go:466: [0;33m[warning] Done txns 1083[0m
+2020/06/10 23:52:39.977482 txmanager_test.go:466: [0;33m[warning] Done txns 1084[0m
+2020/06/10 23:52:39.999127 txmanager_test.go:466: [0;33m[warning] Done txns 1085[0m
+2020/06/10 23:52:40.019096 txmanager_test.go:466: [0;33m[warning] Done txns 1086[0m
+2020/06/10 23:52:40.039367 txmanager_test.go:466: [0;33m[warning] Done txns 1087[0m
+2020/06/10 23:52:40.059720 txmanager_test.go:466: [0;33m[warning] Done txns 1088[0m
+2020/06/10 23:52:40.082257 txmanager_test.go:466: [0;33m[warning] Done txns 1089[0m
+2020/06/10 23:52:40.102292 txmanager_test.go:466: [0;33m[warning] Done txns 1090[0m
+2020/06/10 23:52:40.122363 txmanager_test.go:466: [0;33m[warning] Done txns 1091[0m
+2020/06/10 23:52:40.142324 txmanager_test.go:466: [0;33m[warning] Done txns 1092[0m
+2020/06/10 23:52:40.162655 txmanager_test.go:466: [0;33m[warning] Done txns 1093[0m
+2020/06/10 23:52:40.182852 txmanager_test.go:466: [0;33m[warning] Done txns 1094[0m
+2020/06/10 23:52:40.202532 txmanager_test.go:466: [0;33m[warning] Done txns 1095[0m
+2020/06/10 23:52:40.224563 txmanager_test.go:466: [0;33m[warning] Done txns 1096[0m
+2020/06/10 23:52:40.245441 txmanager_test.go:466: [0;33m[warning] Done txns 1097[0m
+2020/06/10 23:52:40.263785 txmanager_test.go:466: [0;33m[warning] Done txns 1098[0m
+2020/06/10 23:52:40.283323 txmanager_test.go:466: [0;33m[warning] Done txns 1099[0m
+2020/06/10 23:52:40.303816 txmanager_test.go:466: [0;33m[warning] Done txns 1100[0m
+2020/06/10 23:52:40.322012 txmanager_test.go:466: [0;33m[warning] Done txns 1101[0m
+2020/06/10 23:52:40.343861 txmanager_test.go:466: [0;33m[warning] Done txns 1102[0m
+2020/06/10 23:52:40.364218 txmanager_test.go:466: [0;33m[warning] Done txns 1103[0m
+2020/06/10 23:52:40.384671 txmanager_test.go:466: [0;33m[warning] Done txns 1104[0m
+2020/06/10 23:52:40.405712 txmanager_test.go:466: [0;33m[warning] Done txns 1105[0m
+2020/06/10 23:52:40.424858 txmanager_test.go:466: [0;33m[warning] Done txns 1106[0m
+2020/06/10 23:52:40.445389 txmanager_test.go:466: [0;33m[warning] Done txns 1107[0m
+2020/06/10 23:52:40.464588 txmanager_test.go:466: [0;33m[warning] Done txns 1108[0m
+2020/06/10 23:52:40.691977 txmanager_test.go:466: [0;33m[warning] Done txns 1109[0m
+2020/06/10 23:52:40.898448 txmanager_test.go:466: [0;33m[warning] Done txns 1110[0m
+2020/06/10 23:52:41.100731 txmanager_test.go:466: [0;33m[warning] Done txns 1111[0m
+2020/06/10 23:52:41.292776 txmanager_test.go:466: [0;33m[warning] Done txns 1112[0m
+2020/06/10 23:52:41.512461 txmanager_test.go:466: [0;33m[warning] Done txns 1113[0m
+2020/06/10 23:52:41.723135 txmanager_test.go:466: [0;33m[warning] Done txns 1114[0m
+2020/06/10 23:52:41.941999 txmanager_test.go:466: [0;33m[warning] Done txns 1115[0m
+2020/06/10 23:52:42.161775 txmanager_test.go:466: [0;33m[warning] Done txns 1116[0m
+2020/06/10 23:52:42.380020 txmanager_test.go:466: [0;33m[warning] Done txns 1117[0m
+2020/06/10 23:52:42.592812 txmanager_test.go:466: [0;33m[warning] Done txns 1118[0m
+2020/06/10 23:52:42.816375 txmanager_test.go:466: [0;33m[warning] Done txns 1119[0m
+2020/06/10 23:52:43.031142 txmanager_test.go:466: [0;33m[warning] Done txns 1120[0m
+2020/06/10 23:52:43.223552 txmanager_test.go:466: [0;33m[warning] Done txns 1121[0m
+2020/06/10 23:52:43.441991 txmanager_test.go:466: [0;33m[warning] Done txns 1122[0m
+2020/06/10 23:52:43.668846 txmanager_test.go:466: [0;33m[warning] Done txns 1123[0m
+2020/06/10 23:52:43.890045 txmanager_test.go:466: [0;33m[warning] Done txns 1124[0m
+2020/06/10 23:52:44.101193 txmanager_test.go:466: [0;33m[warning] Done txns 1125[0m
+2020/06/10 23:52:44.314174 txmanager_test.go:466: [0;33m[warning] Done txns 1126[0m
+2020/06/10 23:52:44.477888 txmanager_test.go:466: [0;33m[warning] Done txns 1127[0m
+2020/06/10 23:52:44.499458 txmanager_test.go:466: [0;33m[warning] Done txns 1128[0m
+2020/06/10 23:52:44.519752 txmanager_test.go:466: [0;33m[warning] Done txns 1129[0m
+2020/06/10 23:52:44.540721 txmanager_test.go:466: [0;33m[warning] Done txns 1130[0m
+2020/06/10 23:52:44.561249 txmanager_test.go:466: [0;33m[warning] Done txns 1131[0m
+2020/06/10 23:52:44.581273 txmanager_test.go:466: [0;33m[warning] Done txns 1132[0m
+2020/06/10 23:52:44.600976 txmanager_test.go:466: [0;33m[warning] Done txns 1133[0m
+2020/06/10 23:52:44.620350 txmanager_test.go:466: [0;33m[warning] Done txns 1134[0m
+2020/06/10 23:52:44.639856 txmanager_test.go:466: [0;33m[warning] Done txns 1135[0m
+2020/06/10 23:52:44.661285 txmanager_test.go:466: [0;33m[warning] Done txns 1136[0m
+2020/06/10 23:52:44.681855 txmanager_test.go:466: [0;33m[warning] Done txns 1137[0m
+2020/06/10 23:52:44.702885 txmanager_test.go:466: [0;33m[warning] Done txns 1138[0m
+2020/06/10 23:52:44.723704 txmanager_test.go:466: [0;33m[warning] Done txns 1139[0m
+2020/06/10 23:52:44.744799 txmanager_test.go:466: [0;33m[warning] Done txns 1140[0m
+2020/06/10 23:52:44.763846 txmanager_test.go:466: [0;33m[warning] Done txns 1141[0m
+2020/06/10 23:52:44.784909 txmanager_test.go:466: [0;33m[warning] Done txns 1142[0m
+2020/06/10 23:52:44.805590 txmanager_test.go:466: [0;33m[warning] Done txns 1143[0m
+2020/06/10 23:52:44.827133 txmanager_test.go:466: [0;33m[warning] Done txns 1144[0m
+2020/06/10 23:52:44.847392 txmanager_test.go:466: [0;33m[warning] Done txns 1145[0m
+2020/06/10 23:52:44.869195 txmanager_test.go:466: [0;33m[warning] Done txns 1146[0m
+2020/06/10 23:52:44.891222 txmanager_test.go:466: [0;33m[warning] Done txns 1147[0m
+2020/06/10 23:52:44.911373 txmanager_test.go:466: [0;33m[warning] Done txns 1148[0m
+2020/06/10 23:52:44.933607 txmanager_test.go:466: [0;33m[warning] Done txns 1149[0m
+2020/06/10 23:52:44.952900 txmanager_test.go:466: [0;33m[warning] Done txns 1150[0m
+2020/06/10 23:52:44.974046 txmanager_test.go:466: [0;33m[warning] Done txns 1151[0m
+2020/06/10 23:52:44.995342 txmanager_test.go:466: [0;33m[warning] Done txns 1152[0m
+2020/06/10 23:52:45.016570 txmanager_test.go:466: [0;33m[warning] Done txns 1153[0m
+2020/06/10 23:52:45.040349 txmanager_test.go:466: [0;33m[warning] Done txns 1154[0m
+2020/06/10 23:52:45.061265 txmanager_test.go:466: [0;33m[warning] Done txns 1155[0m
+2020/06/10 23:52:45.081853 txmanager_test.go:466: [0;33m[warning] Done txns 1156[0m
+2020/06/10 23:52:45.103245 txmanager_test.go:466: [0;33m[warning] Done txns 1157[0m
+2020/06/10 23:52:45.126137 txmanager_test.go:466: [0;33m[warning] Done txns 1158[0m
+2020/06/10 23:52:45.147586 txmanager_test.go:466: [0;33m[warning] Done txns 1159[0m
+2020/06/10 23:52:45.168276 txmanager_test.go:466: [0;33m[warning] Done txns 1160[0m
+2020/06/10 23:52:45.190113 txmanager_test.go:466: [0;33m[warning] Done txns 1161[0m
+2020/06/10 23:52:45.210762 txmanager_test.go:466: [0;33m[warning] Done txns 1162[0m
+2020/06/10 23:52:45.231207 txmanager_test.go:466: [0;33m[warning] Done txns 1163[0m
+2020/06/10 23:52:45.252376 txmanager_test.go:466: [0;33m[warning] Done txns 1164[0m
+2020/06/10 23:52:45.272292 txmanager_test.go:466: [0;33m[warning] Done txns 1165[0m
+2020/06/10 23:52:45.293009 txmanager_test.go:466: [0;33m[warning] Done txns 1166[0m
+2020/06/10 23:52:45.313569 txmanager_test.go:466: [0;33m[warning] Done txns 1167[0m
+2020/06/10 23:52:45.333123 txmanager_test.go:466: [0;33m[warning] Done txns 1168[0m
+2020/06/10 23:52:45.353454 txmanager_test.go:466: [0;33m[warning] Done txns 1169[0m
+2020/06/10 23:52:45.373981 txmanager_test.go:466: [0;33m[warning] Done txns 1170[0m
+2020/06/10 23:52:45.395118 txmanager_test.go:466: [0;33m[warning] Done txns 1171[0m
+2020/06/10 23:52:45.416207 txmanager_test.go:466: [0;33m[warning] Done txns 1172[0m
+2020/06/10 23:52:45.437296 txmanager_test.go:466: [0;33m[warning] Done txns 1173[0m
+2020/06/10 23:52:45.456427 txmanager_test.go:466: [0;33m[warning] Done txns 1174[0m
+2020/06/10 23:52:45.476848 txmanager_test.go:466: [0;33m[warning] Done txns 1175[0m
+2020/06/10 23:52:45.497298 txmanager_test.go:466: [0;33m[warning] Done txns 1176[0m
+2020/06/10 23:52:45.516367 txmanager_test.go:466: [0;33m[warning] Done txns 1177[0m
+2020/06/10 23:52:45.535995 txmanager_test.go:466: [0;33m[warning] Done txns 1178[0m
+2020/06/10 23:52:45.556875 txmanager_test.go:466: [0;33m[warning] Done txns 1179[0m
+2020/06/10 23:52:45.578424 txmanager_test.go:466: [0;33m[warning] Done txns 1180[0m
+2020/06/10 23:52:45.599420 txmanager_test.go:466: [0;33m[warning] Done txns 1181[0m
+2020/06/10 23:52:45.620933 txmanager_test.go:466: [0;33m[warning] Done txns 1182[0m
+2020/06/10 23:52:45.640729 txmanager_test.go:466: [0;33m[warning] Done txns 1183[0m
+2020/06/10 23:52:45.659842 txmanager_test.go:466: [0;33m[warning] Done txns 1184[0m
+2020/06/10 23:52:45.679706 txmanager_test.go:466: [0;33m[warning] Done txns 1185[0m
+2020/06/10 23:52:45.699087 txmanager_test.go:466: [0;33m[warning] Done txns 1186[0m
+2020/06/10 23:52:45.721997 txmanager_test.go:466: [0;33m[warning] Done txns 1187[0m
+2020/06/10 23:52:45.740878 txmanager_test.go:466: [0;33m[warning] Done txns 1188[0m
+2020/06/10 23:52:45.761003 txmanager_test.go:466: [0;33m[warning] Done txns 1189[0m
+2020/06/10 23:52:45.781896 txmanager_test.go:466: [0;33m[warning] Done txns 1190[0m
+2020/06/10 23:52:45.802840 txmanager_test.go:466: [0;33m[warning] Done txns 1191[0m
+2020/06/10 23:52:45.824645 txmanager_test.go:466: [0;33m[warning] Done txns 1192[0m
+2020/06/10 23:52:45.845959 txmanager_test.go:466: [0;33m[warning] Done txns 1193[0m
+2020/06/10 23:52:45.868513 txmanager_test.go:466: [0;33m[warning] Done txns 1194[0m
+2020/06/10 23:52:45.892908 txmanager_test.go:466: [0;33m[warning] Done txns 1195[0m
+2020/06/10 23:52:45.913045 txmanager_test.go:466: [0;33m[warning] Done txns 1196[0m
+2020/06/10 23:52:45.934437 txmanager_test.go:466: [0;33m[warning] Done txns 1197[0m
+2020/06/10 23:52:45.956466 txmanager_test.go:466: [0;33m[warning] Done txns 1198[0m
+2020/06/10 23:52:45.974922 txmanager_test.go:466: [0;33m[warning] Done txns 1199[0m
+2020/06/10 23:52:45.994151 txmanager_test.go:466: [0;33m[warning] Done txns 1200[0m
+2020/06/10 23:52:46.014322 txmanager_test.go:466: [0;33m[warning] Done txns 1201[0m
+2020/06/10 23:52:46.034410 txmanager_test.go:466: [0;33m[warning] Done txns 1202[0m
+2020/06/10 23:52:46.054192 txmanager_test.go:466: [0;33m[warning] Done txns 1203[0m
+2020/06/10 23:52:46.075015 txmanager_test.go:466: [0;33m[warning] Done txns 1204[0m
+2020/06/10 23:52:46.096100 txmanager_test.go:466: [0;33m[warning] Done txns 1205[0m
+2020/06/10 23:52:46.114555 txmanager_test.go:466: [0;33m[warning] Done txns 1206[0m
+2020/06/10 23:52:46.136117 txmanager_test.go:466: [0;33m[warning] Done txns 1207[0m
+2020/06/10 23:52:46.156722 txmanager_test.go:466: [0;33m[warning] Done txns 1208[0m
+2020/06/10 23:52:46.176798 txmanager_test.go:466: [0;33m[warning] Done txns 1209[0m
+2020/06/10 23:52:46.197825 txmanager_test.go:466: [0;33m[warning] Done txns 1210[0m
+2020/06/10 23:52:46.216301 txmanager_test.go:466: [0;33m[warning] Done txns 1211[0m
+2020/06/10 23:52:46.236311 txmanager_test.go:466: [0;33m[warning] Done txns 1212[0m
+2020/06/10 23:52:46.256162 txmanager_test.go:466: [0;33m[warning] Done txns 1213[0m
+2020/06/10 23:52:46.275179 txmanager_test.go:466: [0;33m[warning] Done txns 1214[0m
+2020/06/10 23:52:46.295703 txmanager_test.go:466: [0;33m[warning] Done txns 1215[0m
+2020/06/10 23:52:46.318131 txmanager_test.go:466: [0;33m[warning] Done txns 1216[0m
+2020/06/10 23:52:46.338310 txmanager_test.go:466: [0;33m[warning] Done txns 1217[0m
+2020/06/10 23:52:46.358745 txmanager_test.go:466: [0;33m[warning] Done txns 1218[0m
+2020/06/10 23:52:46.379415 txmanager_test.go:466: [0;33m[warning] Done txns 1219[0m
+2020/06/10 23:52:46.399008 txmanager_test.go:466: [0;33m[warning] Done txns 1220[0m
+2020/06/10 23:52:46.418389 txmanager_test.go:466: [0;33m[warning] Done txns 1221[0m
+2020/06/10 23:52:46.438127 txmanager_test.go:466: [0;33m[warning] Done txns 1222[0m
+2020/06/10 23:52:46.462487 txmanager_test.go:466: [0;33m[warning] Done txns 1223[0m
+2020/06/10 23:52:46.482605 txmanager_test.go:466: [0;33m[warning] Done txns 1224[0m
+2020/06/10 23:52:46.504707 txmanager_test.go:466: [0;33m[warning] Done txns 1225[0m
+2020/06/10 23:52:46.525674 txmanager_test.go:466: [0;33m[warning] Done txns 1226[0m
+2020/06/10 23:52:46.545997 txmanager_test.go:466: [0;33m[warning] Done txns 1227[0m
+2020/06/10 23:52:46.567326 txmanager_test.go:466: [0;33m[warning] Done txns 1228[0m
+2020/06/10 23:52:46.588350 txmanager_test.go:466: [0;33m[warning] Done txns 1229[0m
+2020/06/10 23:52:46.609421 txmanager_test.go:466: [0;33m[warning] Done txns 1230[0m
+2020/06/10 23:52:46.628147 txmanager_test.go:466: [0;33m[warning] Done txns 1231[0m
+2020/06/10 23:52:46.650573 txmanager_test.go:466: [0;33m[warning] Done txns 1232[0m
+2020/06/10 23:52:46.673882 txmanager_test.go:466: [0;33m[warning] Done txns 1233[0m
+2020/06/10 23:52:46.692380 txmanager_test.go:466: [0;33m[warning] Done txns 1234[0m
+2020/06/10 23:52:46.714385 txmanager_test.go:466: [0;33m[warning] Done txns 1235[0m
+2020/06/10 23:52:46.734677 txmanager_test.go:466: [0;33m[warning] Done txns 1236[0m
+2020/06/10 23:52:46.754618 txmanager_test.go:466: [0;33m[warning] Done txns 1237[0m
+2020/06/10 23:52:46.773323 txmanager_test.go:466: [0;33m[warning] Done txns 1238[0m
+2020/06/10 23:52:46.794441 txmanager_test.go:466: [0;33m[warning] Done txns 1239[0m
+2020/06/10 23:52:46.812679 txmanager_test.go:466: [0;33m[warning] Done txns 1240[0m
+2020/06/10 23:52:46.831928 txmanager_test.go:466: [0;33m[warning] Done txns 1241[0m
+2020/06/10 23:52:46.852902 txmanager_test.go:466: [0;33m[warning] Done txns 1242[0m
+2020/06/10 23:52:46.873174 txmanager_test.go:466: [0;33m[warning] Done txns 1243[0m
+2020/06/10 23:52:46.892951 txmanager_test.go:466: [0;33m[warning] Done txns 1244[0m
+2020/06/10 23:52:46.912913 txmanager_test.go:466: [0;33m[warning] Done txns 1245[0m
+2020/06/10 23:52:46.932588 txmanager_test.go:466: [0;33m[warning] Done txns 1246[0m
+2020/06/10 23:52:46.952993 txmanager_test.go:466: [0;33m[warning] Done txns 1247[0m
+2020/06/10 23:52:46.974669 txmanager_test.go:466: [0;33m[warning] Done txns 1248[0m
+2020/06/10 23:52:46.994861 txmanager_test.go:466: [0;33m[warning] Done txns 1249[0m
+2020/06/10 23:52:47.013168 txmanager_test.go:466: [0;33m[warning] Done txns 1250[0m
+2020/06/10 23:52:47.034162 txmanager_test.go:466: [0;33m[warning] Done txns 1251[0m
+2020/06/10 23:52:47.053555 txmanager_test.go:466: [0;33m[warning] Done txns 1252[0m
+2020/06/10 23:52:47.073816 txmanager_test.go:466: [0;33m[warning] Done txns 1253[0m
+2020/06/10 23:52:47.095874 txmanager_test.go:466: [0;33m[warning] Done txns 1254[0m
+2020/06/10 23:52:47.114719 txmanager_test.go:466: [0;33m[warning] Done txns 1255[0m
+2020/06/10 23:52:47.135279 txmanager_test.go:466: [0;33m[warning] Done txns 1256[0m
+2020/06/10 23:52:47.153361 txmanager_test.go:466: [0;33m[warning] Done txns 1257[0m
+2020/06/10 23:52:47.172742 txmanager_test.go:466: [0;33m[warning] Done txns 1258[0m
+2020/06/10 23:52:47.195242 txmanager_test.go:466: [0;33m[warning] Done txns 1259[0m
+2020/06/10 23:52:47.215608 txmanager_test.go:466: [0;33m[warning] Done txns 1260[0m
+2020/06/10 23:52:47.239777 txmanager_test.go:466: [0;33m[warning] Done txns 1261[0m
+2020/06/10 23:52:47.260289 txmanager_test.go:466: [0;33m[warning] Done txns 1262[0m
+2020/06/10 23:52:47.282069 txmanager_test.go:466: [0;33m[warning] Done txns 1263[0m
+2020/06/10 23:52:47.307515 txmanager_test.go:466: [0;33m[warning] Done txns 1264[0m
+2020/06/10 23:52:47.327923 txmanager_test.go:466: [0;33m[warning] Done txns 1265[0m
+2020/06/10 23:52:47.347938 txmanager_test.go:466: [0;33m[warning] Done txns 1266[0m
+2020/06/10 23:52:47.368077 txmanager_test.go:466: [0;33m[warning] Done txns 1267[0m
+2020/06/10 23:52:47.390036 txmanager_test.go:466: [0;33m[warning] Done txns 1268[0m
+2020/06/10 23:52:47.408323 txmanager_test.go:466: [0;33m[warning] Done txns 1269[0m
+2020/06/10 23:52:47.427140 txmanager_test.go:466: [0;33m[warning] Done txns 1270[0m
+2020/06/10 23:52:47.446103 txmanager_test.go:466: [0;33m[warning] Done txns 1271[0m
+2020/06/10 23:52:47.467419 txmanager_test.go:466: [0;33m[warning] Done txns 1272[0m
+2020/06/10 23:52:47.488109 txmanager_test.go:466: [0;33m[warning] Done txns 1273[0m
+2020/06/10 23:52:47.506317 txmanager_test.go:466: [0;33m[warning] Done txns 1274[0m
+2020/06/10 23:52:47.527324 txmanager_test.go:466: [0;33m[warning] Done txns 1275[0m
+2020/06/10 23:52:47.547182 txmanager_test.go:466: [0;33m[warning] Done txns 1276[0m
+2020/06/10 23:52:47.568491 txmanager_test.go:466: [0;33m[warning] Done txns 1277[0m
+2020/06/10 23:52:47.588891 txmanager_test.go:466: [0;33m[warning] Done txns 1278[0m
+2020/06/10 23:52:47.608909 txmanager_test.go:466: [0;33m[warning] Done txns 1279[0m
+2020/06/10 23:52:47.627262 txmanager_test.go:466: [0;33m[warning] Done txns 1280[0m
+2020/06/10 23:52:47.646039 txmanager_test.go:466: [0;33m[warning] Done txns 1281[0m
+2020/06/10 23:52:47.665975 txmanager_test.go:466: [0;33m[warning] Done txns 1282[0m
+2020/06/10 23:52:47.686030 txmanager_test.go:466: [0;33m[warning] Done txns 1283[0m
+2020/06/10 23:52:47.707467 txmanager_test.go:466: [0;33m[warning] Done txns 1284[0m
+2020/06/10 23:52:47.727479 txmanager_test.go:466: [0;33m[warning] Done txns 1285[0m
+2020/06/10 23:52:47.747769 txmanager_test.go:466: [0;33m[warning] Done txns 1286[0m
+2020/06/10 23:52:47.770111 txmanager_test.go:466: [0;33m[warning] Done txns 1287[0m
+2020/06/10 23:52:47.790489 txmanager_test.go:466: [0;33m[warning] Done txns 1288[0m
+2020/06/10 23:52:47.811254 txmanager_test.go:466: [0;33m[warning] Done txns 1289[0m
+2020/06/10 23:52:47.831568 txmanager_test.go:466: [0;33m[warning] Done txns 1290[0m
+2020/06/10 23:52:47.852869 txmanager_test.go:466: [0;33m[warning] Done txns 1291[0m
+2020/06/10 23:52:47.873135 txmanager_test.go:466: [0;33m[warning] Done txns 1292[0m
+2020/06/10 23:52:47.891861 txmanager_test.go:466: [0;33m[warning] Done txns 1293[0m
+2020/06/10 23:52:47.911823 txmanager_test.go:466: [0;33m[warning] Done txns 1294[0m
+2020/06/10 23:52:47.932491 txmanager_test.go:466: [0;33m[warning] Done txns 1295[0m
+2020/06/10 23:52:47.953411 txmanager_test.go:466: [0;33m[warning] Done txns 1296[0m
+2020/06/10 23:52:47.971730 txmanager_test.go:466: [0;33m[warning] Done txns 1297[0m
+2020/06/10 23:52:47.992918 txmanager_test.go:466: [0;33m[warning] Done txns 1298[0m
+2020/06/10 23:52:48.012274 txmanager_test.go:466: [0;33m[warning] Done txns 1299[0m
+2020/06/10 23:52:48.032100 txmanager_test.go:466: [0;33m[warning] Done txns 1300[0m
+2020/06/10 23:52:48.061349 txmanager_test.go:466: [0;33m[warning] Done txns 1301[0m
+2020/06/10 23:52:48.079735 txmanager_test.go:466: [0;33m[warning] Done txns 1302[0m
+2020/06/10 23:52:48.097890 txmanager_test.go:466: [0;33m[warning] Done txns 1303[0m
+2020/06/10 23:52:48.116928 txmanager_test.go:466: [0;33m[warning] Done txns 1304[0m
+2020/06/10 23:52:48.136405 txmanager_test.go:466: [0;33m[warning] Done txns 1305[0m
+2020/06/10 23:52:48.158103 txmanager_test.go:466: [0;33m[warning] Done txns 1306[0m
+2020/06/10 23:52:48.178208 txmanager_test.go:466: [0;33m[warning] Done txns 1307[0m
+2020/06/10 23:52:48.198115 txmanager_test.go:466: [0;33m[warning] Done txns 1308[0m
+2020/06/10 23:52:48.218215 txmanager_test.go:466: [0;33m[warning] Done txns 1309[0m
+2020/06/10 23:52:48.236725 txmanager_test.go:466: [0;33m[warning] Done txns 1310[0m
+2020/06/10 23:52:48.256193 txmanager_test.go:466: [0;33m[warning] Done txns 1311[0m
+2020/06/10 23:52:48.279282 txmanager_test.go:466: [0;33m[warning] Done txns 1312[0m
+2020/06/10 23:52:48.298065 txmanager_test.go:466: [0;33m[warning] Done txns 1313[0m
+2020/06/10 23:52:48.317629 txmanager_test.go:466: [0;33m[warning] Done txns 1314[0m
+2020/06/10 23:52:48.337399 txmanager_test.go:466: [0;33m[warning] Done txns 1315[0m
+2020/06/10 23:52:48.356246 txmanager_test.go:466: [0;33m[warning] Done txns 1316[0m
+2020/06/10 23:52:48.376976 txmanager_test.go:466: [0;33m[warning] Done txns 1317[0m
+2020/06/10 23:52:48.395722 txmanager_test.go:466: [0;33m[warning] Done txns 1318[0m
+2020/06/10 23:52:48.414997 txmanager_test.go:466: [0;33m[warning] Done txns 1319[0m
+2020/06/10 23:52:48.434367 txmanager_test.go:466: [0;33m[warning] Done txns 1320[0m
+2020/06/10 23:52:48.455097 txmanager_test.go:466: [0;33m[warning] Done txns 1321[0m
+2020/06/10 23:52:48.473689 txmanager_test.go:466: [0;33m[warning] Done txns 1322[0m
+2020/06/10 23:52:48.494055 txmanager_test.go:466: [0;33m[warning] Done txns 1323[0m
+2020/06/10 23:52:48.512519 txmanager_test.go:466: [0;33m[warning] Done txns 1324[0m
+2020/06/10 23:52:48.532377 txmanager_test.go:466: [0;33m[warning] Done txns 1325[0m
+2020/06/10 23:52:48.552850 txmanager_test.go:466: [0;33m[warning] Done txns 1326[0m
+2020/06/10 23:52:48.571156 txmanager_test.go:466: [0;33m[warning] Done txns 1327[0m
+2020/06/10 23:52:48.591573 txmanager_test.go:466: [0;33m[warning] Done txns 1328[0m
+2020/06/10 23:52:48.610595 txmanager_test.go:466: [0;33m[warning] Done txns 1329[0m
+2020/06/10 23:52:48.631764 txmanager_test.go:466: [0;33m[warning] Done txns 1330[0m
+2020/06/10 23:52:48.650722 txmanager_test.go:466: [0;33m[warning] Done txns 1331[0m
+2020/06/10 23:52:48.670400 txmanager_test.go:466: [0;33m[warning] Done txns 1332[0m
+2020/06/10 23:52:48.689211 txmanager_test.go:466: [0;33m[warning] Done txns 1333[0m
+2020/06/10 23:52:48.708993 txmanager_test.go:466: [0;33m[warning] Done txns 1334[0m
+2020/06/10 23:52:48.727584 txmanager_test.go:466: [0;33m[warning] Done txns 1335[0m
+2020/06/10 23:52:48.746769 txmanager_test.go:466: [0;33m[warning] Done txns 1336[0m
+2020/06/10 23:52:48.768875 txmanager_test.go:466: [0;33m[warning] Done txns 1337[0m
+2020/06/10 23:52:48.787785 txmanager_test.go:466: [0;33m[warning] Done txns 1338[0m
+2020/06/10 23:52:48.808085 txmanager_test.go:466: [0;33m[warning] Done txns 1339[0m
+2020/06/10 23:52:48.829412 txmanager_test.go:466: [0;33m[warning] Done txns 1340[0m
+2020/06/10 23:52:48.849185 txmanager_test.go:466: [0;33m[warning] Done txns 1341[0m
+2020/06/10 23:52:48.870378 txmanager_test.go:466: [0;33m[warning] Done txns 1342[0m
+2020/06/10 23:52:48.890500 txmanager_test.go:466: [0;33m[warning] Done txns 1343[0m
+2020/06/10 23:52:48.909969 txmanager_test.go:466: [0;33m[warning] Done txns 1344[0m
+2020/06/10 23:52:48.930414 txmanager_test.go:466: [0;33m[warning] Done txns 1345[0m
+2020/06/10 23:52:48.950011 txmanager_test.go:466: [0;33m[warning] Done txns 1346[0m
+2020/06/10 23:52:48.969664 txmanager_test.go:466: [0;33m[warning] Done txns 1347[0m
+2020/06/10 23:52:48.990048 txmanager_test.go:466: [0;33m[warning] Done txns 1348[0m
+2020/06/10 23:52:49.009713 txmanager_test.go:466: [0;33m[warning] Done txns 1349[0m
+2020/06/10 23:52:49.030187 txmanager_test.go:466: [0;33m[warning] Done txns 1350[0m
+2020/06/10 23:52:49.048837 txmanager_test.go:466: [0;33m[warning] Done txns 1351[0m
+2020/06/10 23:52:49.070150 txmanager_test.go:466: [0;33m[warning] Done txns 1352[0m
+2020/06/10 23:52:49.093692 txmanager_test.go:466: [0;33m[warning] Done txns 1353[0m
+2020/06/10 23:52:49.115002 txmanager_test.go:466: [0;33m[warning] Done txns 1354[0m
+2020/06/10 23:52:49.134961 txmanager_test.go:466: [0;33m[warning] Done txns 1355[0m
+2020/06/10 23:52:49.155119 txmanager_test.go:466: [0;33m[warning] Done txns 1356[0m
+2020/06/10 23:52:49.176813 txmanager_test.go:466: [0;33m[warning] Done txns 1357[0m
+2020/06/10 23:52:49.195643 txmanager_test.go:466: [0;33m[warning] Done txns 1358[0m
+2020/06/10 23:52:49.216327 txmanager_test.go:466: [0;33m[warning] Done txns 1359[0m
+2020/06/10 23:52:49.234830 txmanager_test.go:466: [0;33m[warning] Done txns 1360[0m
+2020/06/10 23:52:49.255654 txmanager_test.go:466: [0;33m[warning] Done txns 1361[0m
+2020/06/10 23:52:49.275201 txmanager_test.go:466: [0;33m[warning] Done txns 1362[0m
+2020/06/10 23:52:49.296175 txmanager_test.go:466: [0;33m[warning] Done txns 1363[0m
+2020/06/10 23:52:49.315786 txmanager_test.go:466: [0;33m[warning] Done txns 1364[0m
+2020/06/10 23:52:49.334940 txmanager_test.go:466: [0;33m[warning] Done txns 1365[0m
+2020/06/10 23:52:49.356103 txmanager_test.go:466: [0;33m[warning] Done txns 1366[0m
+2020/06/10 23:52:49.375815 txmanager_test.go:466: [0;33m[warning] Done txns 1367[0m
+2020/06/10 23:52:49.395471 txmanager_test.go:466: [0;33m[warning] Done txns 1368[0m
+2020/06/10 23:52:49.415662 txmanager_test.go:466: [0;33m[warning] Done txns 1369[0m
+2020/06/10 23:52:49.438041 txmanager_test.go:466: [0;33m[warning] Done txns 1370[0m
+2020/06/10 23:52:49.456879 txmanager_test.go:466: [0;33m[warning] Done txns 1371[0m
+2020/06/10 23:52:49.480820 txmanager_test.go:466: [0;33m[warning] Done txns 1372[0m
+2020/06/10 23:52:49.502159 txmanager_test.go:466: [0;33m[warning] Done txns 1373[0m
+2020/06/10 23:52:49.522349 txmanager_test.go:466: [0;33m[warning] Done txns 1374[0m
+2020/06/10 23:52:49.544361 txmanager_test.go:466: [0;33m[warning] Done txns 1375[0m
+2020/06/10 23:52:49.566394 txmanager_test.go:466: [0;33m[warning] Done txns 1376[0m
+2020/06/10 23:52:49.586024 txmanager_test.go:466: [0;33m[warning] Done txns 1377[0m
+2020/06/10 23:52:49.605614 txmanager_test.go:466: [0;33m[warning] Done txns 1378[0m
+2020/06/10 23:52:49.625300 txmanager_test.go:466: [0;33m[warning] Done txns 1379[0m
+2020/06/10 23:52:49.643945 txmanager_test.go:466: [0;33m[warning] Done txns 1380[0m
+2020/06/10 23:52:49.663618 txmanager_test.go:466: [0;33m[warning] Done txns 1381[0m
+2020/06/10 23:52:49.683186 txmanager_test.go:466: [0;33m[warning] Done txns 1382[0m
+2020/06/10 23:52:49.703713 txmanager_test.go:466: [0;33m[warning] Done txns 1383[0m
+2020/06/10 23:52:49.722164 txmanager_test.go:466: [0;33m[warning] Done txns 1384[0m
+2020/06/10 23:52:49.743639 txmanager_test.go:466: [0;33m[warning] Done txns 1385[0m
+2020/06/10 23:52:49.763712 txmanager_test.go:466: [0;33m[warning] Done txns 1386[0m
+2020/06/10 23:52:49.785159 txmanager_test.go:466: [0;33m[warning] Done txns 1387[0m
+2020/06/10 23:52:49.809296 txmanager_test.go:466: [0;33m[warning] Done txns 1388[0m
+2020/06/10 23:52:49.834994 txmanager_test.go:466: [0;33m[warning] Done txns 1389[0m
+2020/06/10 23:52:49.854043 txmanager_test.go:466: [0;33m[warning] Done txns 1390[0m
+2020/06/10 23:52:49.872649 txmanager_test.go:466: [0;33m[warning] Done txns 1391[0m
+2020/06/10 23:52:49.893285 txmanager_test.go:466: [0;33m[warning] Done txns 1392[0m
+2020/06/10 23:52:49.912231 txmanager_test.go:466: [0;33m[warning] Done txns 1393[0m
+2020/06/10 23:52:49.934518 txmanager_test.go:466: [0;33m[warning] Done txns 1394[0m
+2020/06/10 23:52:49.953453 txmanager_test.go:466: [0;33m[warning] Done txns 1395[0m
+2020/06/10 23:52:49.974108 txmanager_test.go:466: [0;33m[warning] Done txns 1396[0m
+2020/06/10 23:52:49.992887 txmanager_test.go:466: [0;33m[warning] Done txns 1397[0m
+2020/06/10 23:52:50.012691 txmanager_test.go:466: [0;33m[warning] Done txns 1398[0m
+2020/06/10 23:52:50.032394 txmanager_test.go:466: [0;33m[warning] Done txns 1399[0m
+2020/06/10 23:52:50.051040 txmanager_test.go:466: [0;33m[warning] Done txns 1400[0m
+2020/06/10 23:52:50.070230 txmanager_test.go:466: [0;33m[warning] Done txns 1401[0m
+2020/06/10 23:52:50.088294 txmanager_test.go:466: [0;33m[warning] Done txns 1402[0m
+2020/06/10 23:52:50.109006 txmanager_test.go:466: [0;33m[warning] Done txns 1403[0m
+2020/06/10 23:52:50.128688 txmanager_test.go:466: [0;33m[warning] Done txns 1404[0m
+2020/06/10 23:52:50.146907 txmanager_test.go:466: [0;33m[warning] Done txns 1405[0m
+2020/06/10 23:52:50.167254 txmanager_test.go:466: [0;33m[warning] Done txns 1406[0m
+2020/06/10 23:52:50.186667 txmanager_test.go:466: [0;33m[warning] Done txns 1407[0m
+2020/06/10 23:52:50.206501 txmanager_test.go:466: [0;33m[warning] Done txns 1408[0m
+2020/06/10 23:52:50.228176 txmanager_test.go:466: [0;33m[warning] Done txns 1409[0m
+2020/06/10 23:52:50.248446 txmanager_test.go:466: [0;33m[warning] Done txns 1410[0m
+2020/06/10 23:52:50.268361 txmanager_test.go:466: [0;33m[warning] Done txns 1411[0m
+2020/06/10 23:52:50.288311 txmanager_test.go:466: [0;33m[warning] Done txns 1412[0m
+2020/06/10 23:52:50.308601 txmanager_test.go:466: [0;33m[warning] Done txns 1413[0m
+2020/06/10 23:52:50.330853 txmanager_test.go:466: [0;33m[warning] Done txns 1414[0m
+2020/06/10 23:52:50.350011 txmanager_test.go:466: [0;33m[warning] Done txns 1415[0m
+2020/06/10 23:52:50.369428 txmanager_test.go:466: [0;33m[warning] Done txns 1416[0m
+2020/06/10 23:52:50.389191 txmanager_test.go:466: [0;33m[warning] Done txns 1417[0m
+2020/06/10 23:52:50.408161 txmanager_test.go:466: [0;33m[warning] Done txns 1418[0m
+2020/06/10 23:52:50.427931 txmanager_test.go:466: [0;33m[warning] Done txns 1419[0m
+2020/06/10 23:52:50.447885 txmanager_test.go:466: [0;33m[warning] Done txns 1420[0m
+2020/06/10 23:52:50.467905 txmanager_test.go:466: [0;33m[warning] Done txns 1421[0m
+2020/06/10 23:52:50.490917 txmanager_test.go:466: [0;33m[warning] Done txns 1422[0m
+2020/06/10 23:52:50.510414 txmanager_test.go:466: [0;33m[warning] Done txns 1423[0m
+2020/06/10 23:52:50.530007 txmanager_test.go:466: [0;33m[warning] Done txns 1424[0m
+2020/06/10 23:52:50.548363 txmanager_test.go:466: [0;33m[warning] Done txns 1425[0m
+2020/06/10 23:52:50.568534 txmanager_test.go:466: [0;33m[warning] Done txns 1426[0m
+2020/06/10 23:52:50.589031 txmanager_test.go:466: [0;33m[warning] Done txns 1427[0m
+2020/06/10 23:52:50.610309 txmanager_test.go:466: [0;33m[warning] Done txns 1428[0m
+2020/06/10 23:52:50.628106 txmanager_test.go:466: [0;33m[warning] Done txns 1429[0m
+2020/06/10 23:52:50.646633 txmanager_test.go:466: [0;33m[warning] Done txns 1430[0m
+2020/06/10 23:52:50.667880 txmanager_test.go:466: [0;33m[warning] Done txns 1431[0m
+2020/06/10 23:52:50.686049 txmanager_test.go:466: [0;33m[warning] Done txns 1432[0m
+2020/06/10 23:52:50.706814 txmanager_test.go:466: [0;33m[warning] Done txns 1433[0m
+2020/06/10 23:52:50.727733 txmanager_test.go:466: [0;33m[warning] Done txns 1434[0m
+2020/06/10 23:52:50.748003 txmanager_test.go:466: [0;33m[warning] Done txns 1435[0m
+2020/06/10 23:52:50.768990 txmanager_test.go:466: [0;33m[warning] Done txns 1436[0m
+2020/06/10 23:52:50.793474 txmanager_test.go:466: [0;33m[warning] Done txns 1437[0m
+2020/06/10 23:52:50.812171 txmanager_test.go:466: [0;33m[warning] Done txns 1438[0m
+2020/06/10 23:52:50.832243 txmanager_test.go:466: [0;33m[warning] Done txns 1439[0m
+2020/06/10 23:52:50.851677 txmanager_test.go:466: [0;33m[warning] Done txns 1440[0m
+2020/06/10 23:52:50.870322 txmanager_test.go:466: [0;33m[warning] Done txns 1441[0m
+2020/06/10 23:52:50.889685 txmanager_test.go:466: [0;33m[warning] Done txns 1442[0m
+2020/06/10 23:52:50.912899 txmanager_test.go:466: [0;33m[warning] Done txns 1443[0m
+2020/06/10 23:52:50.933595 txmanager_test.go:466: [0;33m[warning] Done txns 1444[0m
+2020/06/10 23:52:50.951980 txmanager_test.go:466: [0;33m[warning] Done txns 1445[0m
+2020/06/10 23:52:50.972445 txmanager_test.go:466: [0;33m[warning] Done txns 1446[0m
+2020/06/10 23:52:50.993526 txmanager_test.go:466: [0;33m[warning] Done txns 1447[0m
+2020/06/10 23:52:51.013059 txmanager_test.go:466: [0;33m[warning] Done txns 1448[0m
+2020/06/10 23:52:51.035345 txmanager_test.go:466: [0;33m[warning] Done txns 1449[0m
+2020/06/10 23:52:51.055246 txmanager_test.go:466: [0;33m[warning] Done txns 1450[0m
+2020/06/10 23:52:51.075665 txmanager_test.go:466: [0;33m[warning] Done txns 1451[0m
+2020/06/10 23:52:51.099680 txmanager_test.go:466: [0;33m[warning] Done txns 1452[0m
+2020/06/10 23:52:51.118964 txmanager_test.go:466: [0;33m[warning] Done txns 1453[0m
+2020/06/10 23:52:51.139953 txmanager_test.go:466: [0;33m[warning] Done txns 1454[0m
+2020/06/10 23:52:51.160096 txmanager_test.go:466: [0;33m[warning] Done txns 1455[0m
+2020/06/10 23:52:51.181057 txmanager_test.go:466: [0;33m[warning] Done txns 1456[0m
+2020/06/10 23:52:51.200437 txmanager_test.go:466: [0;33m[warning] Done txns 1457[0m
+2020/06/10 23:52:51.219875 txmanager_test.go:466: [0;33m[warning] Done txns 1458[0m
+2020/06/10 23:52:51.240611 txmanager_test.go:466: [0;33m[warning] Done txns 1459[0m
+2020/06/10 23:52:51.261776 txmanager_test.go:466: [0;33m[warning] Done txns 1460[0m
+2020/06/10 23:52:51.282598 txmanager_test.go:466: [0;33m[warning] Done txns 1461[0m
+2020/06/10 23:52:51.301691 txmanager_test.go:466: [0;33m[warning] Done txns 1462[0m
+2020/06/10 23:52:51.321156 txmanager_test.go:466: [0;33m[warning] Done txns 1463[0m
+2020/06/10 23:52:51.340180 txmanager_test.go:466: [0;33m[warning] Done txns 1464[0m
+2020/06/10 23:52:51.361303 txmanager_test.go:466: [0;33m[warning] Done txns 1465[0m
+2020/06/10 23:52:51.380296 txmanager_test.go:466: [0;33m[warning] Done txns 1466[0m
+2020/06/10 23:52:51.398554 txmanager_test.go:466: [0;33m[warning] Done txns 1467[0m
+2020/06/10 23:52:51.417660 txmanager_test.go:466: [0;33m[warning] Done txns 1468[0m
+2020/06/10 23:52:51.435942 txmanager_test.go:466: [0;33m[warning] Done txns 1469[0m
+2020/06/10 23:52:51.455533 txmanager_test.go:466: [0;33m[warning] Done txns 1470[0m
+2020/06/10 23:52:51.474801 txmanager_test.go:466: [0;33m[warning] Done txns 1471[0m
+2020/06/10 23:52:51.494767 txmanager_test.go:466: [0;33m[warning] Done txns 1472[0m
+2020/06/10 23:52:51.514851 txmanager_test.go:466: [0;33m[warning] Done txns 1473[0m
+2020/06/10 23:52:51.535590 txmanager_test.go:466: [0;33m[warning] Done txns 1474[0m
+2020/06/10 23:52:51.555317 txmanager_test.go:466: [0;33m[warning] Done txns 1475[0m
+2020/06/10 23:52:51.576763 txmanager_test.go:466: [0;33m[warning] Done txns 1476[0m
+2020/06/10 23:52:51.594990 txmanager_test.go:466: [0;33m[warning] Done txns 1477[0m
+2020/06/10 23:52:51.614662 txmanager_test.go:466: [0;33m[warning] Done txns 1478[0m
+2020/06/10 23:52:51.635704 txmanager_test.go:466: [0;33m[warning] Done txns 1479[0m
+2020/06/10 23:52:51.655532 txmanager_test.go:466: [0;33m[warning] Done txns 1480[0m
+2020/06/10 23:52:51.675788 txmanager_test.go:466: [0;33m[warning] Done txns 1481[0m
+2020/06/10 23:52:51.694835 txmanager_test.go:466: [0;33m[warning] Done txns 1482[0m
+2020/06/10 23:52:51.714785 txmanager_test.go:466: [0;33m[warning] Done txns 1483[0m
+2020/06/10 23:52:51.733490 txmanager_test.go:466: [0;33m[warning] Done txns 1484[0m
+2020/06/10 23:52:51.753497 txmanager_test.go:466: [0;33m[warning] Done txns 1485[0m
+2020/06/10 23:52:51.773280 txmanager_test.go:466: [0;33m[warning] Done txns 1486[0m
+2020/06/10 23:52:51.792273 txmanager_test.go:466: [0;33m[warning] Done txns 1487[0m
+2020/06/10 23:52:51.812732 txmanager_test.go:466: [0;33m[warning] Done txns 1488[0m
+2020/06/10 23:52:51.831489 txmanager_test.go:466: [0;33m[warning] Done txns 1489[0m
+2020/06/10 23:52:51.852090 txmanager_test.go:466: [0;33m[warning] Done txns 1490[0m
+2020/06/10 23:52:51.872247 txmanager_test.go:466: [0;33m[warning] Done txns 1491[0m
+2020/06/10 23:52:51.892824 txmanager_test.go:466: [0;33m[warning] Done txns 1492[0m
+2020/06/10 23:52:51.910724 txmanager_test.go:466: [0;33m[warning] Done txns 1493[0m
+2020/06/10 23:52:51.931047 txmanager_test.go:466: [0;33m[warning] Done txns 1494[0m
+2020/06/10 23:52:51.950502 txmanager_test.go:466: [0;33m[warning] Done txns 1495[0m
+2020/06/10 23:52:51.969173 txmanager_test.go:466: [0;33m[warning] Done txns 1496[0m
+2020/06/10 23:52:51.989414 txmanager_test.go:466: [0;33m[warning] Done txns 1497[0m
+2020/06/10 23:52:52.008960 txmanager_test.go:466: [0;33m[warning] Done txns 1498[0m
+2020/06/10 23:52:52.028935 txmanager_test.go:466: [0;33m[warning] Done txns 1499[0m
+2020/06/10 23:52:52.048425 txmanager_test.go:466: [0;33m[warning] Done txns 1500[0m
+2020/06/10 23:52:52.068060 txmanager_test.go:466: [0;33m[warning] Done txns 1501[0m
+2020/06/10 23:52:52.087413 txmanager_test.go:466: [0;33m[warning] Done txns 1502[0m
+2020/06/10 23:52:52.105937 txmanager_test.go:466: [0;33m[warning] Done txns 1503[0m
+2020/06/10 23:52:52.125367 txmanager_test.go:466: [0;33m[warning] Done txns 1504[0m
+2020/06/10 23:52:52.144794 txmanager_test.go:466: [0;33m[warning] Done txns 1505[0m
+2020/06/10 23:52:52.162956 txmanager_test.go:466: [0;33m[warning] Done txns 1506[0m
+2020/06/10 23:52:52.183109 txmanager_test.go:466: [0;33m[warning] Done txns 1507[0m
+2020/06/10 23:52:52.200590 txmanager_test.go:466: [0;33m[warning] Done txns 1508[0m
+2020/06/10 23:52:52.221038 txmanager_test.go:466: [0;33m[warning] Done txns 1509[0m
+2020/06/10 23:52:52.240821 txmanager_test.go:466: [0;33m[warning] Done txns 1510[0m
+2020/06/10 23:52:52.260638 txmanager_test.go:466: [0;33m[warning] Done txns 1511[0m
+2020/06/10 23:52:52.280109 txmanager_test.go:466: [0;33m[warning] Done txns 1512[0m
+2020/06/10 23:52:52.299341 txmanager_test.go:466: [0;33m[warning] Done txns 1513[0m
+2020/06/10 23:52:52.317723 txmanager_test.go:466: [0;33m[warning] Done txns 1514[0m
+2020/06/10 23:52:52.337347 txmanager_test.go:466: [0;33m[warning] Done txns 1515[0m
+2020/06/10 23:52:52.356810 txmanager_test.go:466: [0;33m[warning] Done txns 1516[0m
+2020/06/10 23:52:52.376263 txmanager_test.go:466: [0;33m[warning] Done txns 1517[0m
+2020/06/10 23:52:52.396847 txmanager_test.go:466: [0;33m[warning] Done txns 1518[0m
+2020/06/10 23:52:52.416087 txmanager_test.go:466: [0;33m[warning] Done txns 1519[0m
+2020/06/10 23:52:52.436175 txmanager_test.go:466: [0;33m[warning] Done txns 1520[0m
+2020/06/10 23:52:52.454408 txmanager_test.go:466: [0;33m[warning] Done txns 1521[0m
+2020/06/10 23:52:52.475137 txmanager_test.go:466: [0;33m[warning] Done txns 1522[0m
+2020/06/10 23:52:52.495257 txmanager_test.go:466: [0;33m[warning] Done txns 1523[0m
+2020/06/10 23:52:52.513834 txmanager_test.go:466: [0;33m[warning] Done txns 1524[0m
+2020/06/10 23:52:52.537051 txmanager_test.go:466: [0;33m[warning] Done txns 1525[0m
+2020/06/10 23:52:52.558190 txmanager_test.go:466: [0;33m[warning] Done txns 1526[0m
+2020/06/10 23:52:52.576931 txmanager_test.go:466: [0;33m[warning] Done txns 1527[0m
+2020/06/10 23:52:52.597280 txmanager_test.go:466: [0;33m[warning] Done txns 1528[0m
+2020/06/10 23:52:52.622436 txmanager_test.go:466: [0;33m[warning] Done txns 1529[0m
+2020/06/10 23:52:52.640909 txmanager_test.go:466: [0;33m[warning] Done txns 1530[0m
+2020/06/10 23:52:52.661592 txmanager_test.go:466: [0;33m[warning] Done txns 1531[0m
+2020/06/10 23:52:52.682314 txmanager_test.go:466: [0;33m[warning] Done txns 1532[0m
+2020/06/10 23:52:52.701552 txmanager_test.go:466: [0;33m[warning] Done txns 1533[0m
+2020/06/10 23:52:52.720769 txmanager_test.go:466: [0;33m[warning] Done txns 1534[0m
+2020/06/10 23:52:52.740076 txmanager_test.go:466: [0;33m[warning] Done txns 1535[0m
+2020/06/10 23:52:52.761094 txmanager_test.go:466: [0;33m[warning] Done txns 1536[0m
+2020/06/10 23:52:52.779677 txmanager_test.go:466: [0;33m[warning] Done txns 1537[0m
+2020/06/10 23:52:52.803250 txmanager_test.go:466: [0;33m[warning] Done txns 1538[0m
+2020/06/10 23:52:52.823074 txmanager_test.go:466: [0;33m[warning] Done txns 1539[0m
+2020/06/10 23:52:52.841771 txmanager_test.go:466: [0;33m[warning] Done txns 1540[0m
+2020/06/10 23:52:52.864144 txmanager_test.go:466: [0;33m[warning] Done txns 1541[0m
+2020/06/10 23:52:52.885275 txmanager_test.go:466: [0;33m[warning] Done txns 1542[0m
+2020/06/10 23:52:52.905524 txmanager_test.go:466: [0;33m[warning] Done txns 1543[0m
+2020/06/10 23:52:52.924587 txmanager_test.go:466: [0;33m[warning] Done txns 1544[0m
+2020/06/10 23:52:52.945247 txmanager_test.go:466: [0;33m[warning] Done txns 1545[0m
+2020/06/10 23:52:52.963180 txmanager_test.go:466: [0;33m[warning] Done txns 1546[0m
+2020/06/10 23:52:52.983641 txmanager_test.go:466: [0;33m[warning] Done txns 1547[0m
+2020/06/10 23:52:53.002582 txmanager_test.go:466: [0;33m[warning] Done txns 1548[0m
+2020/06/10 23:52:53.022232 txmanager_test.go:466: [0;33m[warning] Done txns 1549[0m
+2020/06/10 23:52:53.045127 txmanager_test.go:466: [0;33m[warning] Done txns 1550[0m
+2020/06/10 23:52:53.065136 txmanager_test.go:466: [0;33m[warning] Done txns 1551[0m
+2020/06/10 23:52:53.085877 txmanager_test.go:466: [0;33m[warning] Done txns 1552[0m
+2020/06/10 23:52:53.105554 txmanager_test.go:466: [0;33m[warning] Done txns 1553[0m
+2020/06/10 23:52:53.126135 txmanager_test.go:466: [0;33m[warning] Done txns 1554[0m
+2020/06/10 23:52:53.148967 txmanager_test.go:466: [0;33m[warning] Done txns 1555[0m
+2020/06/10 23:52:53.167630 txmanager_test.go:466: [0;33m[warning] Done txns 1556[0m
+2020/06/10 23:52:53.187778 txmanager_test.go:466: [0;33m[warning] Done txns 1557[0m
+2020/06/10 23:52:53.207079 txmanager_test.go:466: [0;33m[warning] Done txns 1558[0m
+2020/06/10 23:52:53.228028 txmanager_test.go:466: [0;33m[warning] Done txns 1559[0m
+2020/06/10 23:52:53.247356 txmanager_test.go:466: [0;33m[warning] Done txns 1560[0m
+2020/06/10 23:52:53.267164 txmanager_test.go:466: [0;33m[warning] Done txns 1561[0m
+2020/06/10 23:52:53.287597 txmanager_test.go:466: [0;33m[warning] Done txns 1562[0m
+2020/06/10 23:52:53.306953 txmanager_test.go:466: [0;33m[warning] Done txns 1563[0m
+2020/06/10 23:52:53.328125 txmanager_test.go:466: [0;33m[warning] Done txns 1564[0m
+2020/06/10 23:52:53.348246 txmanager_test.go:466: [0;33m[warning] Done txns 1565[0m
+2020/06/10 23:52:53.368887 txmanager_test.go:466: [0;33m[warning] Done txns 1566[0m
+2020/06/10 23:52:53.388705 txmanager_test.go:466: [0;33m[warning] Done txns 1567[0m
+2020/06/10 23:52:53.410945 txmanager_test.go:466: [0;33m[warning] Done txns 1568[0m
+2020/06/10 23:52:53.430111 txmanager_test.go:466: [0;33m[warning] Done txns 1569[0m
+2020/06/10 23:52:53.448081 txmanager_test.go:466: [0;33m[warning] Done txns 1570[0m
+2020/06/10 23:52:53.470673 txmanager_test.go:466: [0;33m[warning] Done txns 1571[0m
+2020/06/10 23:52:53.492754 txmanager_test.go:466: [0;33m[warning] Done txns 1572[0m
+2020/06/10 23:52:53.514251 txmanager_test.go:466: [0;33m[warning] Done txns 1573[0m
+2020/06/10 23:52:53.536340 txmanager_test.go:466: [0;33m[warning] Done txns 1574[0m
+2020/06/10 23:52:53.559252 txmanager_test.go:466: [0;33m[warning] Done txns 1575[0m
+2020/06/10 23:52:53.577692 txmanager_test.go:466: [0;33m[warning] Done txns 1576[0m
+2020/06/10 23:52:53.600363 txmanager_test.go:466: [0;33m[warning] Done txns 1577[0m
+2020/06/10 23:52:53.620098 txmanager_test.go:466: [0;33m[warning] Done txns 1578[0m
+2020/06/10 23:52:53.640799 txmanager_test.go:466: [0;33m[warning] Done txns 1579[0m
+2020/06/10 23:52:53.662372 txmanager_test.go:466: [0;33m[warning] Done txns 1580[0m
+2020/06/10 23:52:53.682410 txmanager_test.go:466: [0;33m[warning] Done txns 1581[0m
+2020/06/10 23:52:53.702931 txmanager_test.go:466: [0;33m[warning] Done txns 1582[0m
+2020/06/10 23:52:53.724292 txmanager_test.go:466: [0;33m[warning] Done txns 1583[0m
+2020/06/10 23:52:53.746001 txmanager_test.go:466: [0;33m[warning] Done txns 1584[0m
+2020/06/10 23:52:53.766626 txmanager_test.go:466: [0;33m[warning] Done txns 1585[0m
+2020/06/10 23:52:53.788985 txmanager_test.go:466: [0;33m[warning] Done txns 1586[0m
+2020/06/10 23:52:53.808533 txmanager_test.go:466: [0;33m[warning] Done txns 1587[0m
+2020/06/10 23:52:53.830885 txmanager_test.go:466: [0;33m[warning] Done txns 1588[0m
+2020/06/10 23:52:53.851550 txmanager_test.go:466: [0;33m[warning] Done txns 1589[0m
+2020/06/10 23:52:53.872094 txmanager_test.go:466: [0;33m[warning] Done txns 1590[0m
+2020/06/10 23:52:53.893171 txmanager_test.go:466: [0;33m[warning] Done txns 1591[0m
+2020/06/10 23:52:53.916435 txmanager_test.go:466: [0;33m[warning] Done txns 1592[0m
+2020/06/10 23:52:53.945114 txmanager_test.go:466: [0;33m[warning] Done txns 1593[0m
+2020/06/10 23:52:53.966802 txmanager_test.go:466: [0;33m[warning] Done txns 1594[0m
+2020/06/10 23:52:53.989458 txmanager_test.go:466: [0;33m[warning] Done txns 1595[0m
+2020/06/10 23:52:54.010789 txmanager_test.go:466: [0;33m[warning] Done txns 1596[0m
+2020/06/10 23:52:54.032398 txmanager_test.go:466: [0;33m[warning] Done txns 1597[0m
+2020/06/10 23:52:54.052007 txmanager_test.go:466: [0;33m[warning] Done txns 1598[0m
+2020/06/10 23:52:54.072345 txmanager_test.go:466: [0;33m[warning] Done txns 1599[0m
+2020/06/10 23:52:54.092475 txmanager_test.go:466: [0;33m[warning] Done txns 1600[0m
+2020/06/10 23:52:54.111524 txmanager_test.go:466: [0;33m[warning] Done txns 1601[0m
+2020/06/10 23:52:54.131359 txmanager_test.go:466: [0;33m[warning] Done txns 1602[0m
+2020/06/10 23:52:54.153025 txmanager_test.go:466: [0;33m[warning] Done txns 1603[0m
+2020/06/10 23:52:54.172710 txmanager_test.go:466: [0;33m[warning] Done txns 1604[0m
+2020/06/10 23:52:54.192111 txmanager_test.go:466: [0;33m[warning] Done txns 1605[0m
+2020/06/10 23:52:54.213963 txmanager_test.go:466: [0;33m[warning] Done txns 1606[0m
+2020/06/10 23:52:54.233382 txmanager_test.go:466: [0;33m[warning] Done txns 1607[0m
+2020/06/10 23:52:54.254478 txmanager_test.go:466: [0;33m[warning] Done txns 1608[0m
+2020/06/10 23:52:54.276121 txmanager_test.go:466: [0;33m[warning] Done txns 1609[0m
+2020/06/10 23:52:54.296942 txmanager_test.go:466: [0;33m[warning] Done txns 1610[0m
+2020/06/10 23:52:54.316694 txmanager_test.go:466: [0;33m[warning] Done txns 1611[0m
+2020/06/10 23:52:54.337729 txmanager_test.go:466: [0;33m[warning] Done txns 1612[0m
+2020/06/10 23:52:54.358259 txmanager_test.go:466: [0;33m[warning] Done txns 1613[0m
+2020/06/10 23:52:54.379385 txmanager_test.go:466: [0;33m[warning] Done txns 1614[0m
+2020/06/10 23:52:54.402155 txmanager_test.go:466: [0;33m[warning] Done txns 1615[0m
+2020/06/10 23:52:54.434839 txmanager_test.go:466: [0;33m[warning] Done txns 1616[0m
+2020/06/10 23:52:54.455406 txmanager_test.go:466: [0;33m[warning] Done txns 1617[0m
+2020/06/10 23:52:54.475353 txmanager_test.go:466: [0;33m[warning] Done txns 1618[0m
+2020/06/10 23:52:54.496715 txmanager_test.go:466: [0;33m[warning] Done txns 1619[0m
+2020/06/10 23:52:54.518903 txmanager_test.go:466: [0;33m[warning] Done txns 1620[0m
+2020/06/10 23:52:54.538999 txmanager_test.go:466: [0;33m[warning] Done txns 1621[0m
+2020/06/10 23:52:54.561076 txmanager_test.go:466: [0;33m[warning] Done txns 1622[0m
+2020/06/10 23:52:54.581108 txmanager_test.go:466: [0;33m[warning] Done txns 1623[0m
+2020/06/10 23:52:54.600953 txmanager_test.go:466: [0;33m[warning] Done txns 1624[0m
+2020/06/10 23:52:54.619434 txmanager_test.go:466: [0;33m[warning] Done txns 1625[0m
+2020/06/10 23:52:54.639922 txmanager_test.go:466: [0;33m[warning] Done txns 1626[0m
+2020/06/10 23:52:54.660491 txmanager_test.go:466: [0;33m[warning] Done txns 1627[0m
+2020/06/10 23:52:54.680687 txmanager_test.go:466: [0;33m[warning] Done txns 1628[0m
+2020/06/10 23:52:54.702786 txmanager_test.go:466: [0;33m[warning] Done txns 1629[0m
+2020/06/10 23:52:54.723026 txmanager_test.go:466: [0;33m[warning] Done txns 1630[0m
+2020/06/10 23:52:54.744884 txmanager_test.go:466: [0;33m[warning] Done txns 1631[0m
+2020/06/10 23:52:54.765683 txmanager_test.go:466: [0;33m[warning] Done txns 1632[0m
+2020/06/10 23:52:54.788213 txmanager_test.go:466: [0;33m[warning] Done txns 1633[0m
+2020/06/10 23:52:54.810418 txmanager_test.go:466: [0;33m[warning] Done txns 1634[0m
+2020/06/10 23:52:54.829484 txmanager_test.go:466: [0;33m[warning] Done txns 1635[0m
+2020/06/10 23:52:54.853134 txmanager_test.go:466: [0;33m[warning] Done txns 1636[0m
+2020/06/10 23:52:54.874482 txmanager_test.go:466: [0;33m[warning] Done txns 1637[0m
+2020/06/10 23:52:54.896053 txmanager_test.go:466: [0;33m[warning] Done txns 1638[0m
+2020/06/10 23:52:54.916286 txmanager_test.go:466: [0;33m[warning] Done txns 1639[0m
+2020/06/10 23:52:54.936885 txmanager_test.go:466: [0;33m[warning] Done txns 1640[0m
+2020/06/10 23:52:54.956246 txmanager_test.go:466: [0;33m[warning] Done txns 1641[0m
+2020/06/10 23:52:54.976531 txmanager_test.go:466: [0;33m[warning] Done txns 1642[0m
+2020/06/10 23:52:54.997582 txmanager_test.go:466: [0;33m[warning] Done txns 1643[0m
+2020/06/10 23:52:55.016658 txmanager_test.go:466: [0;33m[warning] Done txns 1644[0m
+2020/06/10 23:52:55.038985 txmanager_test.go:466: [0;33m[warning] Done txns 1645[0m
+2020/06/10 23:52:55.059002 txmanager_test.go:466: [0;33m[warning] Done txns 1646[0m
+2020/06/10 23:52:55.079420 txmanager_test.go:466: [0;33m[warning] Done txns 1647[0m
+2020/06/10 23:52:55.100864 txmanager_test.go:466: [0;33m[warning] Done txns 1648[0m
+2020/06/10 23:52:55.121657 txmanager_test.go:466: [0;33m[warning] Done txns 1649[0m
+2020/06/10 23:52:55.144599 txmanager_test.go:466: [0;33m[warning] Done txns 1650[0m
+2020/06/10 23:52:55.162652 txmanager_test.go:466: [0;33m[warning] Done txns 1651[0m
+2020/06/10 23:52:55.182964 txmanager_test.go:466: [0;33m[warning] Done txns 1652[0m
+2020/06/10 23:52:55.204509 txmanager_test.go:466: [0;33m[warning] Done txns 1653[0m
+2020/06/10 23:52:55.223266 txmanager_test.go:466: [0;33m[warning] Done txns 1654[0m
+2020/06/10 23:52:55.244983 txmanager_test.go:466: [0;33m[warning] Done txns 1655[0m
+2020/06/10 23:52:55.266052 txmanager_test.go:466: [0;33m[warning] Done txns 1656[0m
+2020/06/10 23:52:55.286014 txmanager_test.go:466: [0;33m[warning] Done txns 1657[0m
+2020/06/10 23:52:55.305865 txmanager_test.go:466: [0;33m[warning] Done txns 1658[0m
+2020/06/10 23:52:55.324961 txmanager_test.go:466: [0;33m[warning] Done txns 1659[0m
+2020/06/10 23:52:55.345184 txmanager_test.go:466: [0;33m[warning] Done txns 1660[0m
+2020/06/10 23:52:55.364488 txmanager_test.go:466: [0;33m[warning] Done txns 1661[0m
+2020/06/10 23:52:55.388281 txmanager_test.go:466: [0;33m[warning] Done txns 1662[0m
+2020/06/10 23:52:55.407868 txmanager_test.go:466: [0;33m[warning] Done txns 1663[0m
+2020/06/10 23:52:55.426851 txmanager_test.go:466: [0;33m[warning] Done txns 1664[0m
+2020/06/10 23:52:55.447788 txmanager_test.go:466: [0;33m[warning] Done txns 1665[0m
+2020/06/10 23:52:55.468514 txmanager_test.go:466: [0;33m[warning] Done txns 1666[0m
+2020/06/10 23:52:55.489501 txmanager_test.go:466: [0;33m[warning] Done txns 1667[0m
+2020/06/10 23:52:55.511319 txmanager_test.go:466: [0;33m[warning] Done txns 1668[0m
+2020/06/10 23:52:55.532713 txmanager_test.go:466: [0;33m[warning] Done txns 1669[0m
+2020/06/10 23:52:55.555185 txmanager_test.go:466: [0;33m[warning] Done txns 1670[0m
+2020/06/10 23:52:55.574510 txmanager_test.go:466: [0;33m[warning] Done txns 1671[0m
+2020/06/10 23:52:55.608357 txmanager_test.go:466: [0;33m[warning] Done txns 1672[0m
+2020/06/10 23:52:55.632250 txmanager_test.go:466: [0;33m[warning] Done txns 1673[0m
+2020/06/10 23:52:55.653406 txmanager_test.go:466: [0;33m[warning] Done txns 1674[0m
+2020/06/10 23:52:55.673938 txmanager_test.go:466: [0;33m[warning] Done txns 1675[0m
+2020/06/10 23:52:55.697116 txmanager_test.go:466: [0;33m[warning] Done txns 1676[0m
+2020/06/10 23:52:55.719356 txmanager_test.go:466: [0;33m[warning] Done txns 1677[0m
+2020/06/10 23:52:55.741306 txmanager_test.go:466: [0;33m[warning] Done txns 1678[0m
+2020/06/10 23:52:55.761534 txmanager_test.go:466: [0;33m[warning] Done txns 1679[0m
+2020/06/10 23:52:55.779939 txmanager_test.go:466: [0;33m[warning] Done txns 1680[0m
+2020/06/10 23:52:55.802043 txmanager_test.go:466: [0;33m[warning] Done txns 1681[0m
+2020/06/10 23:52:55.822040 txmanager_test.go:466: [0;33m[warning] Done txns 1682[0m
+2020/06/10 23:52:55.842947 txmanager_test.go:466: [0;33m[warning] Done txns 1683[0m
+2020/06/10 23:52:55.862797 txmanager_test.go:466: [0;33m[warning] Done txns 1684[0m
+2020/06/10 23:52:55.882519 txmanager_test.go:466: [0;33m[warning] Done txns 1685[0m
+2020/06/10 23:52:55.902330 txmanager_test.go:466: [0;33m[warning] Done txns 1686[0m
+2020/06/10 23:52:55.920988 txmanager_test.go:466: [0;33m[warning] Done txns 1687[0m
+2020/06/10 23:52:55.941103 txmanager_test.go:466: [0;33m[warning] Done txns 1688[0m
+2020/06/10 23:52:55.960420 txmanager_test.go:466: [0;33m[warning] Done txns 1689[0m
+2020/06/10 23:52:55.981641 txmanager_test.go:466: [0;33m[warning] Done txns 1690[0m
+2020/06/10 23:52:56.001365 txmanager_test.go:466: [0;33m[warning] Done txns 1691[0m
+2020/06/10 23:52:56.023279 txmanager_test.go:466: [0;33m[warning] Done txns 1692[0m
+2020/06/10 23:52:56.045089 txmanager_test.go:466: [0;33m[warning] Done txns 1693[0m
+2020/06/10 23:52:56.065989 txmanager_test.go:466: [0;33m[warning] Done txns 1694[0m
+2020/06/10 23:52:56.086789 txmanager_test.go:466: [0;33m[warning] Done txns 1695[0m
+2020/06/10 23:52:56.106945 txmanager_test.go:466: [0;33m[warning] Done txns 1696[0m
+2020/06/10 23:52:56.128224 txmanager_test.go:466: [0;33m[warning] Done txns 1697[0m
+2020/06/10 23:52:56.148284 txmanager_test.go:466: [0;33m[warning] Done txns 1698[0m
+2020/06/10 23:52:56.169286 txmanager_test.go:466: [0;33m[warning] Done txns 1699[0m
+2020/06/10 23:52:56.189617 txmanager_test.go:466: [0;33m[warning] Done txns 1700[0m
+2020/06/10 23:52:56.210300 txmanager_test.go:466: [0;33m[warning] Done txns 1701[0m
+2020/06/10 23:52:56.230083 txmanager_test.go:466: [0;33m[warning] Done txns 1702[0m
+2020/06/10 23:52:56.253268 txmanager_test.go:466: [0;33m[warning] Done txns 1703[0m
+2020/06/10 23:52:56.273923 txmanager_test.go:466: [0;33m[warning] Done txns 1704[0m
+2020/06/10 23:52:56.294856 txmanager_test.go:466: [0;33m[warning] Done txns 1705[0m
+2020/06/10 23:52:56.314902 txmanager_test.go:466: [0;33m[warning] Done txns 1706[0m
+2020/06/10 23:52:56.335003 txmanager_test.go:466: [0;33m[warning] Done txns 1707[0m
+2020/06/10 23:52:56.357068 txmanager_test.go:466: [0;33m[warning] Done txns 1708[0m
+2020/06/10 23:52:56.375681 txmanager_test.go:466: [0;33m[warning] Done txns 1709[0m
+2020/06/10 23:52:56.398012 txmanager_test.go:466: [0;33m[warning] Done txns 1710[0m
+2020/06/10 23:52:56.417328 txmanager_test.go:466: [0;33m[warning] Done txns 1711[0m
+2020/06/10 23:52:56.435735 txmanager_test.go:466: [0;33m[warning] Done txns 1712[0m
+2020/06/10 23:52:56.458947 txmanager_test.go:466: [0;33m[warning] Done txns 1713[0m
+2020/06/10 23:52:56.478720 txmanager_test.go:466: [0;33m[warning] Done txns 1714[0m
+2020/06/10 23:52:56.500402 txmanager_test.go:466: [0;33m[warning] Done txns 1715[0m
+2020/06/10 23:52:56.520355 txmanager_test.go:466: [0;33m[warning] Done txns 1716[0m
+2020/06/10 23:52:56.540780 txmanager_test.go:466: [0;33m[warning] Done txns 1717[0m
+2020/06/10 23:52:56.563271 txmanager_test.go:466: [0;33m[warning] Done txns 1718[0m
+2020/06/10 23:52:56.583591 txmanager_test.go:466: [0;33m[warning] Done txns 1719[0m
+2020/06/10 23:52:56.603733 txmanager_test.go:466: [0;33m[warning] Done txns 1720[0m
+2020/06/10 23:52:56.624399 txmanager_test.go:466: [0;33m[warning] Done txns 1721[0m
+2020/06/10 23:52:56.647903 txmanager_test.go:466: [0;33m[warning] Done txns 1722[0m
+2020/06/10 23:52:56.668313 txmanager_test.go:466: [0;33m[warning] Done txns 1723[0m
+2020/06/10 23:52:56.689798 txmanager_test.go:466: [0;33m[warning] Done txns 1724[0m
+2020/06/10 23:52:56.710636 txmanager_test.go:466: [0;33m[warning] Done txns 1725[0m
+2020/06/10 23:52:56.730156 txmanager_test.go:466: [0;33m[warning] Done txns 1726[0m
+2020/06/10 23:52:56.751873 txmanager_test.go:466: [0;33m[warning] Done txns 1727[0m
+2020/06/10 23:52:56.771529 txmanager_test.go:466: [0;33m[warning] Done txns 1728[0m
+2020/06/10 23:52:56.792759 txmanager_test.go:466: [0;33m[warning] Done txns 1729[0m
+2020/06/10 23:52:56.811330 txmanager_test.go:466: [0;33m[warning] Done txns 1730[0m
+2020/06/10 23:52:56.832976 txmanager_test.go:466: [0;33m[warning] Done txns 1731[0m
+2020/06/10 23:52:56.851515 txmanager_test.go:466: [0;33m[warning] Done txns 1732[0m
+2020/06/10 23:52:56.871329 txmanager_test.go:466: [0;33m[warning] Done txns 1733[0m
+2020/06/10 23:52:56.890516 txmanager_test.go:466: [0;33m[warning] Done txns 1734[0m
+2020/06/10 23:52:56.910600 txmanager_test.go:466: [0;33m[warning] Done txns 1735[0m
+2020/06/10 23:52:56.929339 txmanager_test.go:466: [0;33m[warning] Done txns 1736[0m
+2020/06/10 23:52:56.949625 txmanager_test.go:466: [0;33m[warning] Done txns 1737[0m
+2020/06/10 23:52:56.971275 txmanager_test.go:466: [0;33m[warning] Done txns 1738[0m
+2020/06/10 23:52:56.990625 txmanager_test.go:466: [0;33m[warning] Done txns 1739[0m
+2020/06/10 23:52:57.010709 txmanager_test.go:466: [0;33m[warning] Done txns 1740[0m
+2020/06/10 23:52:57.029457 txmanager_test.go:466: [0;33m[warning] Done txns 1741[0m
+2020/06/10 23:52:57.051227 txmanager_test.go:466: [0;33m[warning] Done txns 1742[0m
+2020/06/10 23:52:57.070131 txmanager_test.go:466: [0;33m[warning] Done txns 1743[0m
+2020/06/10 23:52:57.091564 txmanager_test.go:466: [0;33m[warning] Done txns 1744[0m
+2020/06/10 23:52:57.111490 txmanager_test.go:466: [0;33m[warning] Done txns 1745[0m
+2020/06/10 23:52:57.131712 txmanager_test.go:466: [0;33m[warning] Done txns 1746[0m
+2020/06/10 23:52:57.153071 txmanager_test.go:466: [0;33m[warning] Done txns 1747[0m
+2020/06/10 23:52:57.173649 txmanager_test.go:466: [0;33m[warning] Done txns 1748[0m
+2020/06/10 23:52:57.195243 txmanager_test.go:466: [0;33m[warning] Done txns 1749[0m
+2020/06/10 23:52:57.216045 txmanager_test.go:466: [0;33m[warning] Done txns 1750[0m
+2020/06/10 23:52:57.238770 txmanager_test.go:466: [0;33m[warning] Done txns 1751[0m
+2020/06/10 23:52:57.257255 txmanager_test.go:466: [0;33m[warning] Done txns 1752[0m
+2020/06/10 23:52:57.278842 txmanager_test.go:466: [0;33m[warning] Done txns 1753[0m
+2020/06/10 23:52:57.298341 txmanager_test.go:466: [0;33m[warning] Done txns 1754[0m
+2020/06/10 23:52:57.318858 txmanager_test.go:466: [0;33m[warning] Done txns 1755[0m
+2020/06/10 23:52:57.340150 txmanager_test.go:466: [0;33m[warning] Done txns 1756[0m
+2020/06/10 23:52:57.360825 txmanager_test.go:466: [0;33m[warning] Done txns 1757[0m
+2020/06/10 23:52:57.381861 txmanager_test.go:466: [0;33m[warning] Done txns 1758[0m
+2020/06/10 23:52:57.404027 txmanager_test.go:466: [0;33m[warning] Done txns 1759[0m
+2020/06/10 23:52:57.427099 txmanager_test.go:466: [0;33m[warning] Done txns 1760[0m
+2020/06/10 23:52:57.446943 txmanager_test.go:466: [0;33m[warning] Done txns 1761[0m
+2020/06/10 23:52:57.468749 txmanager_test.go:466: [0;33m[warning] Done txns 1762[0m
+2020/06/10 23:52:57.489357 txmanager_test.go:466: [0;33m[warning] Done txns 1763[0m
+2020/06/10 23:52:57.510335 txmanager_test.go:466: [0;33m[warning] Done txns 1764[0m
+2020/06/10 23:52:57.531910 txmanager_test.go:466: [0;33m[warning] Done txns 1765[0m
+2020/06/10 23:52:57.552170 txmanager_test.go:466: [0;33m[warning] Done txns 1766[0m
+2020/06/10 23:52:57.571879 txmanager_test.go:466: [0;33m[warning] Done txns 1767[0m
+2020/06/10 23:52:57.592735 txmanager_test.go:466: [0;33m[warning] Done txns 1768[0m
+2020/06/10 23:52:57.613099 txmanager_test.go:466: [0;33m[warning] Done txns 1769[0m
+2020/06/10 23:52:57.633405 txmanager_test.go:466: [0;33m[warning] Done txns 1770[0m
+2020/06/10 23:52:57.654133 txmanager_test.go:466: [0;33m[warning] Done txns 1771[0m
+2020/06/10 23:52:57.674326 txmanager_test.go:466: [0;33m[warning] Done txns 1772[0m
+2020/06/10 23:52:57.696969 txmanager_test.go:466: [0;33m[warning] Done txns 1773[0m
+2020/06/10 23:52:57.717058 txmanager_test.go:466: [0;33m[warning] Done txns 1774[0m
+2020/06/10 23:52:57.738200 txmanager_test.go:466: [0;33m[warning] Done txns 1775[0m
+2020/06/10 23:52:57.758241 txmanager_test.go:466: [0;33m[warning] Done txns 1776[0m
+2020/06/10 23:52:57.779183 txmanager_test.go:466: [0;33m[warning] Done txns 1777[0m
+2020/06/10 23:52:57.799399 txmanager_test.go:466: [0;33m[warning] Done txns 1778[0m
+2020/06/10 23:52:57.819098 txmanager_test.go:466: [0;33m[warning] Done txns 1779[0m
+2020/06/10 23:52:57.841035 txmanager_test.go:466: [0;33m[warning] Done txns 1780[0m
+2020/06/10 23:52:57.859694 txmanager_test.go:466: [0;33m[warning] Done txns 1781[0m
+2020/06/10 23:52:57.881376 txmanager_test.go:466: [0;33m[warning] Done txns 1782[0m
+2020/06/10 23:52:57.901453 txmanager_test.go:466: [0;33m[warning] Done txns 1783[0m
+2020/06/10 23:52:57.922087 txmanager_test.go:466: [0;33m[warning] Done txns 1784[0m
+2020/06/10 23:52:57.944008 txmanager_test.go:466: [0;33m[warning] Done txns 1785[0m
+2020/06/10 23:52:57.966455 txmanager_test.go:466: [0;33m[warning] Done txns 1786[0m
+2020/06/10 23:52:57.986660 txmanager_test.go:466: [0;33m[warning] Done txns 1787[0m
+2020/06/10 23:52:58.007532 txmanager_test.go:466: [0;33m[warning] Done txns 1788[0m
+2020/06/10 23:52:58.026978 txmanager_test.go:466: [0;33m[warning] Done txns 1789[0m
+2020/06/10 23:52:58.048657 txmanager_test.go:466: [0;33m[warning] Done txns 1790[0m
+2020/06/10 23:52:58.068609 txmanager_test.go:466: [0;33m[warning] Done txns 1791[0m
+2020/06/10 23:52:58.089509 txmanager_test.go:466: [0;33m[warning] Done txns 1792[0m
+2020/06/10 23:52:58.111055 txmanager_test.go:466: [0;33m[warning] Done txns 1793[0m
+2020/06/10 23:52:58.135410 txmanager_test.go:466: [0;33m[warning] Done txns 1794[0m
+2020/06/10 23:52:58.163433 txmanager_test.go:466: [0;33m[warning] Done txns 1795[0m
+2020/06/10 23:52:58.185751 txmanager_test.go:466: [0;33m[warning] Done txns 1796[0m
+2020/06/10 23:52:58.211016 txmanager_test.go:466: [0;33m[warning] Done txns 1797[0m
+2020/06/10 23:52:58.232444 txmanager_test.go:466: [0;33m[warning] Done txns 1798[0m
+2020/06/10 23:52:58.255683 txmanager_test.go:466: [0;33m[warning] Done txns 1799[0m
+2020/06/10 23:52:58.275935 txmanager_test.go:466: [0;33m[warning] Done txns 1800[0m
+2020/06/10 23:52:58.297307 txmanager_test.go:466: [0;33m[warning] Done txns 1801[0m
+2020/06/10 23:52:58.336724 txmanager_test.go:466: [0;33m[warning] Done txns 1802[0m
+2020/06/10 23:52:58.364523 txmanager_test.go:466: [0;33m[warning] Done txns 1803[0m
+2020/06/10 23:52:58.394485 txmanager_test.go:466: [0;33m[warning] Done txns 1804[0m
+2020/06/10 23:52:58.436252 txmanager_test.go:466: [0;33m[warning] Done txns 1805[0m
+2020/06/10 23:52:58.459469 txmanager_test.go:466: [0;33m[warning] Done txns 1806[0m
+2020/06/10 23:52:58.479953 txmanager_test.go:466: [0;33m[warning] Done txns 1807[0m
+2020/06/10 23:52:58.502047 txmanager_test.go:466: [0;33m[warning] Done txns 1808[0m
+2020/06/10 23:52:58.523200 txmanager_test.go:466: [0;33m[warning] Done txns 1809[0m
+2020/06/10 23:52:58.547787 txmanager_test.go:466: [0;33m[warning] Done txns 1810[0m
+2020/06/10 23:52:58.574153 txmanager_test.go:466: [0;33m[warning] Done txns 1811[0m
+2020/06/10 23:52:58.594066 txmanager_test.go:466: [0;33m[warning] Done txns 1812[0m
+2020/06/10 23:52:58.613923 txmanager_test.go:466: [0;33m[warning] Done txns 1813[0m
+2020/06/10 23:52:58.634233 txmanager_test.go:466: [0;33m[warning] Done txns 1814[0m
+2020/06/10 23:52:58.656512 txmanager_test.go:466: [0;33m[warning] Done txns 1815[0m
+2020/06/10 23:52:58.676654 txmanager_test.go:466: [0;33m[warning] Done txns 1816[0m
+2020/06/10 23:52:58.697027 txmanager_test.go:466: [0;33m[warning] Done txns 1817[0m
+2020/06/10 23:52:58.718565 txmanager_test.go:466: [0;33m[warning] Done txns 1818[0m
+2020/06/10 23:52:58.739030 txmanager_test.go:466: [0;33m[warning] Done txns 1819[0m
+2020/06/10 23:52:58.760840 txmanager_test.go:466: [0;33m[warning] Done txns 1820[0m
+2020/06/10 23:52:58.781089 txmanager_test.go:466: [0;33m[warning] Done txns 1821[0m
+2020/06/10 23:52:58.802360 txmanager_test.go:466: [0;33m[warning] Done txns 1822[0m
+2020/06/10 23:52:58.822340 txmanager_test.go:466: [0;33m[warning] Done txns 1823[0m
+2020/06/10 23:52:58.843675 txmanager_test.go:466: [0;33m[warning] Done txns 1824[0m
+2020/06/10 23:52:58.863346 txmanager_test.go:466: [0;33m[warning] Done txns 1825[0m
+2020/06/10 23:52:58.882203 txmanager_test.go:466: [0;33m[warning] Done txns 1826[0m
+2020/06/10 23:52:58.903475 txmanager_test.go:466: [0;33m[warning] Done txns 1827[0m
+2020/06/10 23:52:58.924008 txmanager_test.go:466: [0;33m[warning] Done txns 1828[0m
+2020/06/10 23:52:58.946396 txmanager_test.go:466: [0;33m[warning] Done txns 1829[0m
+2020/06/10 23:52:58.969456 txmanager_test.go:466: [0;33m[warning] Done txns 1830[0m
+2020/06/10 23:52:58.998161 txmanager_test.go:466: [0;33m[warning] Done txns 1831[0m
+2020/06/10 23:52:59.018440 txmanager_test.go:466: [0;33m[warning] Done txns 1832[0m
+2020/06/10 23:52:59.040869 txmanager_test.go:466: [0;33m[warning] Done txns 1833[0m
+2020/06/10 23:52:59.061383 txmanager_test.go:466: [0;33m[warning] Done txns 1834[0m
+2020/06/10 23:52:59.084442 txmanager_test.go:466: [0;33m[warning] Done txns 1835[0m
+2020/06/10 23:52:59.104253 txmanager_test.go:466: [0;33m[warning] Done txns 1836[0m
+2020/06/10 23:52:59.125467 txmanager_test.go:466: [0;33m[warning] Done txns 1837[0m
+2020/06/10 23:52:59.147060 txmanager_test.go:466: [0;33m[warning] Done txns 1838[0m
+2020/06/10 23:52:59.167793 txmanager_test.go:466: [0;33m[warning] Done txns 1839[0m
+2020/06/10 23:52:59.204024 txmanager_test.go:466: [0;33m[warning] Done txns 1840[0m
+2020/06/10 23:52:59.226236 txmanager_test.go:466: [0;33m[warning] Done txns 1841[0m
+2020/06/10 23:52:59.247117 txmanager_test.go:466: [0;33m[warning] Done txns 1842[0m
+2020/06/10 23:52:59.269470 txmanager_test.go:466: [0;33m[warning] Done txns 1843[0m
+2020/06/10 23:52:59.291884 txmanager_test.go:466: [0;33m[warning] Done txns 1844[0m
+2020/06/10 23:52:59.313825 txmanager_test.go:466: [0;33m[warning] Done txns 1845[0m
+2020/06/10 23:52:59.335439 txmanager_test.go:466: [0;33m[warning] Done txns 1846[0m
+2020/06/10 23:52:59.356512 txmanager_test.go:466: [0;33m[warning] Done txns 1847[0m
+2020/06/10 23:52:59.377722 txmanager_test.go:466: [0;33m[warning] Done txns 1848[0m
+2020/06/10 23:52:59.400397 txmanager_test.go:466: [0;33m[warning] Done txns 1849[0m
+2020/06/10 23:52:59.421558 txmanager_test.go:466: [0;33m[warning] Done txns 1850[0m
+2020/06/10 23:52:59.443944 txmanager_test.go:466: [0;33m[warning] Done txns 1851[0m
+2020/06/10 23:52:59.464147 txmanager_test.go:466: [0;33m[warning] Done txns 1852[0m
+2020/06/10 23:52:59.484387 txmanager_test.go:466: [0;33m[warning] Done txns 1853[0m
+2020/06/10 23:52:59.504184 txmanager_test.go:466: [0;33m[warning] Done txns 1854[0m
+2020/06/10 23:52:59.526106 txmanager_test.go:466: [0;33m[warning] Done txns 1855[0m
+2020/06/10 23:52:59.545989 txmanager_test.go:466: [0;33m[warning] Done txns 1856[0m
+2020/06/10 23:52:59.566709 txmanager_test.go:466: [0;33m[warning] Done txns 1857[0m
+2020/06/10 23:52:59.590156 txmanager_test.go:466: [0;33m[warning] Done txns 1858[0m
+2020/06/10 23:52:59.610077 txmanager_test.go:466: [0;33m[warning] Done txns 1859[0m
+2020/06/10 23:52:59.631776 txmanager_test.go:466: [0;33m[warning] Done txns 1860[0m
+2020/06/10 23:52:59.656660 txmanager_test.go:466: [0;33m[warning] Done txns 1861[0m
+2020/06/10 23:52:59.679752 txmanager_test.go:466: [0;33m[warning] Done txns 1862[0m
+2020/06/10 23:52:59.700780 txmanager_test.go:466: [0;33m[warning] Done txns 1863[0m
+2020/06/10 23:52:59.722106 txmanager_test.go:466: [0;33m[warning] Done txns 1864[0m
+2020/06/10 23:52:59.742084 txmanager_test.go:466: [0;33m[warning] Done txns 1865[0m
+2020/06/10 23:52:59.763106 txmanager_test.go:466: [0;33m[warning] Done txns 1866[0m
+2020/06/10 23:52:59.785299 txmanager_test.go:466: [0;33m[warning] Done txns 1867[0m
+2020/06/10 23:52:59.805274 txmanager_test.go:466: [0;33m[warning] Done txns 1868[0m
+2020/06/10 23:52:59.826538 txmanager_test.go:466: [0;33m[warning] Done txns 1869[0m
+2020/06/10 23:52:59.846894 txmanager_test.go:466: [0;33m[warning] Done txns 1870[0m
+2020/06/10 23:52:59.867532 txmanager_test.go:466: [0;33m[warning] Done txns 1871[0m
+2020/06/10 23:52:59.886883 txmanager_test.go:466: [0;33m[warning] Done txns 1872[0m
+2020/06/10 23:52:59.909262 txmanager_test.go:466: [0;33m[warning] Done txns 1873[0m
+2020/06/10 23:52:59.929547 txmanager_test.go:466: [0;33m[warning] Done txns 1874[0m
+2020/06/10 23:52:59.950218 txmanager_test.go:466: [0;33m[warning] Done txns 1875[0m
+2020/06/10 23:52:59.970872 txmanager_test.go:466: [0;33m[warning] Done txns 1876[0m
+2020/06/10 23:52:59.992403 txmanager_test.go:466: [0;33m[warning] Done txns 1877[0m
+2020/06/10 23:53:00.028034 txmanager_test.go:466: [0;33m[warning] Done txns 1878[0m
+2020/06/10 23:53:00.050988 txmanager_test.go:466: [0;33m[warning] Done txns 1879[0m
+2020/06/10 23:53:00.070568 txmanager_test.go:466: [0;33m[warning] Done txns 1880[0m
+2020/06/10 23:53:00.090141 txmanager_test.go:466: [0;33m[warning] Done txns 1881[0m
+2020/06/10 23:53:00.111633 txmanager_test.go:466: [0;33m[warning] Done txns 1882[0m
+2020/06/10 23:53:00.132822 txmanager_test.go:466: [0;33m[warning] Done txns 1883[0m
+2020/06/10 23:53:00.153509 txmanager_test.go:466: [0;33m[warning] Done txns 1884[0m
+2020/06/10 23:53:00.172557 txmanager_test.go:466: [0;33m[warning] Done txns 1885[0m
+2020/06/10 23:53:00.194007 txmanager_test.go:466: [0;33m[warning] Done txns 1886[0m
+2020/06/10 23:53:00.214979 txmanager_test.go:466: [0;33m[warning] Done txns 1887[0m
+2020/06/10 23:53:00.239670 txmanager_test.go:466: [0;33m[warning] Done txns 1888[0m
+2020/06/10 23:53:00.260508 txmanager_test.go:466: [0;33m[warning] Done txns 1889[0m
+2020/06/10 23:53:00.282218 txmanager_test.go:466: [0;33m[warning] Done txns 1890[0m
+2020/06/10 23:53:00.302633 txmanager_test.go:466: [0;33m[warning] Done txns 1891[0m
+2020/06/10 23:53:00.323788 txmanager_test.go:466: [0;33m[warning] Done txns 1892[0m
+2020/06/10 23:53:00.345029 txmanager_test.go:466: [0;33m[warning] Done txns 1893[0m
+2020/06/10 23:53:00.364295 txmanager_test.go:466: [0;33m[warning] Done txns 1894[0m
+2020/06/10 23:53:00.384950 txmanager_test.go:466: [0;33m[warning] Done txns 1895[0m
+2020/06/10 23:53:00.404209 txmanager_test.go:466: [0;33m[warning] Done txns 1896[0m
+2020/06/10 23:53:00.426047 txmanager_test.go:466: [0;33m[warning] Done txns 1897[0m
+2020/06/10 23:53:00.444964 txmanager_test.go:466: [0;33m[warning] Done txns 1898[0m
+2020/06/10 23:53:00.466205 txmanager_test.go:466: [0;33m[warning] Done txns 1899[0m
+2020/06/10 23:53:00.485677 txmanager_test.go:466: [0;33m[warning] Done txns 1900[0m
+2020/06/10 23:53:00.504918 txmanager_test.go:466: [0;33m[warning] Done txns 1901[0m
+2020/06/10 23:53:00.526595 txmanager_test.go:466: [0;33m[warning] Done txns 1902[0m
+2020/06/10 23:53:00.547475 txmanager_test.go:466: [0;33m[warning] Done txns 1903[0m
+2020/06/10 23:53:00.567763 txmanager_test.go:466: [0;33m[warning] Done txns 1904[0m
+2020/06/10 23:53:00.587696 txmanager_test.go:466: [0;33m[warning] Done txns 1905[0m
+2020/06/10 23:53:00.606903 txmanager_test.go:466: [0;33m[warning] Done txns 1906[0m
+2020/06/10 23:53:00.628331 txmanager_test.go:466: [0;33m[warning] Done txns 1907[0m
+2020/06/10 23:53:00.649422 txmanager_test.go:466: [0;33m[warning] Done txns 1908[0m
+2020/06/10 23:53:00.668423 txmanager_test.go:466: [0;33m[warning] Done txns 1909[0m
+2020/06/10 23:53:00.689123 txmanager_test.go:466: [0;33m[warning] Done txns 1910[0m
+2020/06/10 23:53:00.709711 txmanager_test.go:466: [0;33m[warning] Done txns 1911[0m
+2020/06/10 23:53:00.730193 txmanager_test.go:466: [0;33m[warning] Done txns 1912[0m
+2020/06/10 23:53:00.753469 txmanager_test.go:466: [0;33m[warning] Done txns 1913[0m
+2020/06/10 23:53:00.774343 txmanager_test.go:466: [0;33m[warning] Done txns 1914[0m
+2020/06/10 23:53:00.796526 txmanager_test.go:466: [0;33m[warning] Done txns 1915[0m
+2020/06/10 23:53:00.816704 txmanager_test.go:466: [0;33m[warning] Done txns 1916[0m
+2020/06/10 23:53:00.838515 txmanager_test.go:466: [0;33m[warning] Done txns 1917[0m
+2020/06/10 23:53:00.864902 txmanager_test.go:466: [0;33m[warning] Done txns 1918[0m
+2020/06/10 23:53:00.884955 txmanager_test.go:466: [0;33m[warning] Done txns 1919[0m
+2020/06/10 23:53:00.906300 txmanager_test.go:466: [0;33m[warning] Done txns 1920[0m
+2020/06/10 23:53:00.930196 txmanager_test.go:466: [0;33m[warning] Done txns 1921[0m
+2020/06/10 23:53:00.955542 txmanager_test.go:466: [0;33m[warning] Done txns 1922[0m
+2020/06/10 23:53:00.978832 txmanager_test.go:466: [0;33m[warning] Done txns 1923[0m
+2020/06/10 23:53:01.000130 txmanager_test.go:466: [0;33m[warning] Done txns 1924[0m
+2020/06/10 23:53:01.022114 txmanager_test.go:466: [0;33m[warning] Done txns 1925[0m
+2020/06/10 23:53:01.043799 txmanager_test.go:466: [0;33m[warning] Done txns 1926[0m
+2020/06/10 23:53:01.066574 txmanager_test.go:466: [0;33m[warning] Done txns 1927[0m
+2020/06/10 23:53:01.087831 txmanager_test.go:466: [0;33m[warning] Done txns 1928[0m
+2020/06/10 23:53:01.110860 txmanager_test.go:466: [0;33m[warning] Done txns 1929[0m
+2020/06/10 23:53:01.134867 txmanager_test.go:466: [0;33m[warning] Done txns 1930[0m
+2020/06/10 23:53:01.158643 txmanager_test.go:466: [0;33m[warning] Done txns 1931[0m
+2020/06/10 23:53:01.182097 txmanager_test.go:466: [0;33m[warning] Done txns 1932[0m
+2020/06/10 23:53:01.204469 txmanager_test.go:466: [0;33m[warning] Done txns 1933[0m
+2020/06/10 23:53:01.229346 txmanager_test.go:466: [0;33m[warning] Done txns 1934[0m
+2020/06/10 23:53:01.250952 txmanager_test.go:466: [0;33m[warning] Done txns 1935[0m
+2020/06/10 23:53:01.273299 txmanager_test.go:466: [0;33m[warning] Done txns 1936[0m
+2020/06/10 23:53:01.295709 txmanager_test.go:466: [0;33m[warning] Done txns 1937[0m
+2020/06/10 23:53:01.319356 txmanager_test.go:466: [0;33m[warning] Done txns 1938[0m
+2020/06/10 23:53:01.343989 txmanager_test.go:466: [0;33m[warning] Done txns 1939[0m
+2020/06/10 23:53:01.366356 txmanager_test.go:466: [0;33m[warning] Done txns 1940[0m
+2020/06/10 23:53:01.388560 txmanager_test.go:466: [0;33m[warning] Done txns 1941[0m
+2020/06/10 23:53:01.409933 txmanager_test.go:466: [0;33m[warning] Done txns 1942[0m
+2020/06/10 23:53:01.432567 txmanager_test.go:466: [0;33m[warning] Done txns 1943[0m
+2020/06/10 23:53:01.452766 txmanager_test.go:466: [0;33m[warning] Done txns 1944[0m
+2020/06/10 23:53:01.476817 txmanager_test.go:466: [0;33m[warning] Done txns 1945[0m
+2020/06/10 23:53:01.499372 txmanager_test.go:466: [0;33m[warning] Done txns 1946[0m
+2020/06/10 23:53:01.520472 txmanager_test.go:466: [0;33m[warning] Done txns 1947[0m
+2020/06/10 23:53:01.543410 txmanager_test.go:466: [0;33m[warning] Done txns 1948[0m
+2020/06/10 23:53:01.566444 txmanager_test.go:466: [0;33m[warning] Done txns 1949[0m
+2020/06/10 23:53:01.592393 txmanager_test.go:466: [0;33m[warning] Done txns 1950[0m
+2020/06/10 23:53:01.613746 txmanager_test.go:466: [0;33m[warning] Done txns 1951[0m
+2020/06/10 23:53:01.634832 txmanager_test.go:466: [0;33m[warning] Done txns 1952[0m
+2020/06/10 23:53:01.657649 txmanager_test.go:466: [0;33m[warning] Done txns 1953[0m
+2020/06/10 23:53:01.679586 txmanager_test.go:466: [0;33m[warning] Done txns 1954[0m
+2020/06/10 23:53:01.704653 txmanager_test.go:466: [0;33m[warning] Done txns 1955[0m
+2020/06/10 23:53:01.727564 txmanager_test.go:466: [0;33m[warning] Done txns 1956[0m
+2020/06/10 23:53:01.749265 txmanager_test.go:466: [0;33m[warning] Done txns 1957[0m
+2020/06/10 23:53:01.772584 txmanager_test.go:466: [0;33m[warning] Done txns 1958[0m
+2020/06/10 23:53:01.794804 txmanager_test.go:466: [0;33m[warning] Done txns 1959[0m
+2020/06/10 23:53:01.816537 txmanager_test.go:466: [0;33m[warning] Done txns 1960[0m
+2020/06/10 23:53:01.838686 txmanager_test.go:466: [0;33m[warning] Done txns 1961[0m
+2020/06/10 23:53:01.861955 txmanager_test.go:466: [0;33m[warning] Done txns 1962[0m
+2020/06/10 23:53:01.884051 txmanager_test.go:466: [0;33m[warning] Done txns 1963[0m
+2020/06/10 23:53:01.906488 txmanager_test.go:466: [0;33m[warning] Done txns 1964[0m
+2020/06/10 23:53:01.928271 txmanager_test.go:466: [0;33m[warning] Done txns 1965[0m
+2020/06/10 23:53:01.953706 txmanager_test.go:466: [0;33m[warning] Done txns 1966[0m
+2020/06/10 23:53:01.976855 txmanager_test.go:466: [0;33m[warning] Done txns 1967[0m
+2020/06/10 23:53:01.997472 txmanager_test.go:466: [0;33m[warning] Done txns 1968[0m
+2020/06/10 23:53:02.021253 txmanager_test.go:466: [0;33m[warning] Done txns 1969[0m
+2020/06/10 23:53:02.043005 txmanager_test.go:466: [0;33m[warning] Done txns 1970[0m
+2020/06/10 23:53:02.065972 txmanager_test.go:466: [0;33m[warning] Done txns 1971[0m
+2020/06/10 23:53:02.088106 txmanager_test.go:466: [0;33m[warning] Done txns 1972[0m
+2020/06/10 23:53:02.110660 txmanager_test.go:466: [0;33m[warning] Done txns 1973[0m
+2020/06/10 23:53:02.132789 txmanager_test.go:466: [0;33m[warning] Done txns 1974[0m
+2020/06/10 23:53:02.154927 txmanager_test.go:466: [0;33m[warning] Done txns 1975[0m
+2020/06/10 23:53:02.175941 txmanager_test.go:466: [0;33m[warning] Done txns 1976[0m
+2020/06/10 23:53:02.198263 txmanager_test.go:466: [0;33m[warning] Done txns 1977[0m
+2020/06/10 23:53:02.219075 txmanager_test.go:466: [0;33m[warning] Done txns 1978[0m
+2020/06/10 23:53:02.241202 txmanager_test.go:466: [0;33m[warning] Done txns 1979[0m
+2020/06/10 23:53:02.264247 txmanager_test.go:466: [0;33m[warning] Done txns 1980[0m
+2020/06/10 23:53:02.285482 txmanager_test.go:466: [0;33m[warning] Done txns 1981[0m
+2020/06/10 23:53:02.308241 txmanager_test.go:466: [0;33m[warning] Done txns 1982[0m
+2020/06/10 23:53:02.330079 txmanager_test.go:466: [0;33m[warning] Done txns 1983[0m
+2020/06/10 23:53:02.354022 txmanager_test.go:466: [0;33m[warning] Done txns 1984[0m
+2020/06/10 23:53:02.374282 txmanager_test.go:466: [0;33m[warning] Done txns 1985[0m
+2020/06/10 23:53:02.398256 txmanager_test.go:466: [0;33m[warning] Done txns 1986[0m
+2020/06/10 23:53:02.419559 txmanager_test.go:466: [0;33m[warning] Done txns 1987[0m
+2020/06/10 23:53:02.439782 txmanager_test.go:466: [0;33m[warning] Done txns 1988[0m
+2020/06/10 23:53:02.463061 txmanager_test.go:466: [0;33m[warning] Done txns 1989[0m
+2020/06/10 23:53:02.484311 txmanager_test.go:466: [0;33m[warning] Done txns 1990[0m
+2020/06/10 23:53:02.506715 txmanager_test.go:466: [0;33m[warning] Done txns 1991[0m
+2020/06/10 23:53:02.529862 txmanager_test.go:466: [0;33m[warning] Done txns 1992[0m
+2020/06/10 23:53:02.555686 txmanager_test.go:466: [0;33m[warning] Done txns 1993[0m
+2020/06/10 23:53:02.576458 txmanager_test.go:466: [0;33m[warning] Done txns 1994[0m
+2020/06/10 23:53:02.600487 txmanager_test.go:466: [0;33m[warning] Done txns 1995[0m
+2020/06/10 23:53:02.621477 txmanager_test.go:466: [0;33m[warning] Done txns 1996[0m
+2020/06/10 23:53:02.643514 txmanager_test.go:466: [0;33m[warning] Done txns 1997[0m
+2020/06/10 23:53:02.667468 txmanager_test.go:466: [0;33m[warning] Done txns 1998[0m
+2020/06/10 23:53:02.687701 txmanager_test.go:466: [0;33m[warning] Done txns 1999[0m
+2020/06/10 23:53:02.687720 txmanager_test.go:468: [0;33m[warning] Succesful txns: 981[0m
+2020/06/10 23:53:02.687727 txmanager_test.go:469: [0;33m[warning] Failure txns: 19[0m
+2020/06/10 23:53:02.687742 txmanager_test.go:471: [0;33m[warning]  i 1000  latency 21[0m
+2020/06/10 23:53:02.687749 txmanager_test.go:471: [0;33m[warning]  i 1001  latency 19[0m
+2020/06/10 23:53:02.687758 txmanager_test.go:471: [0;33m[warning]  i 1002  latency 18[0m
+2020/06/10 23:53:02.687764 txmanager_test.go:471: [0;33m[warning]  i 1003  latency 18[0m
+2020/06/10 23:53:02.687771 txmanager_test.go:471: [0;33m[warning]  i 1004  latency 19[0m
+2020/06/10 23:53:02.687777 txmanager_test.go:471: [0;33m[warning]  i 1005  latency 21[0m
+2020/06/10 23:53:02.687784 txmanager_test.go:471: [0;33m[warning]  i 1006  latency 18[0m
+2020/06/10 23:53:02.687790 txmanager_test.go:471: [0;33m[warning]  i 1007  latency 18[0m
+2020/06/10 23:53:02.687796 txmanager_test.go:471: [0;33m[warning]  i 1008  latency 17[0m
+2020/06/10 23:53:02.687803 txmanager_test.go:471: [0;33m[warning]  i 1009  latency 18[0m
+2020/06/10 23:53:02.687809 txmanager_test.go:471: [0;33m[warning]  i 1010  latency 17[0m
+2020/06/10 23:53:02.687816 txmanager_test.go:471: [0;33m[warning]  i 1011  latency 19[0m
+2020/06/10 23:53:02.687822 txmanager_test.go:471: [0;33m[warning]  i 1012  latency 18[0m
+2020/06/10 23:53:02.687828 txmanager_test.go:471: [0;33m[warning]  i 1013  latency 19[0m
+2020/06/10 23:53:02.687835 txmanager_test.go:471: [0;33m[warning]  i 1014  latency 17[0m
+2020/06/10 23:53:02.687841 txmanager_test.go:471: [0;33m[warning]  i 1015  latency 18[0m
+2020/06/10 23:53:02.687847 txmanager_test.go:471: [0;33m[warning]  i 1016  latency 20[0m
+2020/06/10 23:53:02.687854 txmanager_test.go:471: [0;33m[warning]  i 1017  latency 18[0m
+2020/06/10 23:53:02.687861 txmanager_test.go:471: [0;33m[warning]  i 1018  latency 18[0m
+2020/06/10 23:53:02.687867 txmanager_test.go:471: [0;33m[warning]  i 1019  latency 18[0m
+2020/06/10 23:53:02.687874 txmanager_test.go:471: [0;33m[warning]  i 1020  latency 18[0m
+2020/06/10 23:53:02.687880 txmanager_test.go:471: [0;33m[warning]  i 1021  latency 19[0m
+2020/06/10 23:53:02.687886 txmanager_test.go:471: [0;33m[warning]  i 1022  latency 17[0m
+2020/06/10 23:53:02.687893 txmanager_test.go:471: [0;33m[warning]  i 1023  latency 18[0m
+2020/06/10 23:53:02.687899 txmanager_test.go:471: [0;33m[warning]  i 1024  latency 18[0m
+2020/06/10 23:53:02.687905 txmanager_test.go:471: [0;33m[warning]  i 1025  latency 18[0m
+2020/06/10 23:53:02.687912 txmanager_test.go:471: [0;33m[warning]  i 1026  latency 17[0m
+2020/06/10 23:53:02.687918 txmanager_test.go:471: [0;33m[warning]  i 1027  latency 18[0m
+2020/06/10 23:53:02.687925 txmanager_test.go:471: [0;33m[warning]  i 1028  latency 20[0m
+2020/06/10 23:53:02.687931 txmanager_test.go:471: [0;33m[warning]  i 1029  latency 18[0m
+2020/06/10 23:53:02.687937 txmanager_test.go:471: [0;33m[warning]  i 1030  latency 17[0m
+2020/06/10 23:53:02.687944 txmanager_test.go:471: [0;33m[warning]  i 1031  latency 17[0m
+2020/06/10 23:53:02.687951 txmanager_test.go:471: [0;33m[warning]  i 1032  latency 18[0m
+2020/06/10 23:53:02.687957 txmanager_test.go:471: [0;33m[warning]  i 1033  latency 19[0m
+2020/06/10 23:53:02.687963 txmanager_test.go:471: [0;33m[warning]  i 1034  latency 19[0m
+2020/06/10 23:53:02.687969 txmanager_test.go:471: [0;33m[warning]  i 1035  latency 18[0m
+2020/06/10 23:53:02.687975 txmanager_test.go:471: [0;33m[warning]  i 1036  latency 20[0m
+2020/06/10 23:53:02.687982 txmanager_test.go:471: [0;33m[warning]  i 1037  latency 18[0m
+2020/06/10 23:53:02.687988 txmanager_test.go:471: [0;33m[warning]  i 1038  latency 18[0m
+2020/06/10 23:53:02.687997 txmanager_test.go:471: [0;33m[warning]  i 1039  latency 19[0m
+2020/06/10 23:53:02.688003 txmanager_test.go:471: [0;33m[warning]  i 1040  latency 18[0m
+2020/06/10 23:53:02.688010 txmanager_test.go:471: [0;33m[warning]  i 1041  latency 20[0m
+2020/06/10 23:53:02.688016 txmanager_test.go:471: [0;33m[warning]  i 1042  latency 18[0m
+2020/06/10 23:53:02.688025 txmanager_test.go:471: [0;33m[warning]  i 1043  latency 17[0m
+2020/06/10 23:53:02.688032 txmanager_test.go:471: [0;33m[warning]  i 1044  latency 18[0m
+2020/06/10 23:53:02.688038 txmanager_test.go:471: [0;33m[warning]  i 1045  latency 18[0m
+2020/06/10 23:53:02.688044 txmanager_test.go:471: [0;33m[warning]  i 1046  latency 18[0m
+2020/06/10 23:53:02.688051 txmanager_test.go:471: [0;33m[warning]  i 1047  latency 17[0m
+2020/06/10 23:53:02.688057 txmanager_test.go:471: [0;33m[warning]  i 1048  latency 17[0m
+2020/06/10 23:53:02.688063 txmanager_test.go:471: [0;33m[warning]  i 1049  latency 19[0m
+2020/06/10 23:53:02.688070 txmanager_test.go:471: [0;33m[warning]  i 1050  latency 19[0m
+2020/06/10 23:53:02.688076 txmanager_test.go:471: [0;33m[warning]  i 1051  latency 18[0m
+2020/06/10 23:53:02.688083 txmanager_test.go:471: [0;33m[warning]  i 1052  latency 18[0m
+2020/06/10 23:53:02.688090 txmanager_test.go:471: [0;33m[warning]  i 1053  latency 19[0m
+2020/06/10 23:53:02.688096 txmanager_test.go:471: [0;33m[warning]  i 1054  latency 18[0m
+2020/06/10 23:53:02.688103 txmanager_test.go:471: [0;33m[warning]  i 1055  latency 19[0m
+2020/06/10 23:53:02.688109 txmanager_test.go:471: [0;33m[warning]  i 1056  latency 17[0m
+2020/06/10 23:53:02.688115 txmanager_test.go:471: [0;33m[warning]  i 1057  latency 19[0m
+2020/06/10 23:53:02.688121 txmanager_test.go:471: [0;33m[warning]  i 1058  latency 18[0m
+2020/06/10 23:53:02.688128 txmanager_test.go:471: [0;33m[warning]  i 1059  latency 18[0m
+2020/06/10 23:53:02.688134 txmanager_test.go:471: [0;33m[warning]  i 1060  latency 17[0m
+2020/06/10 23:53:02.688140 txmanager_test.go:471: [0;33m[warning]  i 1061  latency 20[0m
+2020/06/10 23:53:02.688146 txmanager_test.go:471: [0;33m[warning]  i 1062  latency 17[0m
+2020/06/10 23:53:02.688153 txmanager_test.go:471: [0;33m[warning]  i 1063  latency 18[0m
+2020/06/10 23:53:02.688159 txmanager_test.go:471: [0;33m[warning]  i 1064  latency 17[0m
+2020/06/10 23:53:02.688166 txmanager_test.go:471: [0;33m[warning]  i 1065  latency 17[0m
+2020/06/10 23:53:02.688172 txmanager_test.go:471: [0;33m[warning]  i 1066  latency 19[0m
+2020/06/10 23:53:02.688179 txmanager_test.go:471: [0;33m[warning]  i 1067  latency 18[0m
+2020/06/10 23:53:02.688185 txmanager_test.go:471: [0;33m[warning]  i 1068  latency 17[0m
+2020/06/10 23:53:02.688191 txmanager_test.go:471: [0;33m[warning]  i 1069  latency 19[0m
+2020/06/10 23:53:02.688197 txmanager_test.go:471: [0;33m[warning]  i 1070  latency 20[0m
+2020/06/10 23:53:02.688204 txmanager_test.go:471: [0;33m[warning]  i 1071  latency 19[0m
+2020/06/10 23:53:02.688210 txmanager_test.go:471: [0;33m[warning]  i 1072  latency 18[0m
+2020/06/10 23:53:02.688216 txmanager_test.go:471: [0;33m[warning]  i 1073  latency 19[0m
+2020/06/10 23:53:02.688222 txmanager_test.go:471: [0;33m[warning]  i 1074  latency 18[0m
+2020/06/10 23:53:02.688228 txmanager_test.go:471: [0;33m[warning]  i 1075  latency 18[0m
+2020/06/10 23:53:02.688234 txmanager_test.go:471: [0;33m[warning]  i 1076  latency 18[0m
+2020/06/10 23:53:02.688240 txmanager_test.go:471: [0;33m[warning]  i 1077  latency 19[0m
+2020/06/10 23:53:02.688247 txmanager_test.go:471: [0;33m[warning]  i 1078  latency 17[0m
+2020/06/10 23:53:02.688253 txmanager_test.go:471: [0;33m[warning]  i 1079  latency 18[0m
+2020/06/10 23:53:02.688261 txmanager_test.go:471: [0;33m[warning]  i 1080  latency 17[0m
+2020/06/10 23:53:02.688267 txmanager_test.go:471: [0;33m[warning]  i 1081  latency 21[0m
+2020/06/10 23:53:02.688274 txmanager_test.go:471: [0;33m[warning]  i 1082  latency 17[0m
+2020/06/10 23:53:02.688281 txmanager_test.go:471: [0;33m[warning]  i 1083  latency 17[0m
+2020/06/10 23:53:02.688287 txmanager_test.go:471: [0;33m[warning]  i 1084  latency 17[0m
+2020/06/10 23:53:02.688294 txmanager_test.go:471: [0;33m[warning]  i 1085  latency 20[0m
+2020/06/10 23:53:02.688300 txmanager_test.go:471: [0;33m[warning]  i 1086  latency 18[0m
+2020/06/10 23:53:02.688306 txmanager_test.go:471: [0;33m[warning]  i 1087  latency 19[0m
+2020/06/10 23:53:02.688313 txmanager_test.go:471: [0;33m[warning]  i 1088  latency 19[0m
+2020/06/10 23:53:02.688319 txmanager_test.go:471: [0;33m[warning]  i 1089  latency 21[0m
+2020/06/10 23:53:02.688325 txmanager_test.go:471: [0;33m[warning]  i 1090  latency 18[0m
+2020/06/10 23:53:02.688331 txmanager_test.go:471: [0;33m[warning]  i 1091  latency 18[0m
+2020/06/10 23:53:02.688337 txmanager_test.go:471: [0;33m[warning]  i 1092  latency 18[0m
+2020/06/10 23:53:02.688344 txmanager_test.go:471: [0;33m[warning]  i 1093  latency 19[0m
+2020/06/10 23:53:02.688350 txmanager_test.go:471: [0;33m[warning]  i 1094  latency 19[0m
+2020/06/10 23:53:02.688356 txmanager_test.go:471: [0;33m[warning]  i 1095  latency 18[0m
+2020/06/10 23:53:02.688362 txmanager_test.go:471: [0;33m[warning]  i 1096  latency 20[0m
+2020/06/10 23:53:02.688369 txmanager_test.go:471: [0;33m[warning]  i 1097  latency 19[0m
+2020/06/10 23:53:02.688375 txmanager_test.go:471: [0;33m[warning]  i 1098  latency 17[0m
+2020/06/10 23:53:02.688381 txmanager_test.go:471: [0;33m[warning]  i 1099  latency 18[0m
+2020/06/10 23:53:02.688387 txmanager_test.go:471: [0;33m[warning]  i 1100  latency 19[0m
+2020/06/10 23:53:02.688393 txmanager_test.go:471: [0;33m[warning]  i 1101  latency 17[0m
+2020/06/10 23:53:02.688399 txmanager_test.go:471: [0;33m[warning]  i 1102  latency 20[0m
+2020/06/10 23:53:02.688405 txmanager_test.go:471: [0;33m[warning]  i 1103  latency 19[0m
+2020/06/10 23:53:02.688411 txmanager_test.go:471: [0;33m[warning]  i 1104  latency 19[0m
+2020/06/10 23:53:02.688418 txmanager_test.go:471: [0;33m[warning]  i 1105  latency 19[0m
+2020/06/10 23:53:02.688424 txmanager_test.go:471: [0;33m[warning]  i 1106  latency 17[0m
+2020/06/10 23:53:02.688430 txmanager_test.go:471: [0;33m[warning]  i 1107  latency 19[0m
+2020/06/10 23:53:02.688436 txmanager_test.go:471: [0;33m[warning]  i 1108  latency 18[0m
+2020/06/10 23:53:02.688442 txmanager_test.go:471: [0;33m[warning]  i 1109  latency 226[0m
+2020/06/10 23:53:02.688448 txmanager_test.go:471: [0;33m[warning]  i 1110  latency 205[0m
+2020/06/10 23:53:02.688454 txmanager_test.go:471: [0;33m[warning]  i 1111  latency 201[0m
+2020/06/10 23:53:02.688460 txmanager_test.go:471: [0;33m[warning]  i 1112  latency 190[0m
+2020/06/10 23:53:02.688466 txmanager_test.go:471: [0;33m[warning]  i 1113  latency 218[0m
+2020/06/10 23:53:02.688473 txmanager_test.go:471: [0;33m[warning]  i 1114  latency 209[0m
+2020/06/10 23:53:02.688479 txmanager_test.go:471: [0;33m[warning]  i 1115  latency 217[0m
+2020/06/10 23:53:02.688496 txmanager_test.go:471: [0;33m[warning]  i 1116  latency 218[0m
+2020/06/10 23:53:02.688503 txmanager_test.go:471: [0;33m[warning]  i 1117  latency 217[0m
+2020/06/10 23:53:02.688509 txmanager_test.go:471: [0;33m[warning]  i 1118  latency 211[0m
+2020/06/10 23:53:02.688515 txmanager_test.go:471: [0;33m[warning]  i 1119  latency 222[0m
+2020/06/10 23:53:02.688521 txmanager_test.go:471: [0;33m[warning]  i 1120  latency 213[0m
+2020/06/10 23:53:02.688528 txmanager_test.go:471: [0;33m[warning]  i 1121  latency 191[0m
+2020/06/10 23:53:02.688536 txmanager_test.go:471: [0;33m[warning]  i 1122  latency 217[0m
+2020/06/10 23:53:02.688542 txmanager_test.go:471: [0;33m[warning]  i 1123  latency 225[0m
+2020/06/10 23:53:02.688548 txmanager_test.go:471: [0;33m[warning]  i 1124  latency 220[0m
+2020/06/10 23:53:02.688554 txmanager_test.go:471: [0;33m[warning]  i 1125  latency 209[0m
+2020/06/10 23:53:02.688560 txmanager_test.go:471: [0;33m[warning]  i 1126  latency 211[0m
+2020/06/10 23:53:02.688566 txmanager_test.go:471: [0;33m[warning]  i 1127  latency 162[0m
+2020/06/10 23:53:02.688572 txmanager_test.go:471: [0;33m[warning]  i 1128  latency 20[0m
+2020/06/10 23:53:02.688579 txmanager_test.go:471: [0;33m[warning]  i 1129  latency 19[0m
+2020/06/10 23:53:02.688585 txmanager_test.go:471: [0;33m[warning]  i 1130  latency 19[0m
+2020/06/10 23:53:02.688591 txmanager_test.go:471: [0;33m[warning]  i 1131  latency 19[0m
+2020/06/10 23:53:02.688598 txmanager_test.go:471: [0;33m[warning]  i 1132  latency 18[0m
+2020/06/10 23:53:02.688604 txmanager_test.go:471: [0;33m[warning]  i 1133  latency 18[0m
+2020/06/10 23:53:02.688610 txmanager_test.go:471: [0;33m[warning]  i 1134  latency 18[0m
+2020/06/10 23:53:02.688616 txmanager_test.go:471: [0;33m[warning]  i 1135  latency 18[0m
+2020/06/10 23:53:02.688622 txmanager_test.go:471: [0;33m[warning]  i 1136  latency 20[0m
+2020/06/10 23:53:02.688628 txmanager_test.go:471: [0;33m[warning]  i 1137  latency 19[0m
+2020/06/10 23:53:02.688635 txmanager_test.go:471: [0;33m[warning]  i 1138  latency 19[0m
+2020/06/10 23:53:02.688643 txmanager_test.go:471: [0;33m[warning]  i 1139  latency 19[0m
+2020/06/10 23:53:02.688649 txmanager_test.go:471: [0;33m[warning]  i 1140  latency 19[0m
+2020/06/10 23:53:02.688655 txmanager_test.go:471: [0;33m[warning]  i 1141  latency 17[0m
+2020/06/10 23:53:02.688661 txmanager_test.go:471: [0;33m[warning]  i 1142  latency 19[0m
+2020/06/10 23:53:02.688667 txmanager_test.go:471: [0;33m[warning]  i 1143  latency 19[0m
+2020/06/10 23:53:02.688673 txmanager_test.go:471: [0;33m[warning]  i 1144  latency 20[0m
+2020/06/10 23:53:02.688679 txmanager_test.go:471: [0;33m[warning]  i 1145  latency 19[0m
+2020/06/10 23:53:02.688685 txmanager_test.go:471: [0;33m[warning]  i 1146  latency 20[0m
+2020/06/10 23:53:02.688692 txmanager_test.go:471: [0;33m[warning]  i 1147  latency 20[0m
+2020/06/10 23:53:02.688698 txmanager_test.go:471: [0;33m[warning]  i 1148  latency 18[0m
+2020/06/10 23:53:02.688704 txmanager_test.go:471: [0;33m[warning]  i 1149  latency 21[0m
+2020/06/10 23:53:02.688718 txmanager_test.go:471: [0;33m[warning]  i 1150  latency 18[0m
+2020/06/10 23:53:02.688724 txmanager_test.go:471: [0;33m[warning]  i 1151  latency 19[0m
+2020/06/10 23:53:02.688731 txmanager_test.go:471: [0;33m[warning]  i 1152  latency 20[0m
+2020/06/10 23:53:02.688737 txmanager_test.go:471: [0;33m[warning]  i 1153  latency 20[0m
+2020/06/10 23:53:02.688743 txmanager_test.go:471: [0;33m[warning]  i 1154  latency 22[0m
+2020/06/10 23:53:02.688749 txmanager_test.go:471: [0;33m[warning]  i 1155  latency 19[0m
+2020/06/10 23:53:02.688755 txmanager_test.go:471: [0;33m[warning]  i 1156  latency 19[0m
+2020/06/10 23:53:02.688761 txmanager_test.go:471: [0;33m[warning]  i 1157  latency 20[0m
+2020/06/10 23:53:02.688768 txmanager_test.go:471: [0;33m[warning]  i 1158  latency 21[0m
+2020/06/10 23:53:02.688774 txmanager_test.go:471: [0;33m[warning]  i 1159  latency 20[0m
+2020/06/10 23:53:02.688780 txmanager_test.go:471: [0;33m[warning]  i 1160  latency 19[0m
+2020/06/10 23:53:02.688788 txmanager_test.go:471: [0;33m[warning]  i 1161  latency 20[0m
+2020/06/10 23:53:02.688794 txmanager_test.go:471: [0;33m[warning]  i 1162  latency 19[0m
+2020/06/10 23:53:02.688800 txmanager_test.go:471: [0;33m[warning]  i 1163  latency 19[0m
+2020/06/10 23:53:02.688806 txmanager_test.go:471: [0;33m[warning]  i 1164  latency 19[0m
+2020/06/10 23:53:02.688812 txmanager_test.go:471: [0;33m[warning]  i 1165  latency 18[0m
+2020/06/10 23:53:02.688818 txmanager_test.go:471: [0;33m[warning]  i 1166  latency 19[0m
+2020/06/10 23:53:02.688824 txmanager_test.go:471: [0;33m[warning]  i 1167  latency 19[0m
+2020/06/10 23:53:02.688830 txmanager_test.go:471: [0;33m[warning]  i 1168  latency 18[0m
+2020/06/10 23:53:02.688837 txmanager_test.go:471: [0;33m[warning]  i 1169  latency 19[0m
+2020/06/10 23:53:02.688843 txmanager_test.go:471: [0;33m[warning]  i 1170  latency 19[0m
+2020/06/10 23:53:02.688849 txmanager_test.go:471: [0;33m[warning]  i 1171  latency 19[0m
+2020/06/10 23:53:02.688855 txmanager_test.go:471: [0;33m[warning]  i 1172  latency 19[0m
+2020/06/10 23:53:02.688861 txmanager_test.go:471: [0;33m[warning]  i 1173  latency 19[0m
+2020/06/10 23:53:02.688867 txmanager_test.go:471: [0;33m[warning]  i 1174  latency 17[0m
+2020/06/10 23:53:02.688873 txmanager_test.go:471: [0;33m[warning]  i 1175  latency 19[0m
+2020/06/10 23:53:02.688879 txmanager_test.go:471: [0;33m[warning]  i 1176  latency 19[0m
+2020/06/10 23:53:02.688885 txmanager_test.go:471: [0;33m[warning]  i 1177  latency 17[0m
+2020/06/10 23:53:02.688892 txmanager_test.go:471: [0;33m[warning]  i 1178  latency 18[0m
+2020/06/10 23:53:02.688898 txmanager_test.go:471: [0;33m[warning]  i 1179  latency 19[0m
+2020/06/10 23:53:02.688904 txmanager_test.go:471: [0;33m[warning]  i 1180  latency 20[0m
+2020/06/10 23:53:02.688910 txmanager_test.go:471: [0;33m[warning]  i 1181  latency 19[0m
+2020/06/10 23:53:02.688916 txmanager_test.go:471: [0;33m[warning]  i 1182  latency 20[0m
+2020/06/10 23:53:02.688923 txmanager_test.go:471: [0;33m[warning]  i 1183  latency 18[0m
+2020/06/10 23:53:02.688929 txmanager_test.go:471: [0;33m[warning]  i 1184  latency 17[0m
+2020/06/10 23:53:02.688935 txmanager_test.go:471: [0;33m[warning]  i 1185  latency 18[0m
+2020/06/10 23:53:02.688941 txmanager_test.go:471: [0;33m[warning]  i 1186  latency 18[0m
+2020/06/10 23:53:02.688947 txmanager_test.go:471: [0;33m[warning]  i 1187  latency 21[0m
+2020/06/10 23:53:02.688953 txmanager_test.go:471: [0;33m[warning]  i 1188  latency 17[0m
+2020/06/10 23:53:02.688960 txmanager_test.go:471: [0;33m[warning]  i 1189  latency 18[0m
+2020/06/10 23:53:02.688966 txmanager_test.go:471: [0;33m[warning]  i 1190  latency 19[0m
+2020/06/10 23:53:02.688972 txmanager_test.go:471: [0;33m[warning]  i 1191  latency 19[0m
+2020/06/10 23:53:02.688978 txmanager_test.go:471: [0;33m[warning]  i 1192  latency 20[0m
+2020/06/10 23:53:02.688984 txmanager_test.go:471: [0;33m[warning]  i 1193  latency 20[0m
+2020/06/10 23:53:02.688990 txmanager_test.go:471: [0;33m[warning]  i 1194  latency 21[0m
+2020/06/10 23:53:02.688996 txmanager_test.go:471: [0;33m[warning]  i 1195  latency 23[0m
+2020/06/10 23:53:02.689002 txmanager_test.go:471: [0;33m[warning]  i 1196  latency 18[0m
+2020/06/10 23:53:02.689009 txmanager_test.go:471: [0;33m[warning]  i 1197  latency 20[0m
+2020/06/10 23:53:02.689015 txmanager_test.go:471: [0;33m[warning]  i 1198  latency 20[0m
+2020/06/10 23:53:02.689021 txmanager_test.go:471: [0;33m[warning]  i 1199  latency 17[0m
+2020/06/10 23:53:02.689029 txmanager_test.go:471: [0;33m[warning]  i 1200  latency 18[0m
+2020/06/10 23:53:02.689035 txmanager_test.go:471: [0;33m[warning]  i 1201  latency 18[0m
+2020/06/10 23:53:02.689041 txmanager_test.go:471: [0;33m[warning]  i 1202  latency 18[0m
+2020/06/10 23:53:02.689047 txmanager_test.go:471: [0;33m[warning]  i 1203  latency 18[0m
+2020/06/10 23:53:02.689053 txmanager_test.go:471: [0;33m[warning]  i 1204  latency 19[0m
+2020/06/10 23:53:02.689059 txmanager_test.go:471: [0;33m[warning]  i 1205  latency 19[0m
+2020/06/10 23:53:02.689065 txmanager_test.go:471: [0;33m[warning]  i 1206  latency 17[0m
+2020/06/10 23:53:02.689071 txmanager_test.go:471: [0;33m[warning]  i 1207  latency 20[0m
+2020/06/10 23:53:02.689077 txmanager_test.go:471: [0;33m[warning]  i 1208  latency 19[0m
+2020/06/10 23:53:02.689084 txmanager_test.go:471: [0;33m[warning]  i 1209  latency 18[0m
+2020/06/10 23:53:02.689090 txmanager_test.go:471: [0;33m[warning]  i 1210  latency 19[0m
+2020/06/10 23:53:02.689096 txmanager_test.go:471: [0;33m[warning]  i 1211  latency 17[0m
+2020/06/10 23:53:02.689102 txmanager_test.go:471: [0;33m[warning]  i 1212  latency 18[0m
+2020/06/10 23:53:02.689108 txmanager_test.go:471: [0;33m[warning]  i 1213  latency 18[0m
+2020/06/10 23:53:02.689114 txmanager_test.go:471: [0;33m[warning]  i 1214  latency 17[0m
+2020/06/10 23:53:02.689120 txmanager_test.go:471: [0;33m[warning]  i 1215  latency 19[0m
+2020/06/10 23:53:02.689126 txmanager_test.go:471: [0;33m[warning]  i 1216  latency 21[0m
+2020/06/10 23:53:02.689133 txmanager_test.go:471: [0;33m[warning]  i 1217  latency 19[0m
+2020/06/10 23:53:02.689142 txmanager_test.go:471: [0;33m[warning]  i 1218  latency 19[0m
+2020/06/10 23:53:02.689148 txmanager_test.go:471: [0;33m[warning]  i 1219  latency 19[0m
+2020/06/10 23:53:02.689155 txmanager_test.go:471: [0;33m[warning]  i 1220  latency 18[0m
+2020/06/10 23:53:02.689161 txmanager_test.go:471: [0;33m[warning]  i 1221  latency 18[0m
+2020/06/10 23:53:02.689167 txmanager_test.go:471: [0;33m[warning]  i 1222  latency 18[0m
+2020/06/10 23:53:02.689173 txmanager_test.go:471: [0;33m[warning]  i 1223  latency 23[0m
+2020/06/10 23:53:02.689180 txmanager_test.go:471: [0;33m[warning]  i 1224  latency 18[0m
+2020/06/10 23:53:02.689186 txmanager_test.go:471: [0;33m[warning]  i 1225  latency 20[0m
+2020/06/10 23:53:02.689192 txmanager_test.go:471: [0;33m[warning]  i 1226  latency 19[0m
+2020/06/10 23:53:02.689198 txmanager_test.go:471: [0;33m[warning]  i 1227  latency 19[0m
+2020/06/10 23:53:02.689205 txmanager_test.go:471: [0;33m[warning]  i 1228  latency 20[0m
+2020/06/10 23:53:02.689211 txmanager_test.go:471: [0;33m[warning]  i 1229  latency 19[0m
+2020/06/10 23:53:02.689217 txmanager_test.go:471: [0;33m[warning]  i 1230  latency 19[0m
+2020/06/10 23:53:02.689223 txmanager_test.go:471: [0;33m[warning]  i 1231  latency 17[0m
+2020/06/10 23:53:02.689229 txmanager_test.go:471: [0;33m[warning]  i 1232  latency 21[0m
+2020/06/10 23:53:02.689235 txmanager_test.go:471: [0;33m[warning]  i 1233  latency 22[0m
+2020/06/10 23:53:02.689241 txmanager_test.go:471: [0;33m[warning]  i 1234  latency 17[0m
+2020/06/10 23:53:02.689247 txmanager_test.go:471: [0;33m[warning]  i 1235  latency 20[0m
+2020/06/10 23:53:02.689254 txmanager_test.go:471: [0;33m[warning]  i 1236  latency 19[0m
+2020/06/10 23:53:02.689260 txmanager_test.go:471: [0;33m[warning]  i 1237  latency 18[0m
+2020/06/10 23:53:02.689266 txmanager_test.go:471: [0;33m[warning]  i 1238  latency 17[0m
+2020/06/10 23:53:02.689274 txmanager_test.go:471: [0;33m[warning]  i 1239  latency 19[0m
+2020/06/10 23:53:02.689280 txmanager_test.go:471: [0;33m[warning]  i 1240  latency 17[0m
+2020/06/10 23:53:02.689286 txmanager_test.go:471: [0;33m[warning]  i 1241  latency 18[0m
+2020/06/10 23:53:02.689292 txmanager_test.go:471: [0;33m[warning]  i 1242  latency 19[0m
+2020/06/10 23:53:02.689298 txmanager_test.go:471: [0;33m[warning]  i 1243  latency 19[0m
+2020/06/10 23:53:02.689304 txmanager_test.go:471: [0;33m[warning]  i 1244  latency 18[0m
+2020/06/10 23:53:02.689310 txmanager_test.go:471: [0;33m[warning]  i 1245  latency 18[0m
+2020/06/10 23:53:02.689316 txmanager_test.go:471: [0;33m[warning]  i 1246  latency 18[0m
+2020/06/10 23:53:02.689322 txmanager_test.go:471: [0;33m[warning]  i 1247  latency 19[0m
+2020/06/10 23:53:02.689328 txmanager_test.go:471: [0;33m[warning]  i 1248  latency 20[0m
+2020/06/10 23:53:02.689334 txmanager_test.go:471: [0;33m[warning]  i 1249  latency 19[0m
+2020/06/10 23:53:02.689342 txmanager_test.go:471: [0;33m[warning]  i 1250  latency 17[0m
+2020/06/10 23:53:02.689348 txmanager_test.go:471: [0;33m[warning]  i 1251  latency 19[0m
+2020/06/10 23:53:02.689354 txmanager_test.go:471: [0;33m[warning]  i 1252  latency 18[0m
+2020/06/10 23:53:02.689360 txmanager_test.go:471: [0;33m[warning]  i 1253  latency 19[0m
+2020/06/10 23:53:02.689366 txmanager_test.go:471: [0;33m[warning]  i 1254  latency 20[0m
+2020/06/10 23:53:02.689373 txmanager_test.go:471: [0;33m[warning]  i 1255  latency 17[0m
+2020/06/10 23:53:02.689379 txmanager_test.go:471: [0;33m[warning]  i 1256  latency 19[0m
+2020/06/10 23:53:02.689385 txmanager_test.go:471: [0;33m[warning]  i 1257  latency 16[0m
+2020/06/10 23:53:02.689391 txmanager_test.go:471: [0;33m[warning]  i 1258  latency 18[0m
+2020/06/10 23:53:02.689397 txmanager_test.go:471: [0;33m[warning]  i 1259  latency 21[0m
+2020/06/10 23:53:02.689403 txmanager_test.go:471: [0;33m[warning]  i 1260  latency 19[0m
+2020/06/10 23:53:02.689409 txmanager_test.go:471: [0;33m[warning]  i 1261  latency 22[0m
+2020/06/10 23:53:02.689415 txmanager_test.go:471: [0;33m[warning]  i 1262  latency 19[0m
+2020/06/10 23:53:02.689421 txmanager_test.go:471: [0;33m[warning]  i 1263  latency 20[0m
+2020/06/10 23:53:02.689427 txmanager_test.go:471: [0;33m[warning]  i 1264  latency 24[0m
+2020/06/10 23:53:02.689433 txmanager_test.go:471: [0;33m[warning]  i 1265  latency 19[0m
+2020/06/10 23:53:02.689440 txmanager_test.go:471: [0;33m[warning]  i 1266  latency 18[0m
+2020/06/10 23:53:02.689446 txmanager_test.go:471: [0;33m[warning]  i 1267  latency 18[0m
+2020/06/10 23:53:02.689452 txmanager_test.go:471: [0;33m[warning]  i 1268  latency 20[0m
+2020/06/10 23:53:02.689458 txmanager_test.go:471: [0;33m[warning]  i 1269  latency 17[0m
+2020/06/10 23:53:02.689464 txmanager_test.go:471: [0;33m[warning]  i 1270  latency 17[0m
+2020/06/10 23:53:02.689471 txmanager_test.go:471: [0;33m[warning]  i 1271  latency 17[0m
+2020/06/10 23:53:02.689477 txmanager_test.go:471: [0;33m[warning]  i 1272  latency 20[0m
+2020/06/10 23:53:02.689483 txmanager_test.go:471: [0;33m[warning]  i 1273  latency 19[0m
+2020/06/10 23:53:02.689489 txmanager_test.go:471: [0;33m[warning]  i 1274  latency 17[0m
+2020/06/10 23:53:02.689495 txmanager_test.go:471: [0;33m[warning]  i 1275  latency 19[0m
+2020/06/10 23:53:02.689501 txmanager_test.go:471: [0;33m[warning]  i 1276  latency 18[0m
+2020/06/10 23:53:02.689507 txmanager_test.go:471: [0;33m[warning]  i 1277  latency 20[0m
+2020/06/10 23:53:02.689515 txmanager_test.go:471: [0;33m[warning]  i 1278  latency 19[0m
+2020/06/10 23:53:02.689521 txmanager_test.go:471: [0;33m[warning]  i 1279  latency 18[0m
+2020/06/10 23:53:02.689527 txmanager_test.go:471: [0;33m[warning]  i 1280  latency 17[0m
+2020/06/10 23:53:02.689534 txmanager_test.go:471: [0;33m[warning]  i 1281  latency 17[0m
+2020/06/10 23:53:02.689540 txmanager_test.go:471: [0;33m[warning]  i 1282  latency 18[0m
+2020/06/10 23:53:02.689546 txmanager_test.go:471: [0;33m[warning]  i 1283  latency 18[0m
+2020/06/10 23:53:02.689552 txmanager_test.go:471: [0;33m[warning]  i 1284  latency 20[0m
+2020/06/10 23:53:02.689558 txmanager_test.go:471: [0;33m[warning]  i 1285  latency 18[0m
+2020/06/10 23:53:02.689564 txmanager_test.go:471: [0;33m[warning]  i 1286  latency 19[0m
+2020/06/10 23:53:02.689570 txmanager_test.go:471: [0;33m[warning]  i 1287  latency 21[0m
+2020/06/10 23:53:02.689576 txmanager_test.go:471: [0;33m[warning]  i 1288  latency 19[0m
+2020/06/10 23:53:02.689583 txmanager_test.go:471: [0;33m[warning]  i 1289  latency 19[0m
+2020/06/10 23:53:02.689589 txmanager_test.go:471: [0;33m[warning]  i 1290  latency 19[0m
+2020/06/10 23:53:02.689595 txmanager_test.go:471: [0;33m[warning]  i 1291  latency 20[0m
+2020/06/10 23:53:02.689601 txmanager_test.go:471: [0;33m[warning]  i 1292  latency 19[0m
+2020/06/10 23:53:02.689607 txmanager_test.go:471: [0;33m[warning]  i 1293  latency 17[0m
+2020/06/10 23:53:02.689613 txmanager_test.go:471: [0;33m[warning]  i 1294  latency 18[0m
+2020/06/10 23:53:02.689619 txmanager_test.go:471: [0;33m[warning]  i 1295  latency 19[0m
+2020/06/10 23:53:02.689626 txmanager_test.go:471: [0;33m[warning]  i 1296  latency 19[0m
+2020/06/10 23:53:02.689632 txmanager_test.go:471: [0;33m[warning]  i 1297  latency 17[0m
+2020/06/10 23:53:02.689638 txmanager_test.go:471: [0;33m[warning]  i 1298  latency 19[0m
+2020/06/10 23:53:02.689644 txmanager_test.go:471: [0;33m[warning]  i 1299  latency 18[0m
+2020/06/10 23:53:02.689650 txmanager_test.go:471: [0;33m[warning]  i 1300  latency 18[0m
+2020/06/10 23:53:02.689656 txmanager_test.go:471: [0;33m[warning]  i 1301  latency 28[0m
+2020/06/10 23:53:02.689662 txmanager_test.go:471: [0;33m[warning]  i 1302  latency 17[0m
+2020/06/10 23:53:02.689668 txmanager_test.go:471: [0;33m[warning]  i 1303  latency 16[0m
+2020/06/10 23:53:02.689674 txmanager_test.go:471: [0;33m[warning]  i 1304  latency 17[0m
+2020/06/10 23:53:02.689680 txmanager_test.go:471: [0;33m[warning]  i 1305  latency 18[0m
+2020/06/10 23:53:02.689686 txmanager_test.go:471: [0;33m[warning]  i 1306  latency 20[0m
+2020/06/10 23:53:02.689692 txmanager_test.go:471: [0;33m[warning]  i 1307  latency 18[0m
+2020/06/10 23:53:02.689698 txmanager_test.go:471: [0;33m[warning]  i 1308  latency 18[0m
+2020/06/10 23:53:02.689705 txmanager_test.go:471: [0;33m[warning]  i 1309  latency 18[0m
+2020/06/10 23:53:02.689711 txmanager_test.go:471: [0;33m[warning]  i 1310  latency 17[0m
+2020/06/10 23:53:02.689717 txmanager_test.go:471: [0;33m[warning]  i 1311  latency 18[0m
+2020/06/10 23:53:02.689723 txmanager_test.go:471: [0;33m[warning]  i 1312  latency 21[0m
+2020/06/10 23:53:02.689730 txmanager_test.go:471: [0;33m[warning]  i 1313  latency 17[0m
+2020/06/10 23:53:02.689736 txmanager_test.go:471: [0;33m[warning]  i 1314  latency 18[0m
+2020/06/10 23:53:02.689742 txmanager_test.go:471: [0;33m[warning]  i 1315  latency 18[0m
+2020/06/10 23:53:02.689748 txmanager_test.go:471: [0;33m[warning]  i 1316  latency 17[0m
+2020/06/10 23:53:02.689755 txmanager_test.go:471: [0;33m[warning]  i 1317  latency 19[0m
+2020/06/10 23:53:02.689761 txmanager_test.go:471: [0;33m[warning]  i 1318  latency 17[0m
+2020/06/10 23:53:02.689768 txmanager_test.go:471: [0;33m[warning]  i 1319  latency 18[0m
+2020/06/10 23:53:02.689774 txmanager_test.go:471: [0;33m[warning]  i 1320  latency 18[0m
+2020/06/10 23:53:02.689780 txmanager_test.go:471: [0;33m[warning]  i 1321  latency 19[0m
+2020/06/10 23:53:02.689786 txmanager_test.go:471: [0;33m[warning]  i 1322  latency 17[0m
+2020/06/10 23:53:02.689792 txmanager_test.go:471: [0;33m[warning]  i 1323  latency 19[0m
+2020/06/10 23:53:02.689798 txmanager_test.go:471: [0;33m[warning]  i 1324  latency 17[0m
+2020/06/10 23:53:02.689804 txmanager_test.go:471: [0;33m[warning]  i 1325  latency 18[0m
+2020/06/10 23:53:02.689810 txmanager_test.go:471: [0;33m[warning]  i 1326  latency 19[0m
+2020/06/10 23:53:02.689816 txmanager_test.go:471: [0;33m[warning]  i 1327  latency 17[0m
+2020/06/10 23:53:02.689822 txmanager_test.go:471: [0;33m[warning]  i 1328  latency 19[0m
+2020/06/10 23:53:02.689829 txmanager_test.go:471: [0;33m[warning]  i 1329  latency 17[0m
+2020/06/10 23:53:02.689835 txmanager_test.go:471: [0;33m[warning]  i 1330  latency 19[0m
+2020/06/10 23:53:02.689841 txmanager_test.go:471: [0;33m[warning]  i 1331  latency 17[0m
+2020/06/10 23:53:02.689847 txmanager_test.go:471: [0;33m[warning]  i 1332  latency 18[0m
+2020/06/10 23:53:02.689853 txmanager_test.go:471: [0;33m[warning]  i 1333  latency 17[0m
+2020/06/10 23:53:02.689859 txmanager_test.go:471: [0;33m[warning]  i 1334  latency 18[0m
+2020/06/10 23:53:02.689865 txmanager_test.go:471: [0;33m[warning]  i 1335  latency 17[0m
+2020/06/10 23:53:02.689871 txmanager_test.go:471: [0;33m[warning]  i 1336  latency 17[0m
+2020/06/10 23:53:02.689877 txmanager_test.go:471: [0;33m[warning]  i 1337  latency 20[0m
+2020/06/10 23:53:02.689883 txmanager_test.go:471: [0;33m[warning]  i 1338  latency 17[0m
+2020/06/10 23:53:02.689889 txmanager_test.go:471: [0;33m[warning]  i 1339  latency 19[0m
+2020/06/10 23:53:02.689895 txmanager_test.go:471: [0;33m[warning]  i 1340  latency 20[0m
+2020/06/10 23:53:02.689901 txmanager_test.go:471: [0;33m[warning]  i 1341  latency 18[0m
+2020/06/10 23:53:02.689907 txmanager_test.go:471: [0;33m[warning]  i 1342  latency 19[0m
+2020/06/10 23:53:02.689913 txmanager_test.go:471: [0;33m[warning]  i 1343  latency 18[0m
+2020/06/10 23:53:02.689920 txmanager_test.go:471: [0;33m[warning]  i 1344  latency 18[0m
+2020/06/10 23:53:02.689926 txmanager_test.go:471: [0;33m[warning]  i 1345  latency 19[0m
+2020/06/10 23:53:02.689932 txmanager_test.go:471: [0;33m[warning]  i 1346  latency 18[0m
+2020/06/10 23:53:02.689938 txmanager_test.go:471: [0;33m[warning]  i 1347  latency 18[0m
+2020/06/10 23:53:02.689944 txmanager_test.go:471: [0;33m[warning]  i 1348  latency 19[0m
+2020/06/10 23:53:02.689950 txmanager_test.go:471: [0;33m[warning]  i 1349  latency 18[0m
+2020/06/10 23:53:02.689956 txmanager_test.go:471: [0;33m[warning]  i 1350  latency 19[0m
+2020/06/10 23:53:02.689962 txmanager_test.go:471: [0;33m[warning]  i 1351  latency 17[0m
+2020/06/10 23:53:02.689968 txmanager_test.go:471: [0;33m[warning]  i 1352  latency 20[0m
+2020/06/10 23:53:02.689974 txmanager_test.go:471: [0;33m[warning]  i 1353  latency 22[0m
+2020/06/10 23:53:02.689980 txmanager_test.go:471: [0;33m[warning]  i 1354  latency 20[0m
+2020/06/10 23:53:02.689986 txmanager_test.go:471: [0;33m[warning]  i 1355  latency 18[0m
+2020/06/10 23:53:02.689994 txmanager_test.go:471: [0;33m[warning]  i 1356  latency 19[0m
+2020/06/10 23:53:02.690001 txmanager_test.go:471: [0;33m[warning]  i 1357  latency 20[0m
+2020/06/10 23:53:02.690007 txmanager_test.go:471: [0;33m[warning]  i 1358  latency 17[0m
+2020/06/10 23:53:02.690013 txmanager_test.go:471: [0;33m[warning]  i 1359  latency 19[0m
+2020/06/10 23:53:02.690019 txmanager_test.go:471: [0;33m[warning]  i 1360  latency 17[0m
+2020/06/10 23:53:02.690025 txmanager_test.go:471: [0;33m[warning]  i 1361  latency 19[0m
+2020/06/10 23:53:02.690031 txmanager_test.go:471: [0;33m[warning]  i 1362  latency 18[0m
+2020/06/10 23:53:02.690038 txmanager_test.go:471: [0;33m[warning]  i 1363  latency 19[0m
+2020/06/10 23:53:02.690044 txmanager_test.go:471: [0;33m[warning]  i 1364  latency 18[0m
+2020/06/10 23:53:02.690050 txmanager_test.go:471: [0;33m[warning]  i 1365  latency 17[0m
+2020/06/10 23:53:02.690056 txmanager_test.go:471: [0;33m[warning]  i 1366  latency 19[0m
+2020/06/10 23:53:02.690062 txmanager_test.go:471: [0;33m[warning]  i 1367  latency 18[0m
+2020/06/10 23:53:02.690068 txmanager_test.go:471: [0;33m[warning]  i 1368  latency 18[0m
+2020/06/10 23:53:02.690074 txmanager_test.go:471: [0;33m[warning]  i 1369  latency 19[0m
+2020/06/10 23:53:02.690080 txmanager_test.go:471: [0;33m[warning]  i 1370  latency 21[0m
+2020/06/10 23:53:02.690086 txmanager_test.go:471: [0;33m[warning]  i 1371  latency 17[0m
+2020/06/10 23:53:02.690092 txmanager_test.go:471: [0;33m[warning]  i 1372  latency 22[0m
+2020/06/10 23:53:02.690098 txmanager_test.go:471: [0;33m[warning]  i 1373  latency 20[0m
+2020/06/10 23:53:02.690104 txmanager_test.go:471: [0;33m[warning]  i 1374  latency 18[0m
+2020/06/10 23:53:02.690110 txmanager_test.go:471: [0;33m[warning]  i 1375  latency 20[0m
+2020/06/10 23:53:02.690116 txmanager_test.go:471: [0;33m[warning]  i 1376  latency 20[0m
+2020/06/10 23:53:02.690122 txmanager_test.go:471: [0;33m[warning]  i 1377  latency 18[0m
+2020/06/10 23:53:02.690128 txmanager_test.go:471: [0;33m[warning]  i 1378  latency 18[0m
+2020/06/10 23:53:02.690134 txmanager_test.go:471: [0;33m[warning]  i 1379  latency 18[0m
+2020/06/10 23:53:02.690141 txmanager_test.go:471: [0;33m[warning]  i 1380  latency 17[0m
+2020/06/10 23:53:02.690147 txmanager_test.go:471: [0;33m[warning]  i 1381  latency 18[0m
+2020/06/10 23:53:02.690153 txmanager_test.go:471: [0;33m[warning]  i 1382  latency 18[0m
+2020/06/10 23:53:02.690159 txmanager_test.go:471: [0;33m[warning]  i 1383  latency 19[0m
+2020/06/10 23:53:02.690165 txmanager_test.go:471: [0;33m[warning]  i 1384  latency 17[0m
+2020/06/10 23:53:02.690171 txmanager_test.go:471: [0;33m[warning]  i 1385  latency 20[0m
+2020/06/10 23:53:02.690177 txmanager_test.go:471: [0;33m[warning]  i 1386  latency 18[0m
+2020/06/10 23:53:02.690183 txmanager_test.go:471: [0;33m[warning]  i 1387  latency 20[0m
+2020/06/10 23:53:02.690189 txmanager_test.go:471: [0;33m[warning]  i 1388  latency 22[0m
+2020/06/10 23:53:02.690195 txmanager_test.go:471: [0;33m[warning]  i 1389  latency 24[0m
+2020/06/10 23:53:02.690201 txmanager_test.go:471: [0;33m[warning]  i 1390  latency 17[0m
+2020/06/10 23:53:02.690208 txmanager_test.go:471: [0;33m[warning]  i 1391  latency 17[0m
+2020/06/10 23:53:02.690214 txmanager_test.go:471: [0;33m[warning]  i 1392  latency 19[0m
+2020/06/10 23:53:02.690220 txmanager_test.go:471: [0;33m[warning]  i 1393  latency 17[0m
+2020/06/10 23:53:02.690226 txmanager_test.go:471: [0;33m[warning]  i 1394  latency 21[0m
+2020/06/10 23:53:02.690235 txmanager_test.go:471: [0;33m[warning]  i 1395  latency 17[0m
+2020/06/10 23:53:02.690241 txmanager_test.go:471: [0;33m[warning]  i 1396  latency 19[0m
+2020/06/10 23:53:02.690247 txmanager_test.go:471: [0;33m[warning]  i 1397  latency 17[0m
+2020/06/10 23:53:02.690253 txmanager_test.go:471: [0;33m[warning]  i 1398  latency 18[0m
+2020/06/10 23:53:02.690259 txmanager_test.go:471: [0;33m[warning]  i 1399  latency 18[0m
+2020/06/10 23:53:02.690265 txmanager_test.go:471: [0;33m[warning]  i 1400  latency 17[0m
+2020/06/10 23:53:02.690271 txmanager_test.go:471: [0;33m[warning]  i 1401  latency 18[0m
+2020/06/10 23:53:02.690285 txmanager_test.go:471: [0;33m[warning]  i 1402  latency 16[0m
+2020/06/10 23:53:02.690292 txmanager_test.go:471: [0;33m[warning]  i 1403  latency 19[0m
+2020/06/10 23:53:02.690298 txmanager_test.go:471: [0;33m[warning]  i 1404  latency 18[0m
+2020/06/10 23:53:02.690304 txmanager_test.go:471: [0;33m[warning]  i 1405  latency 16[0m
+2020/06/10 23:53:02.690310 txmanager_test.go:471: [0;33m[warning]  i 1406  latency 19[0m
+2020/06/10 23:53:02.690316 txmanager_test.go:471: [0;33m[warning]  i 1407  latency 18[0m
+2020/06/10 23:53:02.690322 txmanager_test.go:471: [0;33m[warning]  i 1408  latency 18[0m
+2020/06/10 23:53:02.690328 txmanager_test.go:471: [0;33m[warning]  i 1409  latency 20[0m
+2020/06/10 23:53:02.690335 txmanager_test.go:471: [0;33m[warning]  i 1410  latency 19[0m
+2020/06/10 23:53:02.690341 txmanager_test.go:471: [0;33m[warning]  i 1411  latency 18[0m
+2020/06/10 23:53:02.690347 txmanager_test.go:471: [0;33m[warning]  i 1412  latency 18[0m
+2020/06/10 23:53:02.690353 txmanager_test.go:471: [0;33m[warning]  i 1413  latency 19[0m
+2020/06/10 23:53:02.690359 txmanager_test.go:471: [0;33m[warning]  i 1414  latency 21[0m
+2020/06/10 23:53:02.690365 txmanager_test.go:471: [0;33m[warning]  i 1415  latency 17[0m
+2020/06/10 23:53:02.690371 txmanager_test.go:471: [0;33m[warning]  i 1416  latency 18[0m
+2020/06/10 23:53:02.690377 txmanager_test.go:471: [0;33m[warning]  i 1417  latency 18[0m
+2020/06/10 23:53:02.690383 txmanager_test.go:471: [0;33m[warning]  i 1418  latency 17[0m
+2020/06/10 23:53:02.690389 txmanager_test.go:471: [0;33m[warning]  i 1419  latency 18[0m
+2020/06/10 23:53:02.690397 txmanager_test.go:471: [0;33m[warning]  i 1420  latency 18[0m
+2020/06/10 23:53:02.690404 txmanager_test.go:471: [0;33m[warning]  i 1421  latency 18[0m
+2020/06/10 23:53:02.690410 txmanager_test.go:471: [0;33m[warning]  i 1422  latency 21[0m
+2020/06/10 23:53:02.690416 txmanager_test.go:471: [0;33m[warning]  i 1423  latency 18[0m
+2020/06/10 23:53:02.690422 txmanager_test.go:471: [0;33m[warning]  i 1424  latency 18[0m
+2020/06/10 23:53:02.690428 txmanager_test.go:471: [0;33m[warning]  i 1425  latency 17[0m
+2020/06/10 23:53:02.690434 txmanager_test.go:471: [0;33m[warning]  i 1426  latency 18[0m
+2020/06/10 23:53:02.690440 txmanager_test.go:471: [0;33m[warning]  i 1427  latency 19[0m
+2020/06/10 23:53:02.690446 txmanager_test.go:471: [0;33m[warning]  i 1428  latency 20[0m
+2020/06/10 23:53:02.690452 txmanager_test.go:471: [0;33m[warning]  i 1429  latency 16[0m
+2020/06/10 23:53:02.690458 txmanager_test.go:471: [0;33m[warning]  i 1430  latency 17[0m
+2020/06/10 23:53:02.690464 txmanager_test.go:471: [0;33m[warning]  i 1431  latency 20[0m
+2020/06/10 23:53:02.690471 txmanager_test.go:471: [0;33m[warning]  i 1432  latency 16[0m
+2020/06/10 23:53:02.690477 txmanager_test.go:471: [0;33m[warning]  i 1433  latency 19[0m
+2020/06/10 23:53:02.690485 txmanager_test.go:471: [0;33m[warning]  i 1434  latency 19[0m
+2020/06/10 23:53:02.690491 txmanager_test.go:471: [0;33m[warning]  i 1435  latency 19[0m
+2020/06/10 23:53:02.690497 txmanager_test.go:471: [0;33m[warning]  i 1436  latency 19[0m
+2020/06/10 23:53:02.690503 txmanager_test.go:471: [0;33m[warning]  i 1437  latency 23[0m
+2020/06/10 23:53:02.690509 txmanager_test.go:471: [0;33m[warning]  i 1438  latency 17[0m
+2020/06/10 23:53:02.690515 txmanager_test.go:471: [0;33m[warning]  i 1439  latency 18[0m
+2020/06/10 23:53:02.690521 txmanager_test.go:471: [0;33m[warning]  i 1440  latency 18[0m
+2020/06/10 23:53:02.690530 txmanager_test.go:471: [0;33m[warning]  i 1441  latency 17[0m
+2020/06/10 23:53:02.690536 txmanager_test.go:471: [0;33m[warning]  i 1442  latency 18[0m
+2020/06/10 23:53:02.690542 txmanager_test.go:471: [0;33m[warning]  i 1443  latency 21[0m
+2020/06/10 23:53:02.690548 txmanager_test.go:471: [0;33m[warning]  i 1444  latency 19[0m
+2020/06/10 23:53:02.690555 txmanager_test.go:471: [0;33m[warning]  i 1445  latency 17[0m
+2020/06/10 23:53:02.690561 txmanager_test.go:471: [0;33m[warning]  i 1446  latency 19[0m
+2020/06/10 23:53:02.690567 txmanager_test.go:471: [0;33m[warning]  i 1447  latency 19[0m
+2020/06/10 23:53:02.690573 txmanager_test.go:471: [0;33m[warning]  i 1448  latency 18[0m
+2020/06/10 23:53:02.690579 txmanager_test.go:471: [0;33m[warning]  i 1449  latency 21[0m
+2020/06/10 23:53:02.690586 txmanager_test.go:471: [0;33m[warning]  i 1450  latency 18[0m
+2020/06/10 23:53:02.690592 txmanager_test.go:471: [0;33m[warning]  i 1451  latency 19[0m
+2020/06/10 23:53:02.690598 txmanager_test.go:471: [0;33m[warning]  i 1452  latency 22[0m
+2020/06/10 23:53:02.690604 txmanager_test.go:471: [0;33m[warning]  i 1453  latency 18[0m
+2020/06/10 23:53:02.690610 txmanager_test.go:471: [0;33m[warning]  i 1454  latency 19[0m
+2020/06/10 23:53:02.690617 txmanager_test.go:471: [0;33m[warning]  i 1455  latency 18[0m
+2020/06/10 23:53:02.690623 txmanager_test.go:471: [0;33m[warning]  i 1456  latency 19[0m
+2020/06/10 23:53:02.690629 txmanager_test.go:471: [0;33m[warning]  i 1457  latency 18[0m
+2020/06/10 23:53:02.690635 txmanager_test.go:471: [0;33m[warning]  i 1458  latency 18[0m
+2020/06/10 23:53:02.690641 txmanager_test.go:471: [0;33m[warning]  i 1459  latency 19[0m
+2020/06/10 23:53:02.690647 txmanager_test.go:471: [0;33m[warning]  i 1460  latency 19[0m
+2020/06/10 23:53:02.690653 txmanager_test.go:471: [0;33m[warning]  i 1461  latency 19[0m
+2020/06/10 23:53:02.690659 txmanager_test.go:471: [0;33m[warning]  i 1462  latency 17[0m
+2020/06/10 23:53:02.690665 txmanager_test.go:471: [0;33m[warning]  i 1463  latency 18[0m
+2020/06/10 23:53:02.690671 txmanager_test.go:471: [0;33m[warning]  i 1464  latency 17[0m
+2020/06/10 23:53:02.690677 txmanager_test.go:471: [0;33m[warning]  i 1465  latency 19[0m
+2020/06/10 23:53:02.690683 txmanager_test.go:471: [0;33m[warning]  i 1466  latency 17[0m
+2020/06/10 23:53:02.690697 txmanager_test.go:471: [0;33m[warning]  i 1467  latency 17[0m
+2020/06/10 23:53:02.690703 txmanager_test.go:471: [0;33m[warning]  i 1468  latency 17[0m
+2020/06/10 23:53:02.690709 txmanager_test.go:471: [0;33m[warning]  i 1469  latency 17[0m
+2020/06/10 23:53:02.690715 txmanager_test.go:471: [0;33m[warning]  i 1470  latency 18[0m
+2020/06/10 23:53:02.690721 txmanager_test.go:471: [0;33m[warning]  i 1471  latency 18[0m
+2020/06/10 23:53:02.690727 txmanager_test.go:471: [0;33m[warning]  i 1472  latency 18[0m
+2020/06/10 23:53:02.690735 txmanager_test.go:471: [0;33m[warning]  i 1473  latency 18[0m
+2020/06/10 23:53:02.690741 txmanager_test.go:471: [0;33m[warning]  i 1474  latency 19[0m
+2020/06/10 23:53:02.690747 txmanager_test.go:471: [0;33m[warning]  i 1475  latency 18[0m
+2020/06/10 23:53:02.690753 txmanager_test.go:471: [0;33m[warning]  i 1476  latency 20[0m
+2020/06/10 23:53:02.690759 txmanager_test.go:471: [0;33m[warning]  i 1477  latency 17[0m
+2020/06/10 23:53:02.690766 txmanager_test.go:471: [0;33m[warning]  i 1478  latency 18[0m
+2020/06/10 23:53:02.690772 txmanager_test.go:471: [0;33m[warning]  i 1479  latency 19[0m
+2020/06/10 23:53:02.690778 txmanager_test.go:471: [0;33m[warning]  i 1480  latency 18[0m
+2020/06/10 23:53:02.690784 txmanager_test.go:471: [0;33m[warning]  i 1481  latency 19[0m
+2020/06/10 23:53:02.690790 txmanager_test.go:471: [0;33m[warning]  i 1482  latency 17[0m
+2020/06/10 23:53:02.690796 txmanager_test.go:471: [0;33m[warning]  i 1483  latency 18[0m
+2020/06/10 23:53:02.690802 txmanager_test.go:471: [0;33m[warning]  i 1484  latency 17[0m
+2020/06/10 23:53:02.690808 txmanager_test.go:471: [0;33m[warning]  i 1485  latency 18[0m
+2020/06/10 23:53:02.690815 txmanager_test.go:471: [0;33m[warning]  i 1486  latency 18[0m
+2020/06/10 23:53:02.690821 txmanager_test.go:471: [0;33m[warning]  i 1487  latency 17[0m
+2020/06/10 23:53:02.690827 txmanager_test.go:471: [0;33m[warning]  i 1488  latency 19[0m
+2020/06/10 23:53:02.690833 txmanager_test.go:471: [0;33m[warning]  i 1489  latency 17[0m
+2020/06/10 23:53:02.690839 txmanager_test.go:471: [0;33m[warning]  i 1490  latency 19[0m
+2020/06/10 23:53:02.690845 txmanager_test.go:471: [0;33m[warning]  i 1491  latency 18[0m
+2020/06/10 23:53:02.690852 txmanager_test.go:471: [0;33m[warning]  i 1492  latency 19[0m
+2020/06/10 23:53:02.690858 txmanager_test.go:471: [0;33m[warning]  i 1493  latency 16[0m
+2020/06/10 23:53:02.690864 txmanager_test.go:471: [0;33m[warning]  i 1494  latency 19[0m
+2020/06/10 23:53:02.692049 txmanager_test.go:471: [0;33m[warning]  i 1495  latency 18[0m
+2020/06/10 23:53:02.692083 txmanager_test.go:471: [0;33m[warning]  i 1496  latency 17[0m
+2020/06/10 23:53:02.692113 txmanager_test.go:471: [0;33m[warning]  i 1497  latency 19[0m
+2020/06/10 23:53:02.692142 txmanager_test.go:471: [0;33m[warning]  i 1498  latency 18[0m
+2020/06/10 23:53:02.692186 txmanager_test.go:471: [0;33m[warning]  i 1499  latency 18[0m
+2020/06/10 23:53:02.692217 txmanager_test.go:471: [0;33m[warning]  i 1500  latency 18[0m
+2020/06/10 23:53:02.692246 txmanager_test.go:471: [0;33m[warning]  i 1501  latency 18[0m
+2020/06/10 23:53:02.692274 txmanager_test.go:471: [0;33m[warning]  i 1502  latency 18[0m
+2020/06/10 23:53:02.692302 txmanager_test.go:471: [0;33m[warning]  i 1503  latency 17[0m
+2020/06/10 23:53:02.692345 txmanager_test.go:471: [0;33m[warning]  i 1504  latency 18[0m
+2020/06/10 23:53:02.692376 txmanager_test.go:471: [0;33m[warning]  i 1505  latency 18[0m
+2020/06/10 23:53:02.692453 txmanager_test.go:471: [0;33m[warning]  i 1506  latency 16[0m
+2020/06/10 23:53:02.692488 txmanager_test.go:471: [0;33m[warning]  i 1507  latency 18[0m
+2020/06/10 23:53:02.692542 txmanager_test.go:471: [0;33m[warning]  i 1508  latency 16[0m
+2020/06/10 23:53:02.692571 txmanager_test.go:471: [0;33m[warning]  i 1509  latency 19[0m
+2020/06/10 23:53:02.692599 txmanager_test.go:471: [0;33m[warning]  i 1510  latency 18[0m
+2020/06/10 23:53:02.692627 txmanager_test.go:471: [0;33m[warning]  i 1511  latency 18[0m
+2020/06/10 23:53:02.692675 txmanager_test.go:471: [0;33m[warning]  i 1512  latency 18[0m
+2020/06/10 23:53:02.692706 txmanager_test.go:471: [0;33m[warning]  i 1513  latency 17[0m
+2020/06/10 23:53:02.692735 txmanager_test.go:471: [0;33m[warning]  i 1514  latency 17[0m
+2020/06/10 23:53:02.692763 txmanager_test.go:471: [0;33m[warning]  i 1515  latency 18[0m
+2020/06/10 23:53:02.692811 txmanager_test.go:471: [0;33m[warning]  i 1516  latency 18[0m
+2020/06/10 23:53:02.692857 txmanager_test.go:471: [0;33m[warning]  i 1517  latency 18[0m
+2020/06/10 23:53:02.692887 txmanager_test.go:471: [0;33m[warning]  i 1518  latency 19[0m
+2020/06/10 23:53:02.692915 txmanager_test.go:471: [0;33m[warning]  i 1519  latency 18[0m
+2020/06/10 23:53:02.692944 txmanager_test.go:471: [0;33m[warning]  i 1520  latency 18[0m
+2020/06/10 23:53:02.692972 txmanager_test.go:471: [0;33m[warning]  i 1521  latency 17[0m
+2020/06/10 23:53:02.693014 txmanager_test.go:471: [0;33m[warning]  i 1522  latency 19[0m
+2020/06/10 23:53:02.693045 txmanager_test.go:471: [0;33m[warning]  i 1523  latency 19[0m
+2020/06/10 23:53:02.693074 txmanager_test.go:471: [0;33m[warning]  i 1524  latency 17[0m
+2020/06/10 23:53:02.693102 txmanager_test.go:471: [0;33m[warning]  i 1525  latency 22[0m
+2020/06/10 23:53:02.693130 txmanager_test.go:471: [0;33m[warning]  i 1526  latency 19[0m
+2020/06/10 23:53:02.693171 txmanager_test.go:471: [0;33m[warning]  i 1527  latency 17[0m
+2020/06/10 23:53:02.693202 txmanager_test.go:471: [0;33m[warning]  i 1528  latency 19[0m
+2020/06/10 23:53:02.693231 txmanager_test.go:471: [0;33m[warning]  i 1529  latency 23[0m
+2020/06/10 23:53:02.693259 txmanager_test.go:471: [0;33m[warning]  i 1530  latency 17[0m
+2020/06/10 23:53:02.693287 txmanager_test.go:471: [0;33m[warning]  i 1531  latency 19[0m
+2020/06/10 23:53:02.693333 txmanager_test.go:471: [0;33m[warning]  i 1532  latency 19[0m
+2020/06/10 23:53:02.693362 txmanager_test.go:471: [0;33m[warning]  i 1533  latency 18[0m
+2020/06/10 23:53:02.693390 txmanager_test.go:471: [0;33m[warning]  i 1534  latency 18[0m
+2020/06/10 23:53:02.693418 txmanager_test.go:471: [0;33m[warning]  i 1535  latency 18[0m
+2020/06/10 23:53:02.693446 txmanager_test.go:471: [0;33m[warning]  i 1536  latency 19[0m
+2020/06/10 23:53:02.693490 txmanager_test.go:471: [0;33m[warning]  i 1537  latency 17[0m
+2020/06/10 23:53:02.693528 txmanager_test.go:471: [0;33m[warning]  i 1538  latency 22[0m
+2020/06/10 23:53:02.693558 txmanager_test.go:471: [0;33m[warning]  i 1539  latency 18[0m
+2020/06/10 23:53:02.693586 txmanager_test.go:471: [0;33m[warning]  i 1540  latency 17[0m
+2020/06/10 23:53:02.693614 txmanager_test.go:471: [0;33m[warning]  i 1541  latency 21[0m
+2020/06/10 23:53:02.693659 txmanager_test.go:471: [0;33m[warning]  i 1542  latency 19[0m
+2020/06/10 23:53:02.693688 txmanager_test.go:471: [0;33m[warning]  i 1543  latency 19[0m
+2020/06/10 23:53:02.693717 txmanager_test.go:471: [0;33m[warning]  i 1544  latency 17[0m
+2020/06/10 23:53:02.693745 txmanager_test.go:471: [0;33m[warning]  i 1545  latency 19[0m
+2020/06/10 23:53:02.693774 txmanager_test.go:471: [0;33m[warning]  i 1546  latency 16[0m
+2020/06/10 23:53:02.693815 txmanager_test.go:471: [0;33m[warning]  i 1547  latency 19[0m
+2020/06/10 23:53:02.693846 txmanager_test.go:471: [0;33m[warning]  i 1548  latency 17[0m
+2020/06/10 23:53:02.693875 txmanager_test.go:471: [0;33m[warning]  i 1549  latency 18[0m
+2020/06/10 23:53:02.693903 txmanager_test.go:471: [0;33m[warning]  i 1550  latency 21[0m
+2020/06/10 23:53:02.693935 txmanager_test.go:471: [0;33m[warning]  i 1551  latency 18[0m
+2020/06/10 23:53:02.693976 txmanager_test.go:471: [0;33m[warning]  i 1552  latency 19[0m
+2020/06/10 23:53:02.694007 txmanager_test.go:471: [0;33m[warning]  i 1553  latency 18[0m
+2020/06/10 23:53:02.694036 txmanager_test.go:471: [0;33m[warning]  i 1554  latency 19[0m
+2020/06/10 23:53:02.694064 txmanager_test.go:471: [0;33m[warning]  i 1555  latency 21[0m
+2020/06/10 23:53:02.694092 txmanager_test.go:471: [0;33m[warning]  i 1556  latency 17[0m
+2020/06/10 23:53:02.694128 txmanager_test.go:471: [0;33m[warning]  i 1557  latency 19[0m
+2020/06/10 23:53:02.694167 txmanager_test.go:471: [0;33m[warning]  i 1558  latency 18[0m
+2020/06/10 23:53:02.694196 txmanager_test.go:471: [0;33m[warning]  i 1559  latency 19[0m
+2020/06/10 23:53:02.694224 txmanager_test.go:471: [0;33m[warning]  i 1560  latency 18[0m
+2020/06/10 23:53:02.694252 txmanager_test.go:471: [0;33m[warning]  i 1561  latency 18[0m
+2020/06/10 23:53:02.694281 txmanager_test.go:471: [0;33m[warning]  i 1562  latency 19[0m
+2020/06/10 23:53:02.694325 txmanager_test.go:471: [0;33m[warning]  i 1563  latency 18[0m
+2020/06/10 23:53:02.694354 txmanager_test.go:471: [0;33m[warning]  i 1564  latency 19[0m
+2020/06/10 23:53:02.694382 txmanager_test.go:471: [0;33m[warning]  i 1565  latency 18[0m
+2020/06/10 23:53:02.694410 txmanager_test.go:471: [0;33m[warning]  i 1566  latency 19[0m
+2020/06/10 23:53:02.694439 txmanager_test.go:471: [0;33m[warning]  i 1567  latency 18[0m
+2020/06/10 23:53:02.694483 txmanager_test.go:471: [0;33m[warning]  i 1568  latency 21[0m
+2020/06/10 23:53:02.694512 txmanager_test.go:471: [0;33m[warning]  i 1569  latency 17[0m
+2020/06/10 23:53:02.694540 txmanager_test.go:471: [0;33m[warning]  i 1570  latency 16[0m
+2020/06/10 23:53:02.694568 txmanager_test.go:471: [0;33m[warning]  i 1571  latency 21[0m
+2020/06/10 23:53:02.694597 txmanager_test.go:471: [0;33m[warning]  i 1572  latency 20[0m
+2020/06/10 23:53:02.694643 txmanager_test.go:471: [0;33m[warning]  i 1573  latency 20[0m
+2020/06/10 23:53:02.694673 txmanager_test.go:471: [0;33m[warning]  i 1574  latency 20[0m
+2020/06/10 23:53:02.694705 txmanager_test.go:471: [0;33m[warning]  i 1575  latency 21[0m
+2020/06/10 23:53:02.694733 txmanager_test.go:471: [0;33m[warning]  i 1576  latency 17[0m
+2020/06/10 23:53:02.694761 txmanager_test.go:471: [0;33m[warning]  i 1577  latency 21[0m
+2020/06/10 23:53:02.694804 txmanager_test.go:471: [0;33m[warning]  i 1578  latency 18[0m
+2020/06/10 23:53:02.694832 txmanager_test.go:471: [0;33m[warning]  i 1579  latency 19[0m
+2020/06/10 23:53:02.694860 txmanager_test.go:471: [0;33m[warning]  i 1580  latency 20[0m
+2020/06/10 23:53:02.694888 txmanager_test.go:471: [0;33m[warning]  i 1581  latency 18[0m
+2020/06/10 23:53:02.694928 txmanager_test.go:471: [0;33m[warning]  i 1582  latency 19[0m
+2020/06/10 23:53:02.694973 txmanager_test.go:471: [0;33m[warning]  i 1583  latency 20[0m
+2020/06/10 23:53:02.695003 txmanager_test.go:471: [0;33m[warning]  i 1584  latency 20[0m
+2020/06/10 23:53:02.695031 txmanager_test.go:471: [0;33m[warning]  i 1585  latency 19[0m
+2020/06/10 23:53:02.695060 txmanager_test.go:471: [0;33m[warning]  i 1586  latency 21[0m
+2020/06/10 23:53:02.695102 txmanager_test.go:471: [0;33m[warning]  i 1587  latency 18[0m
+2020/06/10 23:53:02.695134 txmanager_test.go:471: [0;33m[warning]  i 1588  latency 21[0m
+2020/06/10 23:53:02.695162 txmanager_test.go:471: [0;33m[warning]  i 1589  latency 19[0m
+2020/06/10 23:53:02.695196 txmanager_test.go:471: [0;33m[warning]  i 1590  latency 19[0m
+2020/06/10 23:53:02.695225 txmanager_test.go:471: [0;33m[warning]  i 1591  latency 19[0m
+2020/06/10 23:53:02.695267 txmanager_test.go:471: [0;33m[warning]  i 1592  latency 22[0m
+2020/06/10 23:53:02.695298 txmanager_test.go:471: [0;33m[warning]  i 1593  latency 27[0m
+2020/06/10 23:53:02.695326 txmanager_test.go:471: [0;33m[warning]  i 1594  latency 20[0m
+2020/06/10 23:53:02.695364 txmanager_test.go:471: [0;33m[warning]  i 1595  latency 21[0m
+2020/06/10 23:53:02.695393 txmanager_test.go:471: [0;33m[warning]  i 1596  latency 20[0m
+2020/06/10 23:53:02.695435 txmanager_test.go:471: [0;33m[warning]  i 1597  latency 20[0m
+2020/06/10 23:53:02.695466 txmanager_test.go:471: [0;33m[warning]  i 1598  latency 18[0m
+2020/06/10 23:53:02.695494 txmanager_test.go:471: [0;33m[warning]  i 1599  latency 18[0m
+2020/06/10 23:53:02.695523 txmanager_test.go:471: [0;33m[warning]  i 1600  latency 18[0m
+2020/06/10 23:53:02.695551 txmanager_test.go:471: [0;33m[warning]  i 1601  latency 17[0m
+2020/06/10 23:53:02.695586 txmanager_test.go:471: [0;33m[warning]  i 1602  latency 18[0m
+2020/06/10 23:53:02.695623 txmanager_test.go:471: [0;33m[warning]  i 1603  latency 20[0m
+2020/06/10 23:53:02.695652 txmanager_test.go:471: [0;33m[warning]  i 1604  latency 18[0m
+2020/06/10 23:53:02.695680 txmanager_test.go:471: [0;33m[warning]  i 1605  latency 18[0m
+2020/06/10 23:53:02.695708 txmanager_test.go:471: [0;33m[warning]  i 1606  latency 20[0m
+2020/06/10 23:53:02.695736 txmanager_test.go:471: [0;33m[warning]  i 1607  latency 18[0m
+2020/06/10 23:53:02.695780 txmanager_test.go:471: [0;33m[warning]  i 1608  latency 19[0m
+2020/06/10 23:53:02.695809 txmanager_test.go:471: [0;33m[warning]  i 1609  latency 20[0m
+2020/06/10 23:53:02.695838 txmanager_test.go:471: [0;33m[warning]  i 1610  latency 19[0m
+2020/06/10 23:53:02.695866 txmanager_test.go:471: [0;33m[warning]  i 1611  latency 18[0m
+2020/06/10 23:53:02.695895 txmanager_test.go:471: [0;33m[warning]  i 1612  latency 19[0m
+2020/06/10 23:53:02.695938 txmanager_test.go:471: [0;33m[warning]  i 1613  latency 19[0m
+2020/06/10 23:53:02.695967 txmanager_test.go:471: [0;33m[warning]  i 1614  latency 19[0m
+2020/06/10 23:53:02.695996 txmanager_test.go:471: [0;33m[warning]  i 1615  latency 21[0m
+2020/06/10 23:53:02.696024 txmanager_test.go:471: [0;33m[warning]  i 1616  latency 31[0m
+2020/06/10 23:53:02.696053 txmanager_test.go:471: [0;33m[warning]  i 1617  latency 19[0m
+2020/06/10 23:53:02.696098 txmanager_test.go:471: [0;33m[warning]  i 1618  latency 18[0m
+2020/06/10 23:53:02.696127 txmanager_test.go:471: [0;33m[warning]  i 1619  latency 20[0m
+2020/06/10 23:53:02.696156 txmanager_test.go:471: [0;33m[warning]  i 1620  latency 21[0m
+2020/06/10 23:53:02.696184 txmanager_test.go:471: [0;33m[warning]  i 1621  latency 18[0m
+2020/06/10 23:53:02.696212 txmanager_test.go:471: [0;33m[warning]  i 1622  latency 20[0m
+2020/06/10 23:53:02.696255 txmanager_test.go:471: [0;33m[warning]  i 1623  latency 18[0m
+2020/06/10 23:53:02.696285 txmanager_test.go:471: [0;33m[warning]  i 1624  latency 18[0m
+2020/06/10 23:53:02.696313 txmanager_test.go:471: [0;33m[warning]  i 1625  latency 17[0m
+2020/06/10 23:53:02.696341 txmanager_test.go:471: [0;33m[warning]  i 1626  latency 19[0m
+2020/06/10 23:53:02.696370 txmanager_test.go:471: [0;33m[warning]  i 1627  latency 19[0m
+2020/06/10 23:53:02.696419 txmanager_test.go:471: [0;33m[warning]  i 1628  latency 18[0m
+2020/06/10 23:53:02.696453 txmanager_test.go:471: [0;33m[warning]  i 1629  latency 21[0m
+2020/06/10 23:53:02.696482 txmanager_test.go:471: [0;33m[warning]  i 1630  latency 19[0m
+2020/06/10 23:53:02.696511 txmanager_test.go:471: [0;33m[warning]  i 1631  latency 20[0m
+2020/06/10 23:53:02.696539 txmanager_test.go:471: [0;33m[warning]  i 1632  latency 19[0m
+2020/06/10 23:53:02.696582 txmanager_test.go:471: [0;33m[warning]  i 1633  latency 21[0m
+2020/06/10 23:53:02.696612 txmanager_test.go:471: [0;33m[warning]  i 1634  latency 21[0m
+2020/06/10 23:53:02.696641 txmanager_test.go:471: [0;33m[warning]  i 1635  latency 17[0m
+2020/06/10 23:53:02.696669 txmanager_test.go:471: [0;33m[warning]  i 1636  latency 22[0m
+2020/06/10 23:53:02.696697 txmanager_test.go:471: [0;33m[warning]  i 1637  latency 20[0m
+2020/06/10 23:53:02.696740 txmanager_test.go:471: [0;33m[warning]  i 1638  latency 20[0m
+2020/06/10 23:53:02.696770 txmanager_test.go:471: [0;33m[warning]  i 1639  latency 19[0m
+2020/06/10 23:53:02.696798 txmanager_test.go:471: [0;33m[warning]  i 1640  latency 19[0m
+2020/06/10 23:53:02.696826 txmanager_test.go:471: [0;33m[warning]  i 1641  latency 18[0m
+2020/06/10 23:53:02.696854 txmanager_test.go:471: [0;33m[warning]  i 1642  latency 19[0m
+2020/06/10 23:53:02.696883 txmanager_test.go:471: [0;33m[warning]  i 1643  latency 19[0m
+2020/06/10 23:53:02.696927 txmanager_test.go:471: [0;33m[warning]  i 1644  latency 17[0m
+2020/06/10 23:53:02.696955 txmanager_test.go:471: [0;33m[warning]  i 1645  latency 21[0m
+2020/06/10 23:53:02.696983 txmanager_test.go:471: [0;33m[warning]  i 1646  latency 18[0m
+2020/06/10 23:53:02.697012 txmanager_test.go:471: [0;33m[warning]  i 1647  latency 19[0m
+2020/06/10 23:53:02.697040 txmanager_test.go:471: [0;33m[warning]  i 1648  latency 20[0m
+2020/06/10 23:53:02.697084 txmanager_test.go:471: [0;33m[warning]  i 1649  latency 19[0m
+2020/06/10 23:53:02.697113 txmanager_test.go:471: [0;33m[warning]  i 1650  latency 21[0m
+2020/06/10 23:53:02.697143 txmanager_test.go:471: [0;33m[warning]  i 1651  latency 16[0m
+2020/06/10 23:53:02.697172 txmanager_test.go:471: [0;33m[warning]  i 1652  latency 19[0m
+2020/06/10 23:53:02.697201 txmanager_test.go:471: [0;33m[warning]  i 1653  latency 20[0m
+2020/06/10 23:53:02.697245 txmanager_test.go:471: [0;33m[warning]  i 1654  latency 17[0m
+2020/06/10 23:53:02.697274 txmanager_test.go:471: [0;33m[warning]  i 1655  latency 20[0m
+2020/06/10 23:53:02.697302 txmanager_test.go:471: [0;33m[warning]  i 1656  latency 19[0m
+2020/06/10 23:53:02.697330 txmanager_test.go:471: [0;33m[warning]  i 1657  latency 18[0m
+2020/06/10 23:53:02.697359 txmanager_test.go:471: [0;33m[warning]  i 1658  latency 18[0m
+2020/06/10 23:53:02.697402 txmanager_test.go:471: [0;33m[warning]  i 1659  latency 17[0m
+2020/06/10 23:53:02.697431 txmanager_test.go:471: [0;33m[warning]  i 1660  latency 19[0m
+2020/06/10 23:53:02.697464 txmanager_test.go:471: [0;33m[warning]  i 1661  latency 18[0m
+2020/06/10 23:53:02.697493 txmanager_test.go:471: [0;33m[warning]  i 1662  latency 22[0m
+2020/06/10 23:53:02.697521 txmanager_test.go:471: [0;33m[warning]  i 1663  latency 18[0m
+2020/06/10 23:53:02.697564 txmanager_test.go:471: [0;33m[warning]  i 1664  latency 17[0m
+2020/06/10 23:53:02.697593 txmanager_test.go:471: [0;33m[warning]  i 1665  latency 19[0m
+2020/06/10 23:53:02.697621 txmanager_test.go:471: [0;33m[warning]  i 1666  latency 19[0m
+2020/06/10 23:53:02.697649 txmanager_test.go:471: [0;33m[warning]  i 1667  latency 19[0m
+2020/06/10 23:53:02.697680 txmanager_test.go:471: [0;33m[warning]  i 1668  latency 20[0m
+2020/06/10 23:53:02.697726 txmanager_test.go:471: [0;33m[warning]  i 1669  latency 20[0m
+2020/06/10 23:53:02.697755 txmanager_test.go:471: [0;33m[warning]  i 1670  latency 21[0m
+2020/06/10 23:53:02.697783 txmanager_test.go:471: [0;33m[warning]  i 1671  latency 18[0m
+2020/06/10 23:53:02.697811 txmanager_test.go:471: [0;33m[warning]  i 1672  latency 32[0m
+2020/06/10 23:53:02.697859 txmanager_test.go:471: [0;33m[warning]  i 1673  latency 22[0m
+2020/06/10 23:53:02.697891 txmanager_test.go:471: [0;33m[warning]  i 1674  latency 19[0m
+2020/06/10 23:53:02.697919 txmanager_test.go:471: [0;33m[warning]  i 1675  latency 19[0m
+2020/06/10 23:53:02.697948 txmanager_test.go:471: [0;33m[warning]  i 1676  latency 21[0m
+2020/06/10 23:53:02.697976 txmanager_test.go:471: [0;33m[warning]  i 1677  latency 21[0m
+2020/06/10 23:53:02.698017 txmanager_test.go:471: [0;33m[warning]  i 1678  latency 20[0m
+2020/06/10 23:53:02.698048 txmanager_test.go:471: [0;33m[warning]  i 1679  latency 19[0m
+2020/06/10 23:53:02.698076 txmanager_test.go:471: [0;33m[warning]  i 1680  latency 17[0m
+2020/06/10 23:53:02.698105 txmanager_test.go:471: [0;33m[warning]  i 1681  latency 20[0m
+2020/06/10 23:53:02.698133 txmanager_test.go:471: [0;33m[warning]  i 1682  latency 18[0m
+2020/06/10 23:53:02.698161 txmanager_test.go:471: [0;33m[warning]  i 1683  latency 19[0m
+2020/06/10 23:53:02.698205 txmanager_test.go:471: [0;33m[warning]  i 1684  latency 18[0m
+2020/06/10 23:53:02.698234 txmanager_test.go:471: [0;33m[warning]  i 1685  latency 18[0m
+2020/06/10 23:53:02.698262 txmanager_test.go:471: [0;33m[warning]  i 1686  latency 18[0m
+2020/06/10 23:53:02.698290 txmanager_test.go:471: [0;33m[warning]  i 1687  latency 17[0m
+2020/06/10 23:53:02.698318 txmanager_test.go:471: [0;33m[warning]  i 1688  latency 18[0m
+2020/06/10 23:53:02.698361 txmanager_test.go:471: [0;33m[warning]  i 1689  latency 18[0m
+2020/06/10 23:53:02.698390 txmanager_test.go:471: [0;33m[warning]  i 1690  latency 20[0m
+2020/06/10 23:53:02.698418 txmanager_test.go:471: [0;33m[warning]  i 1691  latency 18[0m
+2020/06/10 23:53:02.698446 txmanager_test.go:471: [0;33m[warning]  i 1692  latency 20[0m
+2020/06/10 23:53:02.698474 txmanager_test.go:471: [0;33m[warning]  i 1693  latency 20[0m
+2020/06/10 23:53:02.698517 txmanager_test.go:471: [0;33m[warning]  i 1694  latency 19[0m
+2020/06/10 23:53:02.698546 txmanager_test.go:471: [0;33m[warning]  i 1695  latency 19[0m
+2020/06/10 23:53:02.698575 txmanager_test.go:471: [0;33m[warning]  i 1696  latency 18[0m
+2020/06/10 23:53:02.698603 txmanager_test.go:471: [0;33m[warning]  i 1697  latency 20[0m
+2020/06/10 23:53:02.698631 txmanager_test.go:471: [0;33m[warning]  i 1698  latency 18[0m
+2020/06/10 23:53:02.698673 txmanager_test.go:471: [0;33m[warning]  i 1699  latency 19[0m
+2020/06/10 23:53:02.698704 txmanager_test.go:471: [0;33m[warning]  i 1700  latency 19[0m
+2020/06/10 23:53:02.698732 txmanager_test.go:471: [0;33m[warning]  i 1701  latency 19[0m
+2020/06/10 23:53:02.698761 txmanager_test.go:471: [0;33m[warning]  i 1702  latency 18[0m
+2020/06/10 23:53:02.698789 txmanager_test.go:471: [0;33m[warning]  i 1703  latency 21[0m
+2020/06/10 23:53:02.698817 txmanager_test.go:471: [0;33m[warning]  i 1704  latency 19[0m
+2020/06/10 23:53:02.698867 txmanager_test.go:471: [0;33m[warning]  i 1705  latency 19[0m
+2020/06/10 23:53:02.698896 txmanager_test.go:471: [0;33m[warning]  i 1706  latency 18[0m
+2020/06/10 23:53:02.698928 txmanager_test.go:471: [0;33m[warning]  i 1707  latency 18[0m
+2020/06/10 23:53:02.698957 txmanager_test.go:471: [0;33m[warning]  i 1708  latency 20[0m
+2020/06/10 23:53:02.698998 txmanager_test.go:471: [0;33m[warning]  i 1709  latency 17[0m
+2020/06/10 23:53:02.699029 txmanager_test.go:471: [0;33m[warning]  i 1710  latency 21[0m
+2020/06/10 23:53:02.699058 txmanager_test.go:471: [0;33m[warning]  i 1711  latency 18[0m
+2020/06/10 23:53:02.699086 txmanager_test.go:471: [0;33m[warning]  i 1712  latency 17[0m
+2020/06/10 23:53:02.699114 txmanager_test.go:471: [0;33m[warning]  i 1713  latency 22[0m
+2020/06/10 23:53:02.699150 txmanager_test.go:471: [0;33m[warning]  i 1714  latency 18[0m
+2020/06/10 23:53:02.699186 txmanager_test.go:471: [0;33m[warning]  i 1715  latency 20[0m
+2020/06/10 23:53:02.699215 txmanager_test.go:471: [0;33m[warning]  i 1716  latency 18[0m
+2020/06/10 23:53:02.699243 txmanager_test.go:471: [0;33m[warning]  i 1717  latency 19[0m
+2020/06/10 23:53:02.699277 txmanager_test.go:471: [0;33m[warning]  i 1718  latency 21[0m
+2020/06/10 23:53:02.699320 txmanager_test.go:471: [0;33m[warning]  i 1719  latency 19[0m
+2020/06/10 23:53:02.699351 txmanager_test.go:471: [0;33m[warning]  i 1720  latency 18[0m
+2020/06/10 23:53:02.699380 txmanager_test.go:471: [0;33m[warning]  i 1721  latency 19[0m
+2020/06/10 23:53:02.699412 txmanager_test.go:471: [0;33m[warning]  i 1722  latency 22[0m
+2020/06/10 23:53:02.699440 txmanager_test.go:471: [0;33m[warning]  i 1723  latency 19[0m
+2020/06/10 23:53:02.699468 txmanager_test.go:471: [0;33m[warning]  i 1724  latency 20[0m
+2020/06/10 23:53:02.699510 txmanager_test.go:471: [0;33m[warning]  i 1725  latency 19[0m
+2020/06/10 23:53:02.699541 txmanager_test.go:471: [0;33m[warning]  i 1726  latency 18[0m
+2020/06/10 23:53:02.699569 txmanager_test.go:471: [0;33m[warning]  i 1727  latency 20[0m
+2020/06/10 23:53:02.699597 txmanager_test.go:471: [0;33m[warning]  i 1728  latency 18[0m
+2020/06/10 23:53:02.699626 txmanager_test.go:471: [0;33m[warning]  i 1729  latency 19[0m
+2020/06/10 23:53:02.699654 txmanager_test.go:471: [0;33m[warning]  i 1730  latency 17[0m
+2020/06/10 23:53:02.699682 txmanager_test.go:471: [0;33m[warning]  i 1731  latency 20[0m
+2020/06/10 23:53:02.699711 txmanager_test.go:471: [0;33m[warning]  i 1732  latency 17[0m
+2020/06/10 23:53:02.699739 txmanager_test.go:471: [0;33m[warning]  i 1733  latency 18[0m
+2020/06/10 23:53:02.699780 txmanager_test.go:471: [0;33m[warning]  i 1734  latency 18[0m
+2020/06/10 23:53:02.699811 txmanager_test.go:471: [0;33m[warning]  i 1735  latency 18[0m
+2020/06/10 23:53:02.699839 txmanager_test.go:471: [0;33m[warning]  i 1736  latency 17[0m
+2020/06/10 23:53:02.699867 txmanager_test.go:471: [0;33m[warning]  i 1737  latency 19[0m
+2020/06/10 23:53:02.699896 txmanager_test.go:471: [0;33m[warning]  i 1738  latency 20[0m
+2020/06/10 23:53:02.699924 txmanager_test.go:471: [0;33m[warning]  i 1739  latency 18[0m
+2020/06/10 23:53:02.699952 txmanager_test.go:471: [0;33m[warning]  i 1740  latency 18[0m
+2020/06/10 23:53:02.699980 txmanager_test.go:471: [0;33m[warning]  i 1741  latency 17[0m
+2020/06/10 23:53:02.700008 txmanager_test.go:471: [0;33m[warning]  i 1742  latency 20[0m
+2020/06/10 23:53:02.700037 txmanager_test.go:471: [0;33m[warning]  i 1743  latency 17[0m
+2020/06/10 23:53:02.700065 txmanager_test.go:471: [0;33m[warning]  i 1744  latency 20[0m
+2020/06/10 23:53:02.700093 txmanager_test.go:471: [0;33m[warning]  i 1745  latency 18[0m
+2020/06/10 23:53:02.700125 txmanager_test.go:471: [0;33m[warning]  i 1746  latency 19[0m
+2020/06/10 23:53:02.700153 txmanager_test.go:471: [0;33m[warning]  i 1747  latency 20[0m
+2020/06/10 23:53:02.700182 txmanager_test.go:471: [0;33m[warning]  i 1748  latency 19[0m
+2020/06/10 23:53:02.700226 txmanager_test.go:471: [0;33m[warning]  i 1749  latency 20[0m
+2020/06/10 23:53:02.700257 txmanager_test.go:471: [0;33m[warning]  i 1750  latency 19[0m
+2020/06/10 23:53:02.700285 txmanager_test.go:471: [0;33m[warning]  i 1751  latency 21[0m
+2020/06/10 23:53:02.700313 txmanager_test.go:471: [0;33m[warning]  i 1752  latency 17[0m
+2020/06/10 23:53:02.700341 txmanager_test.go:471: [0;33m[warning]  i 1753  latency 20[0m
+2020/06/10 23:53:02.700369 txmanager_test.go:471: [0;33m[warning]  i 1754  latency 18[0m
+2020/06/10 23:53:02.700397 txmanager_test.go:471: [0;33m[warning]  i 1755  latency 19[0m
+2020/06/10 23:53:02.700425 txmanager_test.go:471: [0;33m[warning]  i 1756  latency 20[0m
+2020/06/10 23:53:02.700453 txmanager_test.go:471: [0;33m[warning]  i 1757  latency 19[0m
+2020/06/10 23:53:02.700481 txmanager_test.go:471: [0;33m[warning]  i 1758  latency 19[0m
+2020/06/10 23:53:02.700509 txmanager_test.go:471: [0;33m[warning]  i 1759  latency 20[0m
+2020/06/10 23:53:02.700539 txmanager_test.go:471: [0;33m[warning]  i 1760  latency 21[0m
+2020/06/10 23:53:02.700569 txmanager_test.go:471: [0;33m[warning]  i 1761  latency 18[0m
+2020/06/10 23:53:02.700597 txmanager_test.go:471: [0;33m[warning]  i 1762  latency 20[0m
+2020/06/10 23:53:02.700631 txmanager_test.go:471: [0;33m[warning]  i 1763  latency 19[0m
+2020/06/10 23:53:02.700660 txmanager_test.go:471: [0;33m[warning]  i 1764  latency 19[0m
+2020/06/10 23:53:02.700688 txmanager_test.go:471: [0;33m[warning]  i 1765  latency 20[0m
+2020/06/10 23:53:02.700716 txmanager_test.go:471: [0;33m[warning]  i 1766  latency 19[0m
+2020/06/10 23:53:02.700744 txmanager_test.go:471: [0;33m[warning]  i 1767  latency 18[0m
+2020/06/10 23:53:02.700772 txmanager_test.go:471: [0;33m[warning]  i 1768  latency 19[0m
+2020/06/10 23:53:02.700800 txmanager_test.go:471: [0;33m[warning]  i 1769  latency 19[0m
+2020/06/10 23:53:02.700828 txmanager_test.go:471: [0;33m[warning]  i 1770  latency 19[0m
+2020/06/10 23:53:02.700856 txmanager_test.go:471: [0;33m[warning]  i 1771  latency 19[0m
+2020/06/10 23:53:02.700884 txmanager_test.go:471: [0;33m[warning]  i 1772  latency 18[0m
+2020/06/10 23:53:02.700912 txmanager_test.go:471: [0;33m[warning]  i 1773  latency 21[0m
+2020/06/10 23:53:02.700940 txmanager_test.go:471: [0;33m[warning]  i 1774  latency 18[0m
+2020/06/10 23:53:02.700994 txmanager_test.go:471: [0;33m[warning]  i 1775  latency 19[0m
+2020/06/10 23:53:02.701025 txmanager_test.go:471: [0;33m[warning]  i 1776  latency 18[0m
+2020/06/10 23:53:02.701054 txmanager_test.go:471: [0;33m[warning]  i 1777  latency 19[0m
+2020/06/10 23:53:02.701082 txmanager_test.go:471: [0;33m[warning]  i 1778  latency 19[0m
+2020/06/10 23:53:02.701110 txmanager_test.go:471: [0;33m[warning]  i 1779  latency 18[0m
+2020/06/10 23:53:02.701160 txmanager_test.go:471: [0;33m[warning]  i 1780  latency 20[0m
+2020/06/10 23:53:02.701192 txmanager_test.go:471: [0;33m[warning]  i 1781  latency 17[0m
+2020/06/10 23:53:02.701220 txmanager_test.go:471: [0;33m[warning]  i 1782  latency 20[0m
+2020/06/10 23:53:02.701249 txmanager_test.go:471: [0;33m[warning]  i 1783  latency 18[0m
+2020/06/10 23:53:02.701276 txmanager_test.go:471: [0;33m[warning]  i 1784  latency 19[0m
+2020/06/10 23:53:02.701328 txmanager_test.go:471: [0;33m[warning]  i 1785  latency 20[0m
+2020/06/10 23:53:02.701359 txmanager_test.go:471: [0;33m[warning]  i 1786  latency 21[0m
+2020/06/10 23:53:02.701388 txmanager_test.go:471: [0;33m[warning]  i 1787  latency 19[0m
+2020/06/10 23:53:02.701416 txmanager_test.go:471: [0;33m[warning]  i 1788  latency 19[0m
+2020/06/10 23:53:02.701444 txmanager_test.go:471: [0;33m[warning]  i 1789  latency 18[0m
+2020/06/10 23:53:02.701490 txmanager_test.go:471: [0;33m[warning]  i 1790  latency 20[0m
+2020/06/10 23:53:02.701521 txmanager_test.go:471: [0;33m[warning]  i 1791  latency 18[0m
+2020/06/10 23:53:02.701550 txmanager_test.go:471: [0;33m[warning]  i 1792  latency 19[0m
+2020/06/10 23:53:02.701578 txmanager_test.go:471: [0;33m[warning]  i 1793  latency 20[0m
+2020/06/10 23:53:02.701610 txmanager_test.go:471: [0;33m[warning]  i 1794  latency 23[0m
+2020/06/10 23:53:02.701657 txmanager_test.go:471: [0;33m[warning]  i 1795  latency 26[0m
+2020/06/10 23:53:02.701688 txmanager_test.go:471: [0;33m[warning]  i 1796  latency 21[0m
+2020/06/10 23:53:02.701717 txmanager_test.go:471: [0;33m[warning]  i 1797  latency 24[0m
+2020/06/10 23:53:02.701745 txmanager_test.go:471: [0;33m[warning]  i 1798  latency 20[0m
+2020/06/10 23:53:02.701773 txmanager_test.go:471: [0;33m[warning]  i 1799  latency 22[0m
+2020/06/10 23:53:02.701816 txmanager_test.go:471: [0;33m[warning]  i 1800  latency 19[0m
+2020/06/10 23:53:02.701848 txmanager_test.go:471: [0;33m[warning]  i 1801  latency 20[0m
+2020/06/10 23:53:02.701876 txmanager_test.go:471: [0;33m[warning]  i 1802  latency 38[0m
+2020/06/10 23:53:02.701904 txmanager_test.go:471: [0;33m[warning]  i 1803  latency 26[0m
+2020/06/10 23:53:02.701932 txmanager_test.go:471: [0;33m[warning]  i 1804  latency 28[0m
+2020/06/10 23:53:02.701974 txmanager_test.go:471: [0;33m[warning]  i 1805  latency 40[0m
+2020/06/10 23:53:02.702004 txmanager_test.go:471: [0;33m[warning]  i 1806  latency 22[0m
+2020/06/10 23:53:02.702032 txmanager_test.go:471: [0;33m[warning]  i 1807  latency 19[0m
+2020/06/10 23:53:02.702066 txmanager_test.go:471: [0;33m[warning]  i 1808  latency 20[0m
+2020/06/10 23:53:02.702096 txmanager_test.go:471: [0;33m[warning]  i 1809  latency 19[0m
+2020/06/10 23:53:02.702139 txmanager_test.go:471: [0;33m[warning]  i 1810  latency 23[0m
+2020/06/10 23:53:02.702170 txmanager_test.go:471: [0;33m[warning]  i 1811  latency 25[0m
+2020/06/10 23:53:02.702198 txmanager_test.go:471: [0;33m[warning]  i 1812  latency 18[0m
+2020/06/10 23:53:02.702227 txmanager_test.go:471: [0;33m[warning]  i 1813  latency 18[0m
+2020/06/10 23:53:02.702255 txmanager_test.go:471: [0;33m[warning]  i 1814  latency 19[0m
+2020/06/10 23:53:02.702290 txmanager_test.go:471: [0;33m[warning]  i 1815  latency 21[0m
+2020/06/10 23:53:02.702327 txmanager_test.go:471: [0;33m[warning]  i 1816  latency 18[0m
+2020/06/10 23:53:02.702355 txmanager_test.go:471: [0;33m[warning]  i 1817  latency 19[0m
+2020/06/10 23:53:02.702383 txmanager_test.go:471: [0;33m[warning]  i 1818  latency 20[0m
+2020/06/10 23:53:02.702412 txmanager_test.go:471: [0;33m[warning]  i 1819  latency 19[0m
+2020/06/10 23:53:02.702440 txmanager_test.go:471: [0;33m[warning]  i 1820  latency 20[0m
+2020/06/10 23:53:02.702483 txmanager_test.go:471: [0;33m[warning]  i 1821  latency 19[0m
+2020/06/10 23:53:02.702512 txmanager_test.go:471: [0;33m[warning]  i 1822  latency 20[0m
+2020/06/10 23:53:02.702540 txmanager_test.go:471: [0;33m[warning]  i 1823  latency 18[0m
+2020/06/10 23:53:02.702571 txmanager_test.go:471: [0;33m[warning]  i 1824  latency 20[0m
+2020/06/10 23:53:02.702600 txmanager_test.go:471: [0;33m[warning]  i 1825  latency 18[0m
+2020/06/10 23:53:02.702644 txmanager_test.go:471: [0;33m[warning]  i 1826  latency 17[0m
+2020/06/10 23:53:02.702673 txmanager_test.go:471: [0;33m[warning]  i 1827  latency 20[0m
+2020/06/10 23:53:02.702701 txmanager_test.go:471: [0;33m[warning]  i 1828  latency 19[0m
+2020/06/10 23:53:02.702729 txmanager_test.go:471: [0;33m[warning]  i 1829  latency 21[0m
+2020/06/10 23:53:02.702757 txmanager_test.go:471: [0;33m[warning]  i 1830  latency 21[0m
+2020/06/10 23:53:02.702797 txmanager_test.go:471: [0;33m[warning]  i 1831  latency 27[0m
+2020/06/10 23:53:02.702826 txmanager_test.go:471: [0;33m[warning]  i 1832  latency 19[0m
+2020/06/10 23:53:02.702855 txmanager_test.go:471: [0;33m[warning]  i 1833  latency 21[0m
+2020/06/10 23:53:02.702883 txmanager_test.go:471: [0;33m[warning]  i 1834  latency 19[0m
+2020/06/10 23:53:02.702911 txmanager_test.go:471: [0;33m[warning]  i 1835  latency 21[0m
+2020/06/10 23:53:02.702961 txmanager_test.go:471: [0;33m[warning]  i 1836  latency 18[0m
+2020/06/10 23:53:02.702990 txmanager_test.go:471: [0;33m[warning]  i 1837  latency 19[0m
+2020/06/10 23:53:02.703018 txmanager_test.go:471: [0;33m[warning]  i 1838  latency 20[0m
+2020/06/10 23:53:02.703046 txmanager_test.go:471: [0;33m[warning]  i 1839  latency 19[0m
+2020/06/10 23:53:02.703075 txmanager_test.go:471: [0;33m[warning]  i 1840  latency 35[0m
+2020/06/10 23:53:02.703118 txmanager_test.go:471: [0;33m[warning]  i 1841  latency 21[0m
+2020/06/10 23:53:02.703147 txmanager_test.go:471: [0;33m[warning]  i 1842  latency 19[0m
+2020/06/10 23:53:02.703175 txmanager_test.go:471: [0;33m[warning]  i 1843  latency 21[0m
+2020/06/10 23:53:02.703203 txmanager_test.go:471: [0;33m[warning]  i 1844  latency 21[0m
+2020/06/10 23:53:02.703231 txmanager_test.go:471: [0;33m[warning]  i 1845  latency 20[0m
+2020/06/10 23:53:02.703275 txmanager_test.go:471: [0;33m[warning]  i 1846  latency 20[0m
+2020/06/10 23:53:02.703304 txmanager_test.go:471: [0;33m[warning]  i 1847  latency 19[0m
+2020/06/10 23:53:02.703332 txmanager_test.go:471: [0;33m[warning]  i 1848  latency 20[0m
+2020/06/10 23:53:02.703361 txmanager_test.go:471: [0;33m[warning]  i 1849  latency 21[0m
+2020/06/10 23:53:02.703389 txmanager_test.go:471: [0;33m[warning]  i 1850  latency 20[0m
+2020/06/10 23:53:02.703432 txmanager_test.go:471: [0;33m[warning]  i 1851  latency 21[0m
+2020/06/10 23:53:02.703463 txmanager_test.go:471: [0;33m[warning]  i 1852  latency 19[0m
+2020/06/10 23:53:02.703497 txmanager_test.go:471: [0;33m[warning]  i 1853  latency 19[0m
+2020/06/10 23:53:02.703526 txmanager_test.go:471: [0;33m[warning]  i 1854  latency 18[0m
+2020/06/10 23:53:02.703555 txmanager_test.go:471: [0;33m[warning]  i 1855  latency 20[0m
+2020/06/10 23:53:02.703597 txmanager_test.go:471: [0;33m[warning]  i 1856  latency 18[0m
+2020/06/10 23:53:02.703627 txmanager_test.go:471: [0;33m[warning]  i 1857  latency 19[0m
+2020/06/10 23:53:02.703655 txmanager_test.go:471: [0;33m[warning]  i 1858  latency 22[0m
+2020/06/10 23:53:02.703684 txmanager_test.go:471: [0;33m[warning]  i 1859  latency 18[0m
+2020/06/10 23:53:02.703712 txmanager_test.go:471: [0;33m[warning]  i 1860  latency 20[0m
+2020/06/10 23:53:02.703740 txmanager_test.go:471: [0;33m[warning]  i 1861  latency 23[0m
+2020/06/10 23:53:02.703784 txmanager_test.go:471: [0;33m[warning]  i 1862  latency 21[0m
+2020/06/10 23:53:02.703816 txmanager_test.go:471: [0;33m[warning]  i 1863  latency 19[0m
+2020/06/10 23:53:02.703844 txmanager_test.go:471: [0;33m[warning]  i 1864  latency 20[0m
+2020/06/10 23:53:02.703872 txmanager_test.go:471: [0;33m[warning]  i 1865  latency 18[0m
+2020/06/10 23:53:02.703900 txmanager_test.go:471: [0;33m[warning]  i 1866  latency 19[0m
+2020/06/10 23:53:02.703945 txmanager_test.go:471: [0;33m[warning]  i 1867  latency 20[0m
+2020/06/10 23:53:02.703973 txmanager_test.go:471: [0;33m[warning]  i 1868  latency 18[0m
+2020/06/10 23:53:02.704002 txmanager_test.go:471: [0;33m[warning]  i 1869  latency 20[0m
+2020/06/10 23:53:02.704030 txmanager_test.go:471: [0;33m[warning]  i 1870  latency 19[0m
+2020/06/10 23:53:02.704058 txmanager_test.go:471: [0;33m[warning]  i 1871  latency 19[0m
+2020/06/10 23:53:02.704102 txmanager_test.go:471: [0;33m[warning]  i 1872  latency 18[0m
+2020/06/10 23:53:02.704130 txmanager_test.go:471: [0;33m[warning]  i 1873  latency 21[0m
+2020/06/10 23:53:02.704159 txmanager_test.go:471: [0;33m[warning]  i 1874  latency 19[0m
+2020/06/10 23:53:02.704187 txmanager_test.go:471: [0;33m[warning]  i 1875  latency 19[0m
+2020/06/10 23:53:02.704215 txmanager_test.go:471: [0;33m[warning]  i 1876  latency 19[0m
+2020/06/10 23:53:02.704257 txmanager_test.go:471: [0;33m[warning]  i 1877  latency 20[0m
+2020/06/10 23:53:02.704286 txmanager_test.go:471: [0;33m[warning]  i 1878  latency 34[0m
+2020/06/10 23:53:02.704318 txmanager_test.go:471: [0;33m[warning]  i 1879  latency 21[0m
+2020/06/10 23:53:02.704347 txmanager_test.go:471: [0;33m[warning]  i 1880  latency 18[0m
+2020/06/10 23:53:02.704375 txmanager_test.go:471: [0;33m[warning]  i 1881  latency 18[0m
+2020/06/10 23:53:02.704418 txmanager_test.go:471: [0;33m[warning]  i 1882  latency 20[0m
+2020/06/10 23:53:02.704447 txmanager_test.go:471: [0;33m[warning]  i 1883  latency 19[0m
+2020/06/10 23:53:02.704475 txmanager_test.go:471: [0;33m[warning]  i 1884  latency 19[0m
+2020/06/10 23:53:02.704504 txmanager_test.go:471: [0;33m[warning]  i 1885  latency 17[0m
+2020/06/10 23:53:02.704532 txmanager_test.go:471: [0;33m[warning]  i 1886  latency 20[0m
+2020/06/10 23:53:02.704575 txmanager_test.go:471: [0;33m[warning]  i 1887  latency 19[0m
+2020/06/10 23:53:02.704604 txmanager_test.go:471: [0;33m[warning]  i 1888  latency 23[0m
+2020/06/10 23:53:02.704632 txmanager_test.go:471: [0;33m[warning]  i 1889  latency 19[0m
+2020/06/10 23:53:02.704660 txmanager_test.go:471: [0;33m[warning]  i 1890  latency 20[0m
+2020/06/10 23:53:02.704689 txmanager_test.go:471: [0;33m[warning]  i 1891  latency 19[0m
+2020/06/10 23:53:02.704730 txmanager_test.go:471: [0;33m[warning]  i 1892  latency 19[0m
+2020/06/10 23:53:02.704760 txmanager_test.go:471: [0;33m[warning]  i 1893  latency 20[0m
+2020/06/10 23:53:02.704788 txmanager_test.go:471: [0;33m[warning]  i 1894  latency 18[0m
+2020/06/10 23:53:02.704816 txmanager_test.go:471: [0;33m[warning]  i 1895  latency 19[0m
+2020/06/10 23:53:02.704845 txmanager_test.go:471: [0;33m[warning]  i 1896  latency 18[0m
+2020/06/10 23:53:02.704873 txmanager_test.go:471: [0;33m[warning]  i 1897  latency 20[0m
+2020/06/10 23:53:02.704922 txmanager_test.go:471: [0;33m[warning]  i 1898  latency 17[0m
+2020/06/10 23:53:02.704952 txmanager_test.go:471: [0;33m[warning]  i 1899  latency 20[0m
+2020/06/10 23:53:02.704980 txmanager_test.go:471: [0;33m[warning]  i 1900  latency 18[0m
+2020/06/10 23:53:02.705008 txmanager_test.go:471: [0;33m[warning]  i 1901  latency 18[0m
+2020/06/10 23:53:02.705054 txmanager_test.go:471: [0;33m[warning]  i 1902  latency 20[0m
+2020/06/10 23:53:02.705084 txmanager_test.go:471: [0;33m[warning]  i 1903  latency 19[0m
+2020/06/10 23:53:02.705113 txmanager_test.go:471: [0;33m[warning]  i 1904  latency 19[0m
+2020/06/10 23:53:02.705141 txmanager_test.go:471: [0;33m[warning]  i 1905  latency 18[0m
+2020/06/10 23:53:02.705181 txmanager_test.go:471: [0;33m[warning]  i 1906  latency 18[0m
+2020/06/10 23:53:02.705235 txmanager_test.go:471: [0;33m[warning]  i 1907  latency 20[0m
+2020/06/10 23:53:02.705266 txmanager_test.go:471: [0;33m[warning]  i 1908  latency 19[0m
+2020/06/10 23:53:02.705295 txmanager_test.go:471: [0;33m[warning]  i 1909  latency 17[0m
+2020/06/10 23:53:02.705323 txmanager_test.go:471: [0;33m[warning]  i 1910  latency 19[0m
+2020/06/10 23:53:02.705352 txmanager_test.go:471: [0;33m[warning]  i 1911  latency 19[0m
+2020/06/10 23:53:02.705393 txmanager_test.go:471: [0;33m[warning]  i 1912  latency 19[0m
+2020/06/10 23:53:02.705424 txmanager_test.go:471: [0;33m[warning]  i 1913  latency 22[0m
+2020/06/10 23:53:02.705452 txmanager_test.go:471: [0;33m[warning]  i 1914  latency 19[0m
+2020/06/10 23:53:02.705480 txmanager_test.go:471: [0;33m[warning]  i 1915  latency 20[0m
+2020/06/10 23:53:02.705508 txmanager_test.go:471: [0;33m[warning]  i 1916  latency 18[0m
+2020/06/10 23:53:02.705536 txmanager_test.go:471: [0;33m[warning]  i 1917  latency 20[0m
+2020/06/10 23:53:02.705584 txmanager_test.go:471: [0;33m[warning]  i 1918  latency 25[0m
+2020/06/10 23:53:02.705613 txmanager_test.go:471: [0;33m[warning]  i 1919  latency 18[0m
+2020/06/10 23:53:02.705641 txmanager_test.go:471: [0;33m[warning]  i 1920  latency 20[0m
+2020/06/10 23:53:02.705669 txmanager_test.go:471: [0;33m[warning]  i 1921  latency 22[0m
+2020/06/10 23:53:02.705712 txmanager_test.go:471: [0;33m[warning]  i 1922  latency 24[0m
+2020/06/10 23:53:02.705743 txmanager_test.go:471: [0;33m[warning]  i 1923  latency 22[0m
+2020/06/10 23:53:02.705771 txmanager_test.go:471: [0;33m[warning]  i 1924  latency 20[0m
+2020/06/10 23:53:02.705799 txmanager_test.go:471: [0;33m[warning]  i 1925  latency 20[0m
+2020/06/10 23:53:02.705828 txmanager_test.go:471: [0;33m[warning]  i 1926  latency 20[0m
+2020/06/10 23:53:02.705862 txmanager_test.go:471: [0;33m[warning]  i 1927  latency 21[0m
+2020/06/10 23:53:02.705898 txmanager_test.go:471: [0;33m[warning]  i 1928  latency 20[0m
+2020/06/10 23:53:02.705927 txmanager_test.go:471: [0;33m[warning]  i 1929  latency 21[0m
+2020/06/10 23:53:02.705957 txmanager_test.go:471: [0;33m[warning]  i 1930  latency 22[0m
+2020/06/10 23:53:02.705986 txmanager_test.go:471: [0;33m[warning]  i 1931  latency 22[0m
+2020/06/10 23:53:02.706015 txmanager_test.go:471: [0;33m[warning]  i 1932  latency 22[0m
+2020/06/10 23:53:02.706059 txmanager_test.go:471: [0;33m[warning]  i 1933  latency 21[0m
+2020/06/10 23:53:02.706088 txmanager_test.go:471: [0;33m[warning]  i 1934  latency 23[0m
+2020/06/10 23:53:02.706116 txmanager_test.go:471: [0;33m[warning]  i 1935  latency 20[0m
+2020/06/10 23:53:02.706144 txmanager_test.go:471: [0;33m[warning]  i 1936  latency 21[0m
+2020/06/10 23:53:02.706173 txmanager_test.go:471: [0;33m[warning]  i 1937  latency 21[0m
+2020/06/10 23:53:02.706216 txmanager_test.go:471: [0;33m[warning]  i 1938  latency 22[0m
+2020/06/10 23:53:02.706245 txmanager_test.go:471: [0;33m[warning]  i 1939  latency 23[0m
+2020/06/10 23:53:02.706274 txmanager_test.go:471: [0;33m[warning]  i 1940  latency 21[0m
+2020/06/10 23:53:02.706305 txmanager_test.go:471: [0;33m[warning]  i 1941  latency 21[0m
+2020/06/10 23:53:02.706333 txmanager_test.go:471: [0;33m[warning]  i 1942  latency 20[0m
+2020/06/10 23:53:02.706382 txmanager_test.go:471: [0;33m[warning]  i 1943  latency 21[0m
+2020/06/10 23:53:02.706412 txmanager_test.go:471: [0;33m[warning]  i 1944  latency 18[0m
+2020/06/10 23:53:02.706441 txmanager_test.go:471: [0;33m[warning]  i 1945  latency 22[0m
+2020/06/10 23:53:02.706469 txmanager_test.go:471: [0;33m[warning]  i 1946  latency 21[0m
+2020/06/10 23:53:02.706511 txmanager_test.go:471: [0;33m[warning]  i 1947  latency 19[0m
+2020/06/10 23:53:02.706542 txmanager_test.go:471: [0;33m[warning]  i 1948  latency 21[0m
+2020/06/10 23:53:02.706571 txmanager_test.go:471: [0;33m[warning]  i 1949  latency 21[0m
+2020/06/10 23:53:02.706599 txmanager_test.go:471: [0;33m[warning]  i 1950  latency 24[0m
+2020/06/10 23:53:02.706627 txmanager_test.go:471: [0;33m[warning]  i 1951  latency 20[0m
+2020/06/10 23:53:02.706655 txmanager_test.go:471: [0;33m[warning]  i 1952  latency 19[0m
+2020/06/10 23:53:02.706700 txmanager_test.go:471: [0;33m[warning]  i 1953  latency 21[0m
+2020/06/10 23:53:02.706728 txmanager_test.go:471: [0;33m[warning]  i 1954  latency 20[0m
+2020/06/10 23:53:02.706756 txmanager_test.go:471: [0;33m[warning]  i 1955  latency 23[0m
+2020/06/10 23:53:02.706785 txmanager_test.go:471: [0;33m[warning]  i 1956  latency 21[0m
+2020/06/10 23:53:02.706813 txmanager_test.go:471: [0;33m[warning]  i 1957  latency 20[0m
+2020/06/10 23:53:02.706861 txmanager_test.go:471: [0;33m[warning]  i 1958  latency 22[0m
+2020/06/10 23:53:02.706890 txmanager_test.go:471: [0;33m[warning]  i 1959  latency 21[0m
+2020/06/10 23:53:02.706918 txmanager_test.go:471: [0;33m[warning]  i 1960  latency 20[0m
+2020/06/10 23:53:02.706963 txmanager_test.go:471: [0;33m[warning]  i 1961  latency 20[0m
+2020/06/10 23:53:02.706994 txmanager_test.go:471: [0;33m[warning]  i 1962  latency 22[0m
+2020/06/10 23:53:02.707023 txmanager_test.go:471: [0;33m[warning]  i 1963  latency 20[0m
+2020/06/10 23:53:02.707051 txmanager_test.go:471: [0;33m[warning]  i 1964  latency 21[0m
+2020/06/10 23:53:02.707094 txmanager_test.go:471: [0;33m[warning]  i 1965  latency 20[0m
+2020/06/10 23:53:02.707125 txmanager_test.go:471: [0;33m[warning]  i 1966  latency 24[0m
+2020/06/10 23:53:02.707154 txmanager_test.go:471: [0;33m[warning]  i 1967  latency 21[0m
+2020/06/10 23:53:02.707182 txmanager_test.go:471: [0;33m[warning]  i 1968  latency 19[0m
+2020/06/10 23:53:02.707211 txmanager_test.go:471: [0;33m[warning]  i 1969  latency 22[0m
+2020/06/10 23:53:02.707252 txmanager_test.go:471: [0;33m[warning]  i 1970  latency 20[0m
+2020/06/10 23:53:02.707283 txmanager_test.go:471: [0;33m[warning]  i 1971  latency 21[0m
+2020/06/10 23:53:02.707312 txmanager_test.go:471: [0;33m[warning]  i 1972  latency 21[0m
+2020/06/10 23:53:02.707340 txmanager_test.go:471: [0;33m[warning]  i 1973  latency 21[0m
+2020/06/10 23:53:02.707368 txmanager_test.go:471: [0;33m[warning]  i 1974  latency 20[0m
+2020/06/10 23:53:02.707397 txmanager_test.go:471: [0;33m[warning]  i 1975  latency 20[0m
+2020/06/10 23:53:02.707440 txmanager_test.go:471: [0;33m[warning]  i 1976  latency 19[0m
+2020/06/10 23:53:02.707472 txmanager_test.go:471: [0;33m[warning]  i 1977  latency 21[0m
+2020/06/10 23:53:02.707501 txmanager_test.go:471: [0;33m[warning]  i 1978  latency 19[0m
+2020/06/10 23:53:02.707530 txmanager_test.go:471: [0;33m[warning]  i 1979  latency 20[0m
+2020/06/10 23:53:02.707575 txmanager_test.go:471: [0;33m[warning]  i 1980  latency 21[0m
+2020/06/10 23:53:02.707606 txmanager_test.go:471: [0;33m[warning]  i 1981  latency 20[0m
+2020/06/10 23:53:02.707635 txmanager_test.go:471: [0;33m[warning]  i 1982  latency 21[0m
+2020/06/10 23:53:02.707663 txmanager_test.go:471: [0;33m[warning]  i 1983  latency 20[0m
+2020/06/10 23:53:02.707691 txmanager_test.go:471: [0;33m[warning]  i 1984  latency 22[0m
+2020/06/10 23:53:02.707733 txmanager_test.go:471: [0;33m[warning]  i 1985  latency 19[0m
+2020/06/10 23:53:02.707763 txmanager_test.go:471: [0;33m[warning]  i 1986  latency 22[0m
+2020/06/10 23:53:02.707792 txmanager_test.go:471: [0;33m[warning]  i 1987  latency 19[0m
+2020/06/10 23:53:02.707826 txmanager_test.go:471: [0;33m[warning]  i 1988  latency 19[0m
+2020/06/10 23:53:02.707855 txmanager_test.go:471: [0;33m[warning]  i 1989  latency 22[0m
+2020/06/10 23:53:02.707896 txmanager_test.go:471: [0;33m[warning]  i 1990  latency 20[0m
+2020/06/10 23:53:02.707927 txmanager_test.go:471: [0;33m[warning]  i 1991  latency 21[0m
+2020/06/10 23:53:02.707955 txmanager_test.go:471: [0;33m[warning]  i 1992  latency 21[0m
+2020/06/10 23:53:02.707984 txmanager_test.go:471: [0;33m[warning]  i 1993  latency 24[0m
+2020/06/10 23:53:02.708012 txmanager_test.go:471: [0;33m[warning]  i 1994  latency 19[0m
+2020/06/10 23:53:02.708040 txmanager_test.go:471: [0;33m[warning]  i 1995  latency 22[0m
+2020/06/10 23:53:02.708084 txmanager_test.go:471: [0;33m[warning]  i 1996  latency 19[0m
+2020/06/10 23:53:02.708113 txmanager_test.go:471: [0;33m[warning]  i 1997  latency 20[0m
+2020/06/10 23:53:02.708142 txmanager_test.go:471: [0;33m[warning]  i 1998  latency 22[0m
+2020/06/10 23:53:02.708170 txmanager_test.go:471: [0;33m[warning]  i 1999  latency 19[0m
+PASS
+ok  	github.com/acid_kvstore/tx/txmanager	24.431s
