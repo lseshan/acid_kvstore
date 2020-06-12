@@ -1,6 +1,6 @@
 # ACID KV Store
 
-# ARCHITECTURE
+
 ![image](design/Archietcture.png)
 
 ## ReplicaMgr
